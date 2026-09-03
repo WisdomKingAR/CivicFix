@@ -1,0 +1,159 @@
+// prisma/schema.prisma
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [postgis, pg_trgm]
+}
+
+enum Role {
+  CITIZEN
+  AUTHORITY
+  ADMIN
+}
+
+enum ComplaintStatus {
+  SUBMITTED
+  UNDER_REVIEW       // spam-flagged or manual review
+  ASSIGNED
+  IN_PROGRESS
+  RESOLVED
+  REJECTED
+}
+
+enum ComplaintCategory {
+  POTHOLE
+  STREETLIGHT
+  GARBAGE
+  WATER_LEAKAGE
+  ROAD_DAMAGE
+  OTHER
+}
+
+enum VerificationMethod {
+  AI_COMPARISON
+  CITIZEN_CONFIRMATION
+  AUTHORITY_OVERRIDE
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  phone         String?
+  password      String                        // bcrypt hash
+  role          Role      @default(CITIZEN)
+  isFlagged     Boolean   @default(false)
+  flagReason    String?
+  jurisdiction  String?                       // ward/zone for AUTHORITY role
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  complaints    Complaint[]
+  assignments   ComplaintAssignment[] @relation("AssignedTo")
+  assignedBy    ComplaintAssignment[] @relation("AssignedBy")
+
+  @@map("users")
+}
+
+model ComplaintCluster {
+  id              String          @id @default(cuid())
+  complaintCount  Int             @default(1)
+  priorityScore   Float           @default(0)
+  centroidLat     Float
+  centroidLng     Float
+  status          ComplaintStatus @default(SUBMITTED)
+  category        ComplaintCategory
+  isNearSensitive Boolean         @default(false)    // near hospital/school
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  complaints      Complaint[]
+
+  @@map("complaint_clusters")
+}
+
+model Complaint {
+  id              String                 @id @default(cuid())
+  userId          String
+  clusterId       String?
+  category        ComplaintCategory
+  description     String
+  status          ComplaintStatus        @default(SUBMITTED)
+  photoUrl        String
+  photoHash       String                 // SHA-256 of photo for dedup
+  lat             Float
+  lng             Float
+  address         String?
+  isSeed          Boolean                @default(false)  // first in cluster
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+
+  user            User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cluster         ComplaintCluster?      @relation(fields: [clusterId], references: [id])
+  assignments     ComplaintAssignment[]
+  resolution      ResolutionVerification?
+  statusHistory   StatusHistory[]
+
+  @@map("complaints")
+}
+
+model ComplaintAssignment {
+  id            String    @id @default(cuid())
+  complaintId   String
+  assignedToId  String
+  assignedById  String
+  notes         String?
+  createdAt     DateTime  @default(now())
+
+  complaint     Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+  assignedTo    User      @relation("AssignedTo", fields: [assignedToId], references: [id])
+  assignedBy    User      @relation("AssignedBy", fields: [assignedById], references: [id])
+
+  @@map("complaint_assignments")
+}
+
+model ResolutionVerification {
+  id                  String             @id @default(cuid())
+  complaintId         String             @unique
+  beforePhotoUrl      String
+  afterPhotoUrl       String
+  aiSimilarityScore   Float?             // 0.0–1.0; higher = more different = resolved
+  verificationMethod  VerificationMethod
+  citizenConfirmed    Boolean?
+  verifiedAt          DateTime?
+  createdAt           DateTime           @default(now())
+
+  complaint           Complaint          @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+
+  @@map("resolution_verifications")
+}
+
+model StatusHistory {
+  id          String          @id @default(cuid())
+  complaintId String
+  oldStatus   ComplaintStatus
+  newStatus   ComplaintStatus
+  changedById String
+  notes       String?
+  createdAt   DateTime        @default(now())
+
+  complaint   Complaint       @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+
+  @@map("status_history")
+}
+
+model SensitiveLocation {
+  id        String    @id @default(cuid())
+  name      String
+  type      String    // "HOSPITAL" | "SCHOOL"
+  lat       Float
+  lng       Float
+
+  @@map("sensitive_locations")
+}

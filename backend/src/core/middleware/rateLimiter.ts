@@ -1,0 +1,65 @@
+// src/core/middleware/rateLimiter.ts
+import rateLimit from 'express-rate-limit';
+import { Request, Response } from 'express';
+
+const createRateLimiter = (
+  windowMs: number,
+  max: number,
+  message = 'Too many requests. Please try again later.'
+) => {
+  return rateLimit({
+    windowMs,
+    max,
+    standardHeaders: true, // Return standard RateLimit headers
+    legacyHeaders: false,
+    handler: (req: Request, res: Response) => {
+      res.status(429).json({
+        success: false,
+        error: message,
+        code: 'RATE_LIMITED',
+      });
+    },
+  });
+};
+
+// 1. Auth Login: 5 requests / 15 minutes (brute-force defense)
+export const authLoginLimiter = createRateLimiter(
+  15 * 60 * 1000,
+  5,
+  'Too many login attempts. Please try again after 15 minutes.'
+);
+
+// 2. Auth Register: 3 requests / 1 hour (account farming defense)
+export const authRegisterLimiter = createRateLimiter(
+  60 * 60 * 1000,
+  3,
+  'Too many accounts registered from this IP. Please try again after an hour.'
+);
+
+// 3. Complaint Submission: 10 requests / 1 hour (spam submission defense)
+export const complaintSubmitLimiter = createRateLimiter(
+  60 * 60 * 1000,
+  10,
+  'Submission limit reached (10 complaints per hour). Please wait before reporting more.'
+);
+
+// 4. Global API (authenticated): 100 requests / 1 minute
+export const globalApiLimiter = createRateLimiter(
+  60 * 1000,
+  100,
+  'High traffic detected. Please slow down your requests.'
+);
+
+// 5. AI Operations: 10 requests / 1 minute (Gemini quota protection)
+export const aiLimiter = createRateLimiter(
+  60 * 1000,
+  10,
+  'AI service rate limit exceeded. Please wait a minute before analyzing more images.'
+);
+
+// 6. Upload Operations: 5 requests / 1 minute (Cloudinary storage abuse protection)
+export const uploadLimiter = createRateLimiter(
+  60 * 1000,
+  5,
+  'Upload limit reached (5 images per minute). Please wait a moment.'
+);
