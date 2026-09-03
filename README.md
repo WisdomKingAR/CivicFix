@@ -29,7 +29,7 @@ Citizens frequently encounter urban civic issues — potholes, broken streetligh
 - ⚡ **60-Second Citizen Reporting**: Citizens take a photo with GPS location, pick a category, and submit.
 - 🎯 **PostGIS Geospatial Deduplication**: Automatically groups incoming reports with open issues within **500 meters** of the same category.
 - 🧠 **Multimodal AI Visual Similarity (Gemini 2.0 Flash)**: Compares complaint photos to prevent duplicates and evaluate before/after repair verification.
-- 📊 **Intelligent Priority Scoring (1–100)**: Automatically prioritizes complaints based on duplicate volume (40%), proximity to schools/hospitals (30%), and complaint age (30%).
+- 📊 **Intelligent Priority Scoring (1–100)**: Automatically prioritizes complaints using a realistic 4-factor model: Inherent Hazard Baseline (35%), Consensus Volume Log-Curve (25%), Proximity to Schools/Hospitals (25%), and Category SLA Breach Progression (15%).
 - 🛡️ **Anti-Spam & Fraud Engine**: Detects burst submissions, duplicate image hashes, and high-frequency geo-spam.
 - 🔍 **Closed-Loop Resolution Verification**: Requires an after-repair photo evaluated by Gemini Vision, backed by a citizen confirm/reject validation loop.
 - 🗺️ **Clustered GeoJSON Map**: Generates clustered GeoJSON feeds for real-time visualization on interactive citizen and authority maps.
@@ -85,14 +85,21 @@ CIVICFIX/
 
 ## 📐 Algorithmic Innovations
 
-### 1. Dynamic Priority Score Formula
+### 1. Dynamic Priority Score Formula (4-Factor Model)
 Calculated dynamically whenever a complaint joins a cluster or an age milestone passes:
 
-$$\text{Priority Score} = (\text{duplicate\_weight} \times 40) + (\text{proximity\_weight} \times 30) + (\text{age\_weight} \times 30)$$
+$$\text{Priority Score} = (\text{Hazard} \times 35) + (\text{Volume} \times 25) + (\text{Proximity} \times 25) + (\text{SLA Aging} \times 15)$$
 
-- $\text{duplicate\_weight} = \min(\text{complaint\_count} / 10,\ 1.0)$
-- $\text{proximity\_weight} = 1.0 \text{ (within 500m of hospital/school)}, 0.5 \text{ (within 1km)}, 0.0 \text{ (otherwise)}$
-- $\text{age\_weight} = \min(\text{days\_open} / 7,\ 1.0)$
+- **$\text{Hazard Baseline}$ (35%)**: Inherent public safety impact by category:
+  - `WATER_LEAKAGE`: $1.00$ (Critical infrastructure, contamination)
+  - `POTHOLE`: $0.90$ (Vehicular/pedestrian accident risk)
+  - `ROAD_DAMAGE`: $0.85$ (Structural road/barrier failure)
+  - `STREETLIGHT`: $0.65$ (Night crime & visibility risk)
+  - `GARBAGE`: $0.50$ (Sanitation & disease vector)
+  - `OTHER`: $0.40$ (Default conservative baseline)
+- **$\text{Volume / Consensus}$ (25%)**: Crowd consensus log curve: $\min\left(\frac{\log_2(N + 1)}{\log_2(11)},\ 1.0\right)$
+- **$\text{Proximity Boost}$ (25%)**: $1.0$ (within 500m of hospital/school), $0.5$ (within 1km), $0.0$ (otherwise)
+- **$\text{SLA Aging}$ (15%)**: Category-aware resolution turnaround SLA: $\min\left(\frac{\text{days\_open}}{\text{SLA\_DAYS[category]}},\ 1.0\right)$ (1 day for Water Leakage up to 7 days for Other)
 
 ### 2. Two-Tier Duplicate Clustering Pipeline
 1. **Geospatial Proximity**: Queries open clusters of the same category within 500m using PostGIS:

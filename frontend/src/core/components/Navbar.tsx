@@ -1,5 +1,5 @@
 // frontend/src/core/components/Navbar.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { toast } from './Toast';
 import {
@@ -27,8 +27,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   setActiveTab,
   onOpenReportModal,
 }) => {
-  const { user, logout } = useAuth();
+  const { user, logout, refreshUser } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (user) {
+      refreshUser();
+    }
+  }, [activeTab]);
 
   const navItem = (id: string, label: string, Icon: React.ElementType, badgeColor?: string) => {
     const isActive = activeTab === id;
@@ -117,7 +123,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 onClick={() => setActiveTab('settings')}
                 className="w-8 h-8 rounded-full bg-green-700 text-white flex items-center justify-center font-bold text-xs shadow-sm hover:ring-2 hover:ring-green-400 transition-all"
-                title={`${user.name} (${user.role})`}
+                title={`${user.name || 'User'} (${user.role || 'CITIZEN'})`}
               >
                 {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
               </button>

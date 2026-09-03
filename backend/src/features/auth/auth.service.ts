@@ -33,6 +33,8 @@ export class AuthService {
         name: true,
         role: true,
         jurisdiction: true,
+        isFlagged: true,
+        ratnaTotal: true,
         createdAt: true,
       },
     });
@@ -43,7 +45,13 @@ export class AuthService {
       role: user.role,
     });
 
-    return { user, ...tokens };
+    return {
+      user: {
+        ...user,
+        ratnaTotal: user.ratnaTotal ?? 0,
+      },
+      ...tokens,
+    };
   }
 
   public static async login(data: LoginInput) {
@@ -78,6 +86,7 @@ export class AuthService {
         role: user.role,
         jurisdiction: user.jurisdiction,
         isFlagged: user.isFlagged,
+        ratnaTotal: user.ratnaTotal ?? 0,
       },
       ...tokens,
     };

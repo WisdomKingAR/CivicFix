@@ -17,6 +17,7 @@ interface AuthContextType {
     jurisdiction?: string;
   }) => Promise<User>;
   logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
   demoLogin: (role: Role) => Promise<User>;
 }
 
@@ -75,6 +76,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
+  const refreshUser = async () => {
+    try {
+      const res = await authService.getMe();
+      if (res.data) {
+        setUser(res.data);
+      }
+    } catch {
+      // silently ignore refresh failure
+    }
+  };
+
   const demoLogin = async (role: Role): Promise<User> => {
     const credentialsMap: Record<Role, { email: string; pass: string }> = {
       CITIZEN: { email: 'citizen@civicfix.com', pass: 'HackDemo@2025' },
@@ -87,7 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, demoLogin }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, refreshUser, demoLogin }}>
       {children}
     </AuthContext.Provider>
   );

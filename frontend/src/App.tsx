@@ -26,7 +26,7 @@ export const AppContent: React.FC = () => {
 
   const handleNavigate = (tab: string) => {
     // Protected tabs require user login
-    const protectedTabs = ['report', 'citizen', 'authority', 'admin', 'settings'];
+    const protectedTabs = ['report', 'citizen', 'authority', 'admin', 'settings', 'ratna'];
     if (protectedTabs.includes(tab) && !user) {
       setPendingTab(tab);
       setActiveTab('auth');
@@ -41,18 +41,22 @@ export const AppContent: React.FC = () => {
   };
 
   const handleAuthSuccess = (loggedInUser?: User) => {
-    if (pendingTab) {
-      const target = pendingTab;
-      setPendingTab(null);
-      setActiveTab(target);
-      return;
-    }
-    const role = loggedInUser?.role || user?.role || 'CITIZEN';
-    if (role === 'AUTHORITY') {
-      setActiveTab('authority');
-    } else if (role === 'ADMIN') {
-      setActiveTab('admin');
-    } else {
+    try {
+      if (pendingTab) {
+        const target = pendingTab;
+        setPendingTab(null);
+        setActiveTab(target);
+        return;
+      }
+      const role = loggedInUser?.role ?? user?.role ?? 'CITIZEN';
+      if (role === 'AUTHORITY') {
+        setActiveTab('authority');
+      } else if (role === 'ADMIN') {
+        setActiveTab('admin');
+      } else {
+        setActiveTab('citizen');
+      }
+    } catch {
       setActiveTab('citizen');
     }
   };

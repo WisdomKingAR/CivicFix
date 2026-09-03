@@ -1,5 +1,6 @@
 // frontend/src/features/complaints/pages/ReportIssueView.tsx
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../../core/context/AuthContext';
 import { complaintsService } from '../services/complaintsService';
 import type { ComplaintCategory } from '../../../core/types';
 import {
@@ -30,6 +31,7 @@ const CATEGORIES: { id: ComplaintCategory; label: string; icon: string; desc: st
 ];
 
 export const ReportIssueView: React.FC<ReportIssueViewProps> = ({ onSuccess, onCancel }) => {
+  const { refreshUser } = useAuth();
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [category, setCategory] = useState<ComplaintCategory>('POTHOLE');
   const [photoUrl, setPhotoUrl] = useState<string>('');
@@ -119,6 +121,7 @@ export const ReportIssueView: React.FC<ReportIssueViewProps> = ({ onSuccess, onC
         address,
         photoUrl: photoUrl || '',
       });
+      refreshUser();
       setSubmitted(true);
       toast.success('Complaint filed! +5 Ratna awarded.');
     } catch (err: any) {

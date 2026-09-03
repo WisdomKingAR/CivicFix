@@ -11,13 +11,16 @@ async function main() {
   const citizenPassword = await bcrypt.hash('HackDemo@2025', 10);
   const citizen = await prisma.user.upsert({
     where: { email: 'citizen@civicfix.com' },
-    update: {},
+    update: {
+      ratnaTotal: 125,
+    },
     create: {
       email: 'citizen@civicfix.com',
       name: 'Ramesh Kumar',
       password: citizenPassword,
       role: Role.CITIZEN,
       phone: '+919876543210',
+      ratnaTotal: 125,
     },
   });
   console.log('✅ Seeded citizen user:', citizen.email);
