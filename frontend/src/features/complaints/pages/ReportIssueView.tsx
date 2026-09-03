@@ -10,7 +10,10 @@ import {
   Loader2,
   ShieldCheck,
   Info,
+  Sparkles,
+  CheckCircle2,
 } from 'lucide-react';
+import { toast } from '../../../core/components/Toast';
 
 interface ReportIssueViewProps {
   onSuccess: () => void;
@@ -39,6 +42,7 @@ export const ReportIssueView: React.FC<ReportIssueViewProps> = ({ onSuccess, onC
   const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [detectingGps, setDetectingGps] = useState<boolean>(false);
+  const [submitted, setSubmitted] = useState<boolean>(false);
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -48,9 +52,10 @@ export const ReportIssueView: React.FC<ReportIssueViewProps> = ({ onSuccess, onC
         const uploadRes = await complaintsService.uploadImage(file);
         if (uploadRes.data?.url) {
           setPhotoUrl(uploadRes.data.url);
+          toast.success('Incident photo uploaded');
         }
-      } catch {
-        setPhotoUrl('https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&q=80&w=800');
+      } catch (err: any) {
+        toast.error('Image upload failed. You can still proceed or try again.');
       } finally {
         setUploadingPhoto(false);
       }
@@ -66,10 +71,11 @@ export const ReportIssueView: React.FC<ReportIssueViewProps> = ({ onSuccess, onC
           setLng(position.coords.longitude);
           setAddress(`GPS: ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)} (Auto-detected)`);
           setDetectingGps(false);
+          toast.success('GPS coordinates locked in');
         },
         () => {
           setDetectingGps(false);
-          alert('GPS detection unavailable. Using default municipal coordinates.');
+          toast.info('GPS detection unavailable. Using default municipal coordinates.');
         }
       );
     }
@@ -78,7 +84,7 @@ export const ReportIssueView: React.FC<ReportIssueViewProps> = ({ onSuccess, onC
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!description.trim() || description.length < 10) {
-      alert('Please provide at least 10 characters in the description.');
+      toast.error('Please provide at least 10 characters in the description.');
       return;
     }
 
@@ -90,15 +96,62 @@ export const ReportIssueView: React.FC<ReportIssueViewProps> = ({ onSuccess, onC
         lat,
         lng,
         address,
-        photoUrl: photoUrl || 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&q=80&w=800',
+        photoUrl: photoUrl || '',
       });
-      onSuccess();
+      setSubmitted(true);
+      toast.success('Complaint filed! +5 Ratna awarded.');
     } catch (err: any) {
-      alert(err.message || 'Failed to submit civic issue');
+      toast.error(err.message || 'Failed to submit civic issue');
     } finally {
       setSubmitting(false);
     }
   };
+
+  if (submitted) {
+    return (
+      <div className="max-w-xl mx-auto py-16 px-4">
+        <div className="bg-white rounded-3xl border border-slate-200 p-8 sm:p-10 shadow-lg text-center space-y-5 animate-fadeIn">
+          <div className="w-16 h-16 rounded-full bg-green-100 text-green-700 flex items-center justify-center mx-auto text-3xl shadow-sm">
+            <CheckCircle2 className="w-9 h-9 text-green-600" />
+          </div>
+
+          <div className="space-y-1">
+            <span className="text-xs font-black uppercase tracking-wider text-green-700">
+              Grievance Ticket Lodged
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
+              Report Submitted!
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto">
+              Your report has been queued for municipal dispatch. Automated AI triage and PostGIS clustering are active.
+            </p>
+          </div>
+
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-50 text-amber-800 text-xs font-black rounded-2xl border border-amber-200 shadow-sm">
+            <Sparkles className="w-4 h-4 text-amber-600" />
+            <span>+5 Ratna (रत्न) points awarded to your account!</span>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 justify-center pt-3">
+            <button onClick={onSuccess} className="btn-stitch-primary text-xs py-3 px-6">
+              Track in My Complaints
+            </button>
+            <button
+              onClick={() => {
+                setSubmitted(false);
+                setCurrentStep(1);
+                setDescription('');
+                setPhotoUrl('');
+              }}
+              className="btn-stitch-secondary text-xs py-3 px-6"
+            >
+              Report Another Issue
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto pb-16 space-y-8">

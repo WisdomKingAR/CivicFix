@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 interface AuthPageProps {
-  onSuccess: () => void;
+  onSuccess: (loggedInUser: User) => void;
 }
 
 export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
@@ -38,10 +38,11 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
     setLoading(true);
 
     try {
+      let loggedInUser: User;
       if (isLogin) {
-        await login(email, password);
+        loggedInUser = await login(email, password);
       } else {
-        await register({
+        loggedInUser = await register({
           name,
           email,
           password,
@@ -50,7 +51,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
           jurisdiction: role === 'AUTHORITY' ? jurisdiction : undefined,
         });
       }
-      onSuccess();
+      onSuccess(loggedInUser);
     } catch (err: any) {
       setError(err.message || 'Authentication failed. Please check your credentials.');
     } finally {
@@ -62,8 +63,8 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
     setError(null);
     setLoading(true);
     try {
-      await demoLogin(personaRole);
-      onSuccess();
+      const loggedInUser = await demoLogin(personaRole);
+      onSuccess(loggedInUser);
     } catch (err: any) {
       setError(err.message || 'Demo authentication failed');
     } finally {

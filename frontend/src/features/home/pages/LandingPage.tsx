@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { InteractiveMap } from '../../map/components/InteractiveMap';
 import { mapService } from '../../map/services/mapService';
+import { adminService } from '../../admin/services/adminService';
+import { ratnaService, LeaderboardUser } from '../../ratna/services/ratnaService';
 import type { GeoJsonFeatureCollection, ComplaintCluster, ComplaintCategory } from '../../../core/types';
 import {
   MapPin,
@@ -15,6 +17,12 @@ import {
   ArrowRight,
   ShieldCheck,
   Radio,
+  Clock,
+  Camera,
+  Bot,
+  Users,
+  Trophy,
+  Sparkles,
 } from 'lucide-react';
 
 interface LandingPageProps {
@@ -38,18 +46,24 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   const [geoJsonData, setGeoJsonData] = useState<GeoJsonFeatureCollection | null>(null);
   const [clusters, setClusters] = useState<ComplaintCluster[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
+  const [analytics, setAnalytics] = useState<any>(null);
+  const [topChampions, setTopChampions] = useState<LeaderboardUser[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [geoRes, clusterRes] = await Promise.all([
-          mapService.getGeoJsonFeed(),
-          mapService.getClusters(),
+        const [geoRes, clusterRes, statsRes, boardRes] = await Promise.all([
+          mapService.getGeoJsonFeed().catch(() => null),
+          mapService.getClusters().catch(() => null),
+          adminService.getAnalytics().catch(() => null),
+          ratnaService.getLeaderboard({ limit: 3 }).catch(() => null),
         ]);
-        if (geoRes.data) setGeoJsonData(geoRes.data);
-        if (clusterRes.data) setClusters(clusterRes.data);
+        if (geoRes?.data) setGeoJsonData(geoRes.data);
+        if (clusterRes?.data) setClusters(clusterRes.data);
+        if (statsRes?.data) setAnalytics(statsRes.data);
+        if (boardRes?.data) setTopChampions(boardRes.data);
       } catch (err) {
-        console.error('Failed to load landing map feed:', err);
+        console.error('Failed to load landing data:', err);
       }
     };
     fetchData();
@@ -66,26 +80,30 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   };
 
   const recentFeedItems = features.slice(0, 3);
+  const totalReports = analytics?.overview?.totalComplaints ?? (features.length > 0 ? features.length : 142);
+  const resolutionRate = analytics?.overview?.resolutionRate ?? 86;
+  const avgHours = analytics?.overview?.avgResolutionHours ?? 18.4;
 
   return (
-    <div className="space-y-12 pb-16">
-      {/* Hero Section */}
-      <section className="relative w-full bg-[#eff4ff] rounded-3xl overflow-hidden p-8 sm:p-12 border border-slate-200/90 shadow-sm">
+    <div className="space-y-12 pb-16 animate-fadeIn">
+      {/* 1. Hero Section */}
+      <section className="relative w-full bg-gradient-to-b from-[#e8f1ff] via-[#f0f6ff] to-[#f4f6fb] rounded-3xl overflow-hidden p-8 sm:p-12 border border-slate-200/90 shadow-sm">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          {/* Left Text */}
+          {/* Left Hero Text */}
           <div className="lg:col-span-7 flex flex-col items-start gap-5">
             <div className="inline-flex items-center gap-2 bg-white px-3.5 py-1.5 rounded-full text-xs font-bold text-green-700 border border-green-200 shadow-sm">
               <ShieldCheck className="w-4 h-4 text-green-600" />
-              <span>Official Municipal Partner Network</span>
+              <span>Official Municipal Action Platform</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
-              Report Civic Issues.<br />
-              <span className="text-green-600">Get Them Fixed.</span>
+              Your city hears you now.<br />
+              <span className="text-green-600">Report &amp; Fix in Real Time.</span>
             </h1>
 
             <p className="text-sm sm:text-base text-slate-600 max-w-xl font-normal leading-relaxed">
-              Empowering citizens and local authorities to bridge the gap. Snap a photo, drop a pin, and track your neighborhood repairs in real-time with total transparency.
+              Empowering citizens and municipal authorities with automated AI triage, PostGIS clustering,
+              and Ratna (रत्न) civic rewards for active neighborhood stewardship.
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -101,14 +119,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 className="btn-stitch-secondary text-sm px-6 py-3.5 rounded-xl"
               >
                 <LogIn className="w-5 h-5" />
-                <span>Citizen Login</span>
+                <span>Citizen Portal</span>
               </button>
             </div>
 
             <div className="flex flex-wrap items-center gap-6 pt-4 border-t border-slate-200/80 w-full text-xs text-slate-600 font-medium">
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-green-600" />
-                <span>Anonymous or Public</span>
+                <span>AI Automated Triage</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-green-600" />
@@ -116,7 +134,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-green-600" />
-                <span>Direct Authority Routing</span>
+                <span>Ratna (रत्न) Rewards</span>
               </div>
             </div>
           </div>
@@ -130,8 +148,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     <Radio className="w-5 h-5 animate-pulse" />
                   </div>
                   <div>
-                    <div className="font-bold text-sm text-slate-900">Live Report Feed</div>
-                    <div className="text-xs text-slate-500">Real-time municipal updates</div>
+                    <div className="font-bold text-sm text-slate-900">Live Incident Feed</div>
+                    <div className="text-xs text-slate-500">Real-time municipal triage stream</div>
                   </div>
                 </div>
                 <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-700 animate-pulse">
@@ -163,7 +181,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                               {p.description || p.category.replace('_', ' ')}
                             </div>
                             <div className="text-[10px] text-slate-500">
-                              {p.category.replace('_', ' ')} • Real-time
+                              {p.category.replace('_', ' ')} • Live Stream
                             </div>
                           </div>
                         </div>
@@ -185,23 +203,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   <>
                     <div className="p-3 rounded-xl bg-slate-50 flex items-center justify-between gap-3 border border-slate-100">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0" />
-                        <div className="min-w-0">
-                          <div className="font-semibold text-xs text-slate-800 truncate">Streetlight Outage #4092</div>
-                          <div className="text-[10px] text-slate-500">Downtown District • 12m ago</div>
-                        </div>
-                      </div>
-                      <span className="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-200">
-                        In Progress
-                      </span>
-                    </div>
-
-                    <div className="p-3 rounded-xl bg-slate-50 flex items-center justify-between gap-3 border border-slate-100">
-                      <div className="flex items-center gap-2.5 min-w-0">
                         <span className="w-2.5 h-2.5 rounded-full bg-green-500 shrink-0" />
                         <div className="min-w-0">
-                          <div className="font-semibold text-xs text-slate-800 truncate">Pothole Repaired on 5th Ave</div>
-                          <div className="text-[10px] text-slate-500">North Sector • 2h ago</div>
+                          <div className="font-semibold text-xs text-slate-800 truncate">Pothole Repaired on Linking Road</div>
+                          <div className="text-[10px] text-slate-500">Ward 12 • 2h ago</div>
                         </div>
                       </div>
                       <span className="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-green-50 text-green-700 border border-green-200">
@@ -211,14 +216,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
                     <div className="p-3 rounded-xl bg-slate-50 flex items-center justify-between gap-3 border border-slate-100">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0" />
                         <div className="min-w-0">
-                          <div className="font-semibold text-xs text-slate-800 truncate">Water Main Leakage</div>
-                          <div className="text-[10px] text-slate-500">Westside • 4h ago</div>
+                          <div className="font-semibold text-xs text-slate-800 truncate">Streetlight Outage #4092</div>
+                          <div className="text-[10px] text-slate-500">Central Ward • 18m ago</div>
                         </div>
                       </div>
-                      <span className="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 border border-rose-200">
-                        Reported
+                      <span className="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-200">
+                        In Progress
                       </span>
                     </div>
                   </>
@@ -229,37 +234,132 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
-      {/* Quick Stats Section */}
+      {/* 2. Live Municipal Stats Bar */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="stitch-card p-6 flex flex-col gap-2 relative overflow-hidden bg-white">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Issues Reported</span>
-          <div className="text-3xl font-black text-slate-900">{features.length > 0 ? `${features.length * 15 + 400}+` : '48,215'}</div>
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Registered Complaints</span>
+          <div className="text-3xl font-black text-slate-900">{totalReports.toLocaleString()}</div>
           <div className="flex items-center gap-1.5 text-xs font-semibold text-green-700 mt-1">
             <TrendingUp className="w-4 h-4" />
-            <span>+12% from last month</span>
-          </div>
-        </div>
-
-        <div className="stitch-card p-6 flex flex-col gap-2 relative overflow-hidden bg-white">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Issues Resolved</span>
-          <div className="text-3xl font-black text-slate-900">42,980</div>
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-green-700 mt-1">
-            <Award className="w-4 h-4" />
-            <span>Verified by municipal audit</span>
+            <span>Audited &amp; geo-clustered</span>
           </div>
         </div>
 
         <div className="stitch-card p-6 flex flex-col gap-2 relative overflow-hidden bg-white">
           <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Resolution Rate</span>
-          <div className="text-3xl font-black text-slate-900">89.1%</div>
+          <div className="text-3xl font-black text-slate-900">{resolutionRate}%</div>
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-green-700 mt-1">
+            <Award className="w-4 h-4" />
+            <span>Target: &gt;80% municipal SLA</span>
+          </div>
+        </div>
+
+        <div className="stitch-card p-6 flex flex-col gap-2 relative overflow-hidden bg-white">
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Average Fix Time</span>
+          <div className="text-3xl font-black text-slate-900">{avgHours} hrs</div>
           <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-600 mt-1">
-            <Zap className="w-4 h-4" />
-            <span>Avg. response time: 24 hrs</span>
+            <Clock className="w-4 h-4" />
+            <span>Standard target: &lt;24 hours</span>
           </div>
         </div>
       </section>
 
-      {/* Category Directory Cards */}
+      {/* 3. How It Works (4 Steps) */}
+      <section className="bg-white rounded-3xl border border-slate-200 p-8 sm:p-10 shadow-sm space-y-6">
+        <div className="text-center max-w-xl mx-auto space-y-2">
+          <span className="text-xs font-black text-green-700 uppercase tracking-wider">Transparent Municipal Workflow</span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900">How CivicFix Operates</h2>
+          <p className="text-xs sm:text-sm text-slate-500">
+            From your camera lens to verified repair in 4 accountable stages
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
+          <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-3">
+            <div className="w-12 h-12 rounded-xl bg-green-100 text-green-700 flex items-center justify-center mx-auto">
+              <Camera className="w-6 h-6" />
+            </div>
+            <div className="text-xs font-black uppercase tracking-wider text-green-700">Step 1</div>
+            <h3 className="font-bold text-sm text-slate-900">Photo &amp; GPS Tag</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Capture the hazard on camera with automated high-accuracy GPS coordinates.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-3">
+            <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center mx-auto">
+              <Bot className="w-6 h-6" />
+            </div>
+            <div className="text-xs font-black uppercase tracking-wider text-blue-700">Step 2</div>
+            <h3 className="font-bold text-sm text-slate-900">AI Clustering</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Gemini Vision AI filters duplicates and boosts priority near hospitals or schools.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-3">
+            <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto">
+              <Users className="w-6 h-6" />
+            </div>
+            <div className="text-xs font-black uppercase tracking-wider text-amber-700">Step 3</div>
+            <h3 className="font-bold text-sm text-slate-900">Authority Dispatches</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Assigned municipal officers triage, dispatch field crews, and submit repair photos.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-3">
+            <div className="w-12 h-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center mx-auto">
+              <Sparkles className="w-6 h-6" />
+            </div>
+            <div className="text-xs font-black uppercase tracking-wider text-purple-700">Step 4</div>
+            <h3 className="font-bold text-sm text-slate-900">Confirm &amp; Earn Ratna</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Citizens confirm resolution with one click and earn Ratna points for local rewards.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Ratna Leaderboard Teaser */}
+      {topChampions.length > 0 && (
+        <section className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-3xl border border-amber-200 p-8 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+              <span className="text-xs font-black text-amber-800 uppercase tracking-wider">Top Citizen Stewards</span>
+              <h2 className="text-2xl font-black text-slate-900 flex items-center gap-2">
+                <Trophy className="w-6 h-6 text-amber-600" />
+                Monthly Civic Champions
+              </h2>
+            </div>
+            <span className="text-xs font-bold text-amber-900 bg-amber-200/70 px-3 py-1.5 rounded-xl">
+              ✦ Ratna Honors Board
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {topChampions.map((champ, i) => (
+              <div
+                key={champ.id}
+                className="bg-white rounded-2xl p-5 border border-amber-200/80 shadow-sm flex items-center justify-between"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}</span>
+                  <div>
+                    <div className="font-black text-sm text-slate-900">{champ.name}</div>
+                    <div className="text-[11px] text-slate-500">{champ.jurisdiction || 'City Steward'}</div>
+                  </div>
+                </div>
+                <span className="text-xs font-black text-amber-800 bg-amber-100 px-2.5 py-1 rounded-xl">
+                  ✦ {champ.ratnaTotal}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 5. Category Directory Cards */}
       <section className="space-y-4">
         <div>
           <span className="text-xs font-bold text-green-700 uppercase tracking-wider">Category Directory</span>
@@ -296,7 +396,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
-      {/* Live Map Section */}
+      {/* 6. Live Map Section */}
       <section className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>

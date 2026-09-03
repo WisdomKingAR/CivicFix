@@ -12,9 +12,11 @@ import { AuthorityTriage } from './features/authority/pages/AuthorityTriage';
 import { AdminDashboard } from './features/admin/pages/AdminDashboard';
 import { CityAnalyticsView } from './features/analytics/pages/CityAnalyticsView';
 import { SettingsView } from './features/settings/pages/SettingsView';
-import type { Complaint } from './core/types';
+import { RatnaView } from './features/ratna/pages/RatnaView';
+import type { Complaint, User } from './core/types';
 
 import { ErrorBoundary } from './core/components/ErrorBoundary';
+import { Toaster } from './core/components/Toast';
 
 export const AppContent: React.FC = () => {
   const { user } = useAuth();
@@ -38,14 +40,16 @@ export const AppContent: React.FC = () => {
     setActiveTab('detail');
   };
 
-  const handleAuthSuccess = () => {
+  const handleAuthSuccess = (loggedInUser: User) => {
     if (pendingTab) {
       const target = pendingTab;
       setPendingTab(null);
       setActiveTab(target);
-    } else if (user?.role === 'AUTHORITY') {
+      return;
+    }
+    if (loggedInUser.role === 'AUTHORITY') {
       setActiveTab('authority');
-    } else if (user?.role === 'ADMIN') {
+    } else if (loggedInUser.role === 'ADMIN') {
       setActiveTab('admin');
     } else {
       setActiveTab('citizen');
@@ -106,6 +110,8 @@ export const AppContent: React.FC = () => {
 
         {activeTab === 'admin' && <AdminDashboard />}
 
+        {activeTab === 'ratna' && <RatnaView />}
+
         {activeTab === 'settings' && <SettingsView />}
 
         {activeTab === 'auth' && (
@@ -121,6 +127,7 @@ export default function App() {
     <ErrorBoundary>
       <AuthProvider>
         <AppContent />
+        <Toaster />
       </AuthProvider>
     </ErrorBoundary>
   );

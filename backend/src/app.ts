@@ -18,6 +18,7 @@ import mapRoutes from './features/map/map.routes';
 import aiRoutes from './features/ai/ai.routes';
 import uploadRoutes from './features/upload/upload.routes';
 import adminRoutes from './features/admin/admin.routes';
+import ratnaRoutes from './features/ratna/ratna.routes';
 
 const app = express();
 
@@ -29,12 +30,20 @@ app.use(
       const allowedOrigins = [
         env.FRONTEND_URL,
         'http://localhost:3000',
+        'http://localhost:5173',
         'http://127.0.0.1:3000',
+        'http://127.0.0.1:5173',
       ].filter(Boolean);
-      if (!origin || allowedOrigins.includes(origin)) {
+
+      const isAllowed =
+        !origin ||
+        allowedOrigins.includes(origin) ||
+        origin.endsWith('.vercel.app');
+
+      if (isAllowed) {
         callback(null, true);
       } else {
-        callback(null, true); // Permissive fallback for seamless local/preview testing
+        callback(new Error(`CORS: Origin '${origin}' is not allowed.`), false);
       }
     },
     credentials: true,
@@ -64,6 +73,7 @@ app.use('/api/map', globalApiLimiter, mapRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/admin', globalApiLimiter, adminRoutes);
+app.use('/api/ratna', globalApiLimiter, ratnaRoutes);
 
 // 4. 404 Fallback
 app.use('*', (req, res) => {

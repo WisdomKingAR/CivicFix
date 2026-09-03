@@ -40,4 +40,12 @@ export const authService = {
     const res = await api.get<ApiResponse<User>>('/user/me');
     return res.data;
   },
+
+  refreshToken: async () => {
+    const res = await api.post<ApiResponse<{ accessToken: string }>>('/auth/refresh');
+    if (res.data.data?.accessToken) {
+      setAccessToken(res.data.data.accessToken);
+    }
+    return res.data;
+  },
 };

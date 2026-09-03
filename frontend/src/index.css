@@ -1,15 +1,34 @@
 /* frontend/src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=Space+Grotesk:wght@500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --color-ashoka: #1a3a5c;   /* deep navy — municipal authority */
+  --color-saffron: #e8722a;  /* warm saffron — national identity accent */
+  --color-tiranga: #138808;  /* flag green — civic action CTA */
+  --color-bg: #f4f6fb;
+  --color-surface: #ffffff;
+  --color-border: rgba(26, 58, 92, 0.12);
+  --color-submitted: #64748b;
+  --color-progress: #2563eb;
+  --color-resolved: #16a34a;
+  --color-flagged: #dc2626;
+}
 
 @layer base {
   html, body {
     margin: 0;
     padding: 0;
-    background-color: #f8f9ff;
+    background-color: #f4f6fb;
     color: #0b1c30;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
   }
 }
 
@@ -29,7 +48,7 @@
 /* Stitch Card Panels */
 .stitch-card {
   background-color: #ffffff;
-  border: 1px solid rgba(109, 123, 108, 0.18);
+  border: 1px solid rgba(26, 58, 92, 0.12);
   border-radius: 16px;
   box-shadow: 0 4px 20px -2px rgba(11, 28, 48, 0.06);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -38,13 +57,13 @@
 .stitch-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 30px -4px rgba(11, 28, 48, 0.1);
-  border-color: rgba(0, 110, 47, 0.35);
+  border-color: rgba(19, 136, 8, 0.35);
 }
 
 /* Stitch Buttons */
 .btn-stitch-primary {
-  background-color: #22c55e;
-  color: #004b1e;
+  background-color: #16a34a;
+  color: #ffffff;
   font-weight: 700;
   padding: 10px 20px;
   border-radius: 12px;
@@ -55,11 +74,11 @@
   justify-content: center;
   gap: 8px;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.25);
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25);
 }
 
 .btn-stitch-primary:hover {
-  background-color: #16a34a;
+  background-color: #15803d;
   color: #ffffff;
   transform: translateY(-1px);
 }
@@ -97,7 +116,7 @@
   width: 100%;
   height: 100%;
   border-radius: 16px;
-  font-family: 'Inter', sans-serif !important;
+  font-family: 'DM Sans', sans-serif !important;
 }
 
 .leaflet-popup-content-wrapper {

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { adminService } from '../services/adminService';
 import type { User, Role } from '../../../core/types';
 import { MetricSkeleton } from '../../../core/components/LoadingSkeleton';
+import { toast } from '../../../core/components/Toast';
 import {
   BarChart3,
   Users,
@@ -47,9 +48,10 @@ export const AdminDashboard: React.FC = () => {
   const handleRoleChange = async (userId: string, newRole: Role) => {
     try {
       await adminService.updateUser(userId, { role: newRole });
+      toast.success(`User role updated to ${newRole}`);
       fetchData();
     } catch (err: any) {
-      alert(err.message || 'Failed to update role');
+      toast.error(err.message || 'Failed to update role');
     }
   };
 
@@ -59,9 +61,10 @@ export const AdminDashboard: React.FC = () => {
         isFlagged: !user.isFlagged,
         flagReason: !user.isFlagged ? 'Flagged by Administrator' : undefined,
       });
+      toast.success(user.isFlagged ? 'User unflagged' : 'User flagged for moderation');
       fetchData();
     } catch (err: any) {
-      alert(err.message || 'Failed to update flag status');
+      toast.error(err.message || 'Failed to update flag status');
     }
   };
 

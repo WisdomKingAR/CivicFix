@@ -28,19 +28,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const initAuth = async () => {
-      const token = getAccessToken();
-      if (token) {
-        try {
-          const res = await authService.getMe();
-          if (res.data) {
-            setUser(res.data);
-          }
-        } catch {
-          setAccessToken(null);
-          setUser(null);
+      try {
+        // Attempt cookie-based token refresh on initial load
+        await authService.refreshToken().catch(() => null);
+        const res = await authService.getMe();
+        if (res.data) {
+          setUser(res.data);
         }
+      } catch {
+        setAccessToken(null);
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     initAuth();
   }, []);

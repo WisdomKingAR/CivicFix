@@ -88,14 +88,17 @@ export const CitizenConfirmationModal: React.FC<CitizenConfirmationModalProps> =
 
           <div className="space-y-1.5">
             <span className="text-[11px] font-bold text-green-700 uppercase">2. After (Repaired)</span>
-            <img
-              src={
-                resolution?.afterPhotoUrl ||
-                'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&q=80&w=800'
-              }
-              alt="After Repair"
-              className="h-40 w-full object-cover rounded-xl border border-green-300 bg-slate-100 shadow-sm"
-            />
+            {resolution?.afterPhotoUrl ? (
+              <img
+                src={resolution.afterPhotoUrl}
+                alt="After Repair"
+                className="h-40 w-full object-cover rounded-xl border border-green-300 bg-slate-100 shadow-sm"
+              />
+            ) : (
+              <div className="h-40 flex items-center justify-center bg-slate-50 border border-dashed border-slate-300 rounded-xl p-4 text-center">
+                <span className="text-xs font-semibold text-slate-500">No repair verification photo uploaded yet</span>
+              </div>
+            )}
           </div>
         </div>
 

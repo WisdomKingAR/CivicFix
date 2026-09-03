@@ -8,7 +8,7 @@ if (env.GEMINI_API_KEY) {
   genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
 }
 
-export function getGeminiModel() {
+export function getGeminiModel(modelName?: string) {
   if (!genAI) {
     if (env.GEMINI_API_KEY) {
       genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
@@ -16,5 +16,6 @@ export function getGeminiModel() {
       return null;
     }
   }
-  return genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+  const chosenModel = modelName || process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+  return genAI.getGenerativeModel({ model: chosenModel });
 }

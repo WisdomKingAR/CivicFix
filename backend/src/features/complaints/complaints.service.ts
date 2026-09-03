@@ -6,6 +6,8 @@ import { sha256 } from '../../core/utils/hash';
 import { SpamService } from '../admin/spam.service';
 import { ClusteringService } from '../clustering/clustering.service';
 import { NotificationService } from '../admin/notification.service';
+import { RatnaService } from '../ratna/ratna.service';
+import { RatnaEvent } from '@prisma/client';
 
 export class ComplaintsService {
   public static async createComplaint(userId: string, data: CreateComplaintInput) {
@@ -58,7 +60,7 @@ export class ComplaintsService {
         isSeed: clusterResult.isSeed,
         statusHistory: {
           create: {
-            oldStatus: initialStatus,
+            oldStatus: ComplaintStatus.SUBMITTED,
             newStatus: initialStatus,
             changedById: userId,
             notes: spamCheck.isSpam
@@ -72,6 +74,15 @@ export class ComplaintsService {
         statusHistory: true,
       },
     });
+
+    // 4. Award Ratna civic points
+    await RatnaService.award(userId, RatnaEvent.COMPLAINT_SUBMITTED, complaint.id);
+    if (!spamCheck.isSpam) {
+      await RatnaService.award(userId, RatnaEvent.QUALITY_PHOTO, complaint.id);
+    }
+    if (!clusterResult.isSeed) {
+      await RatnaService.award(userId, RatnaEvent.CLUSTER_JOINED, complaint.id);
+    }
 
     return complaint;
   }
@@ -184,8 +195,18 @@ export class ComplaintsService {
       return updatedComp;
     });
 
-    if (!data.confirmed) {
-      await NotificationService.notifyCitizenRejection('AUTHORITY', complaintId);
+    if (data.confirmed) {
+      await RatnaService.award(userId, RatnaEvent.RESOLUTION_CONFIRMED, complaintId);
+    } else {
+      await RatnaService.award(userId, RatnaEvent.RESOLUTION_REJECTED_CORRECTLY, complaintId);
+      const assignment = await prisma.complaintAssignment.findFirst({
+        where: { complaintId },
+        orderBy: { createdAt: 'desc' },
+        select: { assignedToId: true },
+      });
+      if (assignment) {
+        await NotificationService.notifyCitizenRejection(assignment.assignedToId, complaintId);
+      }
     }
 
     return updated;

@@ -32,6 +32,7 @@ export interface User {
   isFlagged: boolean;
   flagReason?: string | null;
   jurisdiction?: string | null;
+  ratnaTotal?: number;
   createdAt: string;
   updatedAt: string;
   _count?: {

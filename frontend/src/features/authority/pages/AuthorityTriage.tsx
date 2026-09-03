@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { authorityService } from '../services/authorityService';
 import { complaintsService } from '../../complaints/services/complaintsService';
 import type { Complaint, User } from '../../../core/types';
+import { toast } from '../../../core/components/Toast';
 import {
   ShieldCheck,
   UserCheck,
@@ -67,9 +68,10 @@ export const AuthorityTriage: React.FC = () => {
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
       await authorityService.updateStatus(id, newStatus);
+      toast.success(`Complaint status changed to ${newStatus}`);
       fetchQueue();
     } catch (err: any) {
-      alert(err.message || 'Failed to update status');
+      toast.error(err.message || 'Failed to update status');
     }
   };
 
@@ -81,11 +83,10 @@ export const AuthorityTriage: React.FC = () => {
         const uploadRes = await complaintsService.uploadImage(file);
         if (uploadRes.data?.url) {
           setAfterPhotoUrl(uploadRes.data.url);
+          toast.success('Verification photo uploaded successfully');
         }
-      } catch {
-        setAfterPhotoUrl(
-          'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&q=80&w=800'
-        );
+      } catch (err: any) {
+        toast.error(err.message || 'Image upload failed. Please try again.');
       } finally {
         setUploadingAfterPhoto(false);
       }
@@ -95,17 +96,19 @@ export const AuthorityTriage: React.FC = () => {
   const handleResolveSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedComplaint) return;
-    const finalAfter =
-      afterPhotoUrl ||
-      'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&q=80&w=800';
+    if (!afterPhotoUrl) {
+      toast.error('Please upload a repair verification photo before resolving this complaint.');
+      return;
+    }
 
     setResolving(true);
     try {
-      await authorityService.resolveComplaint(selectedComplaint.id, finalAfter, resolveNotes);
+      await authorityService.resolveComplaint(selectedComplaint.id, afterPhotoUrl, resolveNotes);
+      toast.success('Complaint successfully marked as RESOLVED.');
       setShowResolveModal(false);
       fetchQueue();
     } catch (err: any) {
-      alert(err.message || 'Resolution failed');
+      toast.error(err.message || 'Resolution failed');
     } finally {
       setResolving(false);
     }
@@ -117,10 +120,11 @@ export const AuthorityTriage: React.FC = () => {
     setAssigning(true);
     try {
       await authorityService.assignStaff(selectedComplaint.id, assignedToId);
+      toast.success('Complaint assigned to staff officer.');
       setShowAssignModal(false);
       fetchQueue();
     } catch (err: any) {
-      alert(err.message || 'Assignment failed');
+      toast.error(err.message || 'Assignment failed');
     } finally {
       setAssigning(false);
     }
@@ -211,11 +215,17 @@ export const AuthorityTriage: React.FC = () => {
                 className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-start md:items-center justify-between gap-5"
               >
                 <div className="flex items-start gap-4 flex-1">
-                  <img
-                    src={comp.photoUrl || 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&q=80&w=800'}
-                    alt="Complaint"
-                    className="w-24 h-24 rounded-xl object-cover border border-slate-200 shrink-0 bg-slate-100"
-                  />
+                  {comp.photoUrl ? (
+                    <img
+                      src={comp.photoUrl}
+                      alt="Complaint"
+                      className="w-24 h-24 rounded-xl object-cover border border-slate-200 shrink-0 bg-slate-100"
+                    />
+                  ) : (
+                    <div className="w-24 h-24 rounded-xl border border-dashed border-slate-300 flex items-center justify-center text-[10px] text-slate-400 text-center p-2 shrink-0 bg-slate-50">
+                      No Photo
+                    </div>
+                  )}
                   <div className="space-y-1.5 flex-1">
                     <div className="flex items-center gap-2">
                       <span className={`px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase ${

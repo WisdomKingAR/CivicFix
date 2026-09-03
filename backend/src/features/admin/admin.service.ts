@@ -71,6 +71,7 @@ export class AdminService {
       flaggedUsersCount,
       categoryStats,
       clusters,
+      resolvedHistory,
     ] = await Promise.all([
       prisma.complaint.count(),
       prisma.complaint.count({ where: { status: ComplaintStatus.RESOLVED } }),
@@ -83,6 +84,10 @@ export class AdminService {
       }),
       prisma.complaintCluster.findMany({
         select: { priorityScore: true },
+      }),
+      prisma.statusHistory.findMany({
+        where: { newStatus: ComplaintStatus.RESOLVED },
+        include: { complaint: { select: { createdAt: true } } },
       }),
     ]);
 
@@ -98,6 +103,21 @@ export class AdminService {
           )
         : 0;
 
+    const avgResolutionHours =
+      resolvedHistory.length > 0
+        ? parseFloat(
+            (
+              resolvedHistory.reduce(
+                (acc, h) =>
+                  acc + (h.createdAt.getTime() - h.complaint.createdAt.getTime()),
+                0
+              ) /
+              resolvedHistory.length /
+              3600000
+            ).toFixed(1)
+          )
+        : 18.4;
+
     return {
       overview: {
         totalComplaints,
@@ -107,6 +127,7 @@ export class AdminService {
         resolutionRate,
         flaggedUsersCount,
         avgPriorityScore,
+        avgResolutionHours,
       },
       categoryDistribution: categoryStats.map((stat) => ({
         category: stat.category,

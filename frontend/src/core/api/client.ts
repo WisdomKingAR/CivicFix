@@ -10,15 +10,10 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-let memoryToken: string | null = localStorage.getItem('civicfix_token');
+let memoryToken: string | null = null;
 
 export const setAccessToken = (token: string | null) => {
   memoryToken = token;
-  if (token) {
-    localStorage.setItem('civicfix_token', token);
-  } else {
-    localStorage.removeItem('civicfix_token');
-  }
 };
 
 export const getAccessToken = () => memoryToken;

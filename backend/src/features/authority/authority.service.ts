@@ -1,5 +1,4 @@
-// src/features/authority/authority.service.ts
-import { ComplaintCategory, ComplaintStatus, VerificationMethod } from '@prisma/client';
+import { ComplaintCategory, ComplaintStatus, VerificationMethod, RatnaEvent } from '@prisma/client';
 import { prisma } from '../../core/database/prisma';
 import {
   UpdateStatusInput,
@@ -8,6 +7,7 @@ import {
 } from './authority.schema';
 import { AIService } from '../ai/ai.service';
 import { NotificationService } from '../admin/notification.service';
+import { RatnaService } from '../ratna/ratna.service';
 
 export class AuthorityService {
   public static async getStaff() {
@@ -242,6 +242,10 @@ export class AuthorityService {
       complaint.userId,
       complaintId
     );
+
+    if (isAiResolved) {
+      await RatnaService.award(complaint.userId, RatnaEvent.COMPLAINT_RESOLVED, complaintId);
+    }
 
     return result;
   }

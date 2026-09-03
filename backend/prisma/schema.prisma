@@ -51,12 +51,15 @@ model User {
   isFlagged     Boolean   @default(false)
   flagReason    String?
   jurisdiction  String?                       // ward/zone for AUTHORITY role
+  ratnaTotal    Int       @default(0)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   complaints    Complaint[]
   assignments   ComplaintAssignment[] @relation("AssignedTo")
   assignedBy    ComplaintAssignment[] @relation("AssignedBy")
+  ratnaLedger   RatnaLedger[]
+  coupons       Coupon[]
 
   @@map("users")
 }
@@ -99,6 +102,7 @@ model Complaint {
   assignments     ComplaintAssignment[]
   resolution      ResolutionVerification?
   statusHistory   StatusHistory[]
+  ratnaEvents     RatnaLedger[]
 
   @@map("complaints")
 }
@@ -157,3 +161,45 @@ model SensitiveLocation {
 
   @@map("sensitive_locations")
 }
+
+enum RatnaEvent {
+  COMPLAINT_SUBMITTED
+  CLUSTER_JOINED
+  COMPLAINT_RESOLVED
+  RESOLUTION_CONFIRMED
+  RESOLUTION_REJECTED_CORRECTLY
+  REFERRAL_BONUS
+  QUALITY_PHOTO
+}
+
+model RatnaLedger {
+  id          String      @id @default(cuid())
+  userId      String
+  event       RatnaEvent
+  ratna       Int
+  complaintId String?
+  note        String?
+  createdAt   DateTime    @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  complaint   Complaint?  @relation(fields: [complaintId], references: [id])
+
+  @@map("ratna_ledger")
+}
+
+model Coupon {
+  id          String    @id @default(cuid())
+  userId      String
+  code        String    @unique
+  value       Int       // INR value
+  partner     String
+  ratnaSpent  Int
+  redeemedAt  DateTime?
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("coupons")
+}
+
