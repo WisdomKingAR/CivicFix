@@ -69,7 +69,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-sm">
+    <header className="sticky top-0 z-[9999] w-full bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-sm">
       <div className="h-16 max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
         {/* Brand Logo & Title */}
         <div
@@ -141,32 +141,38 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {showRoleMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 animate-fadeIn">
-                <div className="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
-                  Instant Demo Login
+              <>
+                <div
+                  className="fixed inset-0 z-[9998]"
+                  onClick={() => setShowRoleMenu(false)}
+                />
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-2xl border border-slate-200 py-2 z-[9999] animate-fadeIn">
+                  <div className="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                    Instant Demo Login
+                  </div>
+                  <button
+                    onClick={() => handleRoleSwitch('CITIZEN')}
+                    className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-green-50 hover:text-green-700 flex items-center gap-2"
+                  >
+                    <span className="w-2 h-2 rounded-full bg-green-500" />
+                    Citizen Persona
+                  </button>
+                  <button
+                    onClick={() => handleRoleSwitch('AUTHORITY')}
+                    className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-700 flex items-center gap-2"
+                  >
+                    <span className="w-2 h-2 rounded-full bg-blue-500" />
+                    Authority Officer
+                  </button>
+                  <button
+                    onClick={() => handleRoleSwitch('ADMIN')}
+                    className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 flex items-center gap-2"
+                  >
+                    <span className="w-2 h-2 rounded-full bg-purple-500" />
+                    Municipal Admin
+                  </button>
                 </div>
-                <button
-                  onClick={() => handleRoleSwitch('CITIZEN')}
-                  className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-green-50 hover:text-green-700 flex items-center gap-2"
-                >
-                  <span className="w-2 h-2 rounded-full bg-green-500" />
-                  Citizen Persona
-                </button>
-                <button
-                  onClick={() => handleRoleSwitch('AUTHORITY')}
-                  className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-700 flex items-center gap-2"
-                >
-                  <span className="w-2 h-2 rounded-full bg-blue-500" />
-                  Authority Officer
-                </button>
-                <button
-                  onClick={() => handleRoleSwitch('ADMIN')}
-                  className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 flex items-center gap-2"
-                >
-                  <span className="w-2 h-2 rounded-full bg-purple-500" />
-                  Municipal Admin
-                </button>
-              </div>
+              </>
             )}
           </div>
 
