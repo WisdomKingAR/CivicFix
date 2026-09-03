@@ -42,10 +42,9 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         zoomControl: false,
       });
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://carto.com/">CARTO</a> &copy; OpenStreetMap',
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19,
-        subdomains: 'abcd',
       }).addTo(map);
 
       L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -150,7 +149,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         const popupContent = `
           <div style="width: 250px; font-family: 'Inter', sans-serif;">
             <div style="position: relative; height: 120px; border-radius: 8px; overflow: hidden; margin-bottom: 8px; background: #0f172a;">
-              <img src="${props.photoUrl || 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&q=80&w=800'}" style="width: 100%; height: 100%; object-fit: cover;" alt="Incident" />
+              ${props.photoUrl ? `<img src="${props.photoUrl}" style="width: 100%; height: 100%; object-fit: cover;" alt="Incident" />` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#475569;font-size:24px;">📷</div>`}
               <div style="position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.75); padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 700; color: ${statusColor}; border: 1px solid ${statusColor};">
                 ${props.status || 'REPORTED'}
               </div>
