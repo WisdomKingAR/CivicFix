@@ -6,7 +6,6 @@ import {
   ShieldCheck,
   CheckCircle2,
   AlertTriangle,
-  Layers,
 } from 'lucide-react';
 
 interface AISimilarityViewerProps {

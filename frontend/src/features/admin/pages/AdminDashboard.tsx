@@ -167,7 +167,9 @@ export const AdminDashboard: React.FC = () => {
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
               <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Avg Resolution Time</div>
-              <div className="text-2xl font-black text-slate-900 mt-1">{analytics?.avgResolutionHours || '18.4'} hrs</div>
+              <div className="text-2xl font-black text-slate-900 mt-1">
+                {analytics?.overview?.avgResolutionHours ?? analytics?.avgResolutionHours ?? '18.4'} hrs
+              </div>
               <div className="flex items-center gap-1 mt-1 text-xs text-green-700 font-semibold">
                 <Clock className="w-3.5 h-3.5" />
                 <span>-2.1 hrs efficiency</span>
@@ -181,7 +183,9 @@ export const AdminDashboard: React.FC = () => {
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
               <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">SLA Compliance</div>
-              <div className="text-2xl font-black text-slate-900 mt-1">{analytics?.slaComplianceRate || '94.2'}%</div>
+              <div className="text-2xl font-black text-slate-900 mt-1">
+                {analytics?.overview?.resolutionRate ?? analytics?.slaComplianceRate ?? '94.2'}%
+              </div>
               <div className="flex items-center gap-1 mt-1 text-xs text-green-700 font-semibold">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Above 90% target</span>
@@ -264,7 +268,9 @@ export const AdminDashboard: React.FC = () => {
                       <td className="py-3 px-3 text-slate-600">
                         <div className="flex items-center gap-1">
                           <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
-                          <span className="truncate max-w-[160px]">{c.address || `${c.lat.toFixed(3)}, ${c.lng.toFixed(3)}`}</span>
+                          <span className="truncate max-w-[160px]">
+                            {c.address || (c.lat != null && c.lng != null ? `${c.lat.toFixed(3)}, ${c.lng.toFixed(3)}` : 'City-Wide')}
+                          </span>
                         </div>
                       </td>
                       <td className="py-3 px-3 text-right text-slate-400 text-[11px]">
