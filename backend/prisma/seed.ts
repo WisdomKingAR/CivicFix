@@ -74,9 +74,10 @@ async function main() {
       { name: 'Holy Family Hospital Bandra', type: 'HOSPITAL', lat: 19.0606, lng: 72.8363 },
       { name: 'Dhirubhai Ambani International School BKC', type: 'SCHOOL', lat: 19.0633, lng: 72.8681 },
 
-      // Andheri / Jogeshwari
+      // Andheri / Vile Parle / Jogeshwari
       { name: 'Kokilaben Dhirubhai Ambani Hospital', type: 'HOSPITAL', lat: 19.1337, lng: 72.8272 },
       { name: 'Seven Hills Hospital Andheri', type: 'HOSPITAL', lat: 19.1197, lng: 72.8464 },
+      { name: 'Cooper Hospital (RDMT) Juhu Vile Parle', type: 'HOSPITAL', lat: 19.1010, lng: 72.8340 },
       { name: 'Holy Family School Andheri', type: 'SCHOOL', lat: 19.1142, lng: 72.8521 },
 
       // Borivali / Kandivali
