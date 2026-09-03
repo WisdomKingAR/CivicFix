@@ -17,6 +17,7 @@ router.use(authenticateToken);
 router.use(requireRole(Role.AUTHORITY, Role.ADMIN));
 
 router.get('/queue', AuthorityController.getQueue);
+router.get('/staff', AuthorityController.getStaff);
 
 router.put(
   '/complaints/:id/status',

@@ -4,6 +4,16 @@ import { AuthorityService } from './authority.service';
 import { sendSuccess, sendError } from '../../core/utils/response';
 
 export class AuthorityController {
+  public static async getStaff(req: Request, res: Response, next: NextFunction) {
+    try {
+      const staff = await AuthorityService.getStaff();
+      sendSuccess(res, staff);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to fetch staff';
+      sendError(res, msg, 500, 'STAFF_FETCH_FAILED');
+    }
+  }
+
   public static async getQueue(req: Request, res: Response, next: NextFunction) {
     try {
       const { category, status, page, limit } = req.query;

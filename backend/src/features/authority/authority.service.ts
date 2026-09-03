@@ -10,6 +10,25 @@ import { AIService } from '../ai/ai.service';
 import { NotificationService } from '../admin/notification.service';
 
 export class AuthorityService {
+  public static async getStaff() {
+    return prisma.user.findMany({
+      where: {
+        role: { in: ['AUTHORITY', 'ADMIN'] },
+        isFlagged: false,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        jurisdiction: true,
+        createdAt: true,
+        updatedAt: true,
+        isFlagged: true,
+      },
+    });
+  }
+
   /**
    * Retrieves priority-sorted complaint queue for municipal authority officers.
    */
