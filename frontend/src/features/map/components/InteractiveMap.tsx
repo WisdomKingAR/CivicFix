@@ -26,13 +26,35 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   const layerGroupRef = useRef<L.LayerGroup | null>(null);
 
   const defaultSensitiveLocations: SensitiveLocation[] = sensitiveLocations || [
-    { id: '1', name: 'KEM Hospital', type: 'HOSPITAL', lat: 18.9388, lng: 72.8258 },
-    { id: '2', name: 'Nair Hospital (BYL Nair)', type: 'HOSPITAL', lat: 18.9629, lng: 72.8193 },
-    { id: '3', name: 'Hinduja Hospital Mahim', type: 'HOSPITAL', lat: 19.033, lng: 72.8397 },
-    { id: '4', name: 'Lilavati Hospital Bandra', type: 'HOSPITAL', lat: 19.0543, lng: 72.8266 },
-    { id: '5', name: 'Kokilaben Hospital Andheri', type: 'HOSPITAL', lat: 19.1337, lng: 72.8272 },
-    { id: '6', name: 'Don Bosco High School Matunga', type: 'SCHOOL', lat: 19.0216, lng: 72.8427 },
-    { id: '7', name: "St. Xavier's High School Fort", type: 'SCHOOL', lat: 18.9322, lng: 72.8264 },
+    // Hospitals
+    { id: 'h1', name: 'KEM Hospital (King Edward Memorial)', type: 'HOSPITAL', lat: 18.9388, lng: 72.8258 },
+    { id: 'h2', name: 'Nair Hospital (BYL Nair)', type: 'HOSPITAL', lat: 18.9629, lng: 72.8193 },
+    { id: 'h3', name: 'St. George Hospital', type: 'HOSPITAL', lat: 18.9338, lng: 72.8392 },
+    { id: 'h4', name: 'Hinduja Hospital Mahim', type: 'HOSPITAL', lat: 19.033, lng: 72.8397 },
+    { id: 'h5', name: 'Lilavati Hospital Bandra', type: 'HOSPITAL', lat: 19.0543, lng: 72.8266 },
+    { id: 'h6', name: 'Holy Family Hospital Bandra', type: 'HOSPITAL', lat: 19.0606, lng: 72.8363 },
+    { id: 'h7', name: 'Kokilaben Hospital Andheri', type: 'HOSPITAL', lat: 19.1337, lng: 72.8272 },
+    { id: 'h8', name: 'Cooper Hospital (RDMT) Juhu', type: 'HOSPITAL', lat: 19.1010, lng: 72.8340 },
+    { id: 'h9', name: 'Seven Hills Hospital Andheri', type: 'HOSPITAL', lat: 19.1197, lng: 72.8464 },
+    { id: 'h10', name: 'Bhagwati Hospital Borivali', type: 'HOSPITAL', lat: 19.2247, lng: 72.8561 },
+    { id: 'h11', name: 'Fortis Hospital Mulund', type: 'HOSPITAL', lat: 19.1723, lng: 72.9561 },
+    { id: 'h12', name: 'Hiranandani Hospital Powai', type: 'HOSPITAL', lat: 19.1197, lng: 72.9093 },
+    // Schools
+    { id: 's1', name: "St. Xavier's High School Fort", type: 'SCHOOL', lat: 18.9322, lng: 72.8264 },
+    { id: 's2', name: 'Cathedral and John Connon School', type: 'SCHOOL', lat: 18.9356, lng: 72.8338 },
+    { id: 's3', name: 'Campion School Mumbai', type: 'SCHOOL', lat: 18.9381, lng: 72.8292 },
+    { id: 's4', name: 'Don Bosco High School Matunga', type: 'SCHOOL', lat: 19.0216, lng: 72.8427 },
+    { id: 's5', name: 'Balmohan Vidyamandir Dadar', type: 'SCHOOL', lat: 19.0182, lng: 72.8417 },
+    { id: 's6', name: 'Shardashram Vidyamandir Dadar', type: 'SCHOOL', lat: 19.0178, lng: 72.8436 },
+    { id: 's7', name: 'Bombay Scottish School Mahim', type: 'SCHOOL', lat: 19.0384, lng: 72.8414 },
+    { id: 's8', name: 'St. Stanislaus High School Bandra', type: 'SCHOOL', lat: 19.0569, lng: 72.8394 },
+    { id: 's9', name: 'Dhirubhai Ambani International School BKC', type: 'SCHOOL', lat: 19.0633, lng: 72.8681 },
+    { id: 's10', name: 'Holy Family School Andheri', type: 'SCHOOL', lat: 19.1142, lng: 72.8521 },
+    { id: 's11', name: 'Arya Vidya Mandir Juhu', type: 'SCHOOL', lat: 19.1022, lng: 72.8278 },
+    { id: 's12', name: 'Ryan International School Kandivali', type: 'SCHOOL', lat: 19.2086, lng: 72.8357 },
+    { id: 's13', name: 'Thakur Public School Kandivali East', type: 'SCHOOL', lat: 19.2018, lng: 72.8715 },
+    { id: 's14', name: 'Children Academy Malad East', type: 'SCHOOL', lat: 19.1836, lng: 72.8706 },
+    { id: 's15', name: 'Atomic Energy Central School Anushaktinagar', type: 'SCHOOL', lat: 19.0517, lng: 72.9261 },
   ];
 
   // 1. Initialize Map ONCE and cleanup on unmount
@@ -84,34 +106,53 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
     // Render Sensitive Location Radius Buffers (500m)
     defaultSensitiveLocations.forEach((loc) => {
-      const color = loc.type === 'HOSPITAL' ? '#F43F5E' : '#A855F7';
-      const circle = L.circle([loc.lat, loc.lng], {
+      const isHospital = loc.type === 'HOSPITAL';
+      // Hospitals: red-rose, Schools: purple-violet
+      const color = isHospital ? '#F43F5E' : '#8B5CF6';
+      const emoji = isHospital ? '🏥' : '🏫';
+      const iconSize = isHospital ? 14 : 12;
+
+      L.circle([loc.lat, loc.lng], {
         radius: 500,
         color,
         fillColor: color,
-        fillOpacity: 0.08,
-        weight: 1.5,
-        dashArray: '4, 6',
-      });
+        fillOpacity: 0.07,
+        weight: isHospital ? 1.8 : 1.2,
+        dashArray: isHospital ? '4, 6' : '2, 8',
+      }).addTo(layerGroup);
 
-      const iconHtml = `<div style="background-color: ${color}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px ${color};"></div>`;
+      const iconHtml = `
+        <div style="
+          background: ${color};
+          width: ${iconSize}px;
+          height: ${iconSize}px;
+          border-radius: ${isHospital ? '50%' : '3px'};
+          border: 2px solid white;
+          box-shadow: 0 0 8px ${color};
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 8px;
+        ">${isHospital ? '+' : '✦'}</div>`;
+
       const customIcon = L.divIcon({
         html: iconHtml,
         className: 'custom-sensitive-icon',
-        iconSize: [12, 12],
+        iconSize: [iconSize, iconSize],
+        iconAnchor: [iconSize / 2, iconSize / 2],
       });
 
       const marker = L.marker([loc.lat, loc.lng], { icon: customIcon });
       marker.bindPopup(`
-        <div style="font-size: 13px; font-weight: 600; padding: 4px; color: white;">
-          <div style="color: ${color}; font-size: 11px; text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">
-            ${loc.type === 'HOSPITAL' ? '🏥 Hospital' : '🏫 School'} Zone (500m Priority)
+        <div style="font-family: 'Inter', sans-serif; font-size: 12px; min-width: 180px; padding: 2px 0;">
+          <div style="color: ${color}; font-size: 10px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 4px;">
+            ${emoji} ${isHospital ? 'Hospital' : 'School'} Zone — 500m Priority
           </div>
-          <div>${loc.name}</div>
+          <div style="font-weight: 700; color: #1e293b; font-size: 13px; line-height: 1.3;">${loc.name}</div>
+          <div style="margin-top: 4px; font-size: 10px; color: #64748b;">Civic complaints within this radius receive elevated priority scores</div>
         </div>
-      `);
+      `, { maxWidth: 240 });
 
-      layerGroup.addLayer(circle);
       layerGroup.addLayer(marker);
     });
 
@@ -235,9 +276,13 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500" />
           Resolved
         </div>
-        <div className="flex items-center gap-1.5 font-bold text-purple-700">
-          <span className="w-2.5 h-2.5 rounded-full bg-purple-500 border border-white" />
-          500m Hospital/School Zone
+        <div className="flex items-center gap-1.5 font-bold text-rose-700">
+          <span className="w-2.5 h-2.5 rounded-full bg-rose-500 border border-white shadow-sm shadow-rose-400" />
+          🏥 Hospital Zone
+        </div>
+        <div className="flex items-center gap-1.5 font-bold text-violet-700">
+          <span className="w-2 h-2 rounded-sm bg-violet-500 border border-white" />
+          🏫 School Zone
         </div>
       </div>
     </div>
