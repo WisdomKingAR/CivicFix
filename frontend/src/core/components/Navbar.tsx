@@ -95,7 +95,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <nav className="hidden lg:flex items-center gap-1 bg-[#eff4ff] p-1 rounded-xl border border-slate-200">
           {navItem('landing', 'Home', Building2)}
           {navItem('map', 'Live Radar', Radar)}
-          {navItem('citizen', 'My Complaints', FileText)}
+          {user && navItem('citizen', 'My Complaints', FileText)}
           {(user?.role === 'AUTHORITY' || user?.role === 'ADMIN') &&
             navItem('authority', 'Triage Queue', ShieldAlert, 'bg-blue-600 text-white')}
           {user?.role === 'ADMIN' &&
@@ -115,13 +115,13 @@ export const Navbar: React.FC<NavbarProps> = ({
               title="View your earned Ratna civic points"
             >
               <span className="text-amber-600 font-black">✦</span>
-              <span>{(user as any).ratnaTotal ?? 45} Ratna</span>
+              <span>{user.ratnaTotal ?? user.civicPoints ?? 0} Ratna</span>
             </button>
           )}
 
           {/* Quick Report CTA */}
           <button
-            onClick={onOpenReportModal}
+            onClick={() => (user ? onOpenReportModal?.() : setActiveTab('auth'))}
             className="btn-stitch-primary text-xs py-2 px-3.5 shadow-green-500/25 hidden sm:inline-flex"
           >
             <PlusCircle className="w-4 h-4" />
@@ -217,7 +217,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <nav className="lg:hidden border-t border-slate-200 bg-white/98 backdrop-blur-md px-4 py-3 flex flex-col gap-1.5 shadow-xl animate-fadeIn">
           {navItem('landing', 'Home', Building2)}
           {navItem('map', 'Live Radar', Radar)}
-          {navItem('citizen', 'My Complaints', FileText)}
+          {user && navItem('citizen', 'My Complaints', FileText)}
           {(user?.role === 'AUTHORITY' || user?.role === 'ADMIN') &&
             navItem('authority', 'Triage Queue', ShieldAlert, 'bg-blue-600 text-white')}
           {user?.role === 'ADMIN' &&
@@ -229,7 +229,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => {
               setMobileMenuOpen(false);
-              onOpenReportModal && onOpenReportModal();
+              if (user) {
+                onOpenReportModal && onOpenReportModal();
+              } else {
+                setActiveTab('auth');
+              }
             }}
             className="btn-stitch-primary text-xs py-2.5 px-3 mt-2 flex items-center justify-center gap-2"
           >

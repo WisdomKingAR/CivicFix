@@ -11,6 +11,14 @@ import {
   History,
 } from 'lucide-react';
 
+function getRatnaLabel(points: number): string {
+  if (points >= 500) return '💎 Diamond Ratna';
+  if (points >= 200) return '🥇 Gold Ratna';
+  if (points >= 100) return '🥈 Silver Ratna';
+  if (points >= 25) return '🥉 Bronze Ratna';
+  return '🌱 New Citizen';
+}
+
 export const SettingsView: React.FC = () => {
   const { user } = useAuth();
   const [firstName, setFirstName] = useState<string>(user?.name?.split(' ')[0] || 'Alex');
@@ -22,6 +30,8 @@ export const SettingsView: React.FC = () => {
   const [pushAlerts, setPushAlerts] = useState<boolean>(true);
   const [saved, setSaved] = useState<boolean>(false);
   const [saving, setSaving] = useState<boolean>(false);
+
+  const points = user?.ratnaTotal ?? user?.civicPoints ?? 0;
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,8 +112,16 @@ export const SettingsView: React.FC = () => {
 
             <div className="w-full mt-6 pt-5 border-t border-slate-100 flex flex-col gap-2.5 text-left text-xs">
               <div className="flex justify-between items-center text-slate-600">
-                <span>Member Status</span>
-                <span className="font-bold text-slate-900">Active Tier 2</span>
+                <span>Civic Ratna Points</span>
+                <span className="font-black text-green-700 text-base">
+                  {points} ⭐
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-slate-600">
+                <span>Contributor Tier</span>
+                <span className="font-bold text-slate-900">
+                  {getRatnaLabel(points)}
+                </span>
               </div>
               <div className="flex justify-between items-center text-slate-600">
                 <span>Current Role</span>

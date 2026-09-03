@@ -33,6 +33,7 @@ export interface User {
   flagReason?: string | null;
   jurisdiction?: string | null;
   ratnaTotal?: number;
+  civicPoints?: number;
   createdAt: string;
   updatedAt: string;
   _count?: {

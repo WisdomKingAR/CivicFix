@@ -157,8 +157,11 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             <div style="font-weight: 700; font-size: 14px; color: #ffffff; margin-bottom: 4px;">
               ${(props.category || 'CIVIC ISSUE').replace('_', ' ')}
             </div>
-            <p style="font-size: 12px; color: #94a3b8; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+            <p style="font-size: 12px; color: #94a3b8; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
               ${props.description || 'No additional description provided.'}
+            </p>
+            <p style="font-size: 11px; color: #64748b; margin-bottom: 6px;">
+              📍 ${props.address || `${lat.toFixed(4)}, ${lng.toFixed(4)}`}
             </p>
             ${
               props.priorityScore
