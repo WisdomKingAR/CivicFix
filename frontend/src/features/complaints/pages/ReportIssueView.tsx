@@ -1,5 +1,5 @@
 // frontend/src/features/complaints/pages/ReportIssueView.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { complaintsService } from '../services/complaintsService';
 import type { ComplaintCategory } from '../../../core/types';
 import {
@@ -36,13 +36,34 @@ export const ReportIssueView: React.FC<ReportIssueViewProps> = ({ onSuccess, onC
   const [uploadingPhoto, setUploadingPhoto] = useState<boolean>(false);
   const [description, setDescription] = useState<string>('');
   const [urgency, setUrgency] = useState<string>('MEDIUM');
-  const [lat, setLat] = useState<number>(12.9716);
-  const [lng, setLng] = useState<number>(77.5946);
-  const [address, setAddress] = useState<string>('Central Municipal Ward, Downtown');
+  const [lat, setLat] = useState<number>(19.076);
+  const [lng, setLng] = useState<number>(72.8777);
+  const [address, setAddress] = useState<string>('Mumbai, Maharashtra');
   const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [detectingGps, setDetectingGps] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
+
+  // Auto-detect GPS location on mount so the complaint is pinned to the user's actual location
+  useEffect(() => {
+    if (navigator.geolocation) {
+      setDetectingGps(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLat(position.coords.latitude);
+          setLng(position.coords.longitude);
+          setAddress(`GPS: ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)} (Auto-detected)`);
+          setDetectingGps(false);
+          toast.success('Location detected automatically');
+        },
+        () => {
+          setDetectingGps(false);
+          // Keep Mumbai center as fallback
+        },
+        { timeout: 5000, maximumAge: 60000 }
+      );
+    }
+  }, []);
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {

@@ -34,8 +34,8 @@ export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) =
   };
 
   useEffect(() => {
-    const loadMapData = async () => {
-      setLoading(true);
+    const loadMapData = async (showSpinner = false) => {
+      if (showSpinner) setLoading(true);
       try {
         const [geoRes, clusterRes] = await Promise.all([
           mapService.getGeoJsonFeed(),
@@ -46,10 +46,13 @@ export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) =
       } catch (err) {
         console.error('Failed to load live map feed:', err);
       } finally {
-        setLoading(false);
+        if (showSpinner) setLoading(false);
       }
     };
-    loadMapData();
+    loadMapData(true);
+    // Auto-refresh every 30 seconds so newly filed complaints appear without reload
+    const interval = setInterval(() => loadMapData(false), 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const features = geoJsonData?.features || [];
