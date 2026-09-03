@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container": "#e5eeff", "on-surface-variant": "#3d4a3d", "inverse-surface": "#213145", "primary-container": "#22c55e", "on-tertiary-fixed": "#2f1500", "on-background": "#0b1c30", "on-primary-container": "#004b1e", "error": "#ba1a1a", "primary-fixed": "#6bff8f", "tertiary": "#904d00", "secondary-fixed": "#dbe1ff", "on-secondary-fixed-variant": "#003ea8", "on-tertiary-fixed-variant": "#6e3900", "surface-variant": "#d3e4fe", "inverse-on-surface": "#eaf1ff", "error-container": "#ffdad6", "on-tertiary": "#ffffff", "primary": "#006e2f", "on-primary-fixed-variant": "#005321", "tertiary-container": "#fb922a", "secondary": "#0051d5", "inverse-primary": "#4ae176", "secondary-fixed-dim": "#b4c5ff", "surface-container-lowest": "#ffffff", "tertiary-fixed": "#ffdcc3", "outline-variant": "#bccbb9", "surface": "#f8f9ff", "on-primary-fixed": "#002109", "tertiary-fixed-dim": "#ffb77d", "surface-tint": "#006e2f", "surface-dim": "#cbdbf5", "on-surface": "#0b1c30", "on-tertiary-container": "#643300", "on-secondary-fixed": "#00174b", "primary-fixed-dim": "#4ae176", "on-error": "#ffffff", "secondary-container": "#316bf3", "surface-container-low": "#eff4ff", "background": "#f8f9ff", "surface-bright": "#f8f9ff", "on-secondary": "#ffffff", "on-primary": "#ffffff", "surface-container-high": "#dce9ff", "on-secondary-container": "#fefcff", "on-error-container": "#93000a", "outline": "#6d7b6c", "surface-container-highest": "#d3e4fe" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-desktop": "1.5rem", "margin-container": "2rem", "gutter-mobile": "1rem", "column-count": "12" }, "fontFamily": { "body-lg": ["Inter"], "label-md": ["Inter"], "body-md": ["Inter"], "body-sm": ["Inter"], "label-sm": ["Inter"], "headline-sm": ["Inter"], "headline-lg": ["Inter"], "headline-md": ["Inter"], "headline-xl": ["Inter"] }, "fontSize": { "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }] } } } }</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/></head><body class="bg-surface font-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low z-50 flex flex-col pt-6 pb-8 shadow-[1px_0_8px_rgba(0,0,0,0.02)]"><div class="px-6 mb-8 flex items-center gap-3"><img alt="CivicFix Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDXkEgxIZauy80x6_xheLkm2cXKiI6eKfoWOSDQo3d47A2wzbVH_TuKW-Cbyt_cF8YM_VycK8vf25oa5ktvU8fQ9cSbgKdqeRwjA1hgHurjzdg-ZOFMs9R5beI8-Su_BtFKCgxQt9VJqNbs_Hl2nkfz5bxgvrilXdat7OqT6tVra1MG2B-IG70hY26AYbAVe5tbPLPCdeDkdP_jKnelEETLjEnypFph7CXJk95ryU9mhoHljsZZhRQ"/><span class="font-headline-md text-on-surface">CivicFix</span></div><div class="px-4 mb-6"><label class="block text-label-sm text-on-surface-variant mb-2">Active Role Mode</label><select class="w-full bg-surface-container-high text-on-surface text-label-md rounded-lg px-3 py-2 outline-none border-0 focus:ring-2 focus:ring-primary"><option>Citizen Portal</option><option>Authority Dispatch</option><option>System Admin</option></select></div><nav class="flex-1 px-4 space-y-1 overflow-y-auto" data-active-classes="bg-primary-container text-on-primary-container font-label-md rounded-xl"><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="citizen-dashboard" href="#">Overview</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="report-issue" href="#">Report Issue</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="my-reports" href="#">My Reports</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="issue-map" href="#">Live Map</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="municipal-admin-dashboard" href="#">Municipal Admin Dashboard</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="city-analytics-heatmap" href="#">City Analytics & Heatmap</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="department-staff-view" href="#">Department Staff View</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="settings" href="#">Settings</a></nav><div class="px-4 pt-4 border-t border-surface-container-high"><div class="flex items-center gap-3 px-2"><div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="overflow-hidden"><div class="text-label-md text-on-surface truncate">Alex Johnson</div><div class="text-body-sm text-on-surface-variant truncate">Citizen Tier 2</div></div></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/85 backdrop-blur-xl z-40 flex items-center justify-between px-margin-container shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-4 w-96"><div class="relative w-full"><span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span></span><input class="w-full bg-surface-container-low text-on-surface text-body-sm rounded-full pl-9 pr-4 py-2 outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="Search ticket ID, category, location..." type="text"/></div></div><div class="flex items-center gap-4"><button class="relative p-2 rounded-full hover:bg-surface-container-high hover:text-on-surface text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span></button><button class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary-container text-on-primary-container text-label-md font-label-md hover:opacity-90 transition-opacity"><span class="material-symbols-outlined text-[18px]">add</span>New Report</button></div></header></div><main class="relative pt-16 bg-surface min-h-[calc(100vh-4rem)] p-margin-container"><div class="flex flex-col w-full">
+<!-- Top Stats Bar -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+<div class="bg-surface-container-low p-6 rounded-xl shadow-sm flex items-center justify-between">
+<div>
+<span class="text-label-sm text-on-surface-variant uppercase tracking-wider">Total Active Issues</span>
+<h2 class="font-headline-lg text-on-surface mt-1">1,428</h2>
+<span class="text-body-sm text-primary flex items-center gap-1 mt-1 font-label-sm"><span class="material-symbols-outlined text-[14px]">trending_down</span> -12% from last month</span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-primary-container/30 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">analytics</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl shadow-sm flex items-center justify-between">
+<div>
+<span class="text-label-sm text-on-surface-variant uppercase tracking-wider">Resolution Rate</span>
+<h2 class="font-headline-lg text-on-surface mt-1">84.2%</h2>
+<span class="text-body-sm text-primary flex items-center gap-1 mt-1 font-label-sm"><span class="material-symbols-outlined text-[14px]">trending_up</span> +4.5% efficiency</span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-primary-container/30 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">task_alt</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl shadow-sm flex items-center justify-between">
+<div>
+<span class="text-label-sm text-on-surface-variant uppercase tracking-wider">Avg. Response Time</span>
+<h2 class="font-headline-lg text-on-surface mt-1">18.4 hrs</h2>
+<span class="text-body-sm text-on-surface-variant flex items-center gap-1 mt-1 font-label-sm"><span class="material-symbols-outlined text-[14px]">schedule</span> Target < 24 hrs</span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[24px]">timer</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl shadow-sm flex items-center justify-between">
+<div>
+<span class="text-label-sm text-on-surface-variant uppercase tracking-wider">High Risk Zones</span>
+<h2 class="font-headline-lg text-on-surface mt-1">3 Districts</h2>
+<span class="text-body-sm text-error flex items-center gap-1 mt-1 font-label-sm"><span class="material-symbols-outlined text-[14px]">warning</span> Action required</span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-error-container flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-[24px]">dangerous</span>
+</div>
+</div>
+</div>
+<!-- Filter Toolbar -->
+<div class="bg-surface-container-low p-4 rounded-xl shadow-sm mb-8 flex flex-wrap items-center justify-between gap-4">
+<div class="flex flex-wrap items-center gap-3">
+<div class="flex items-center gap-2 bg-surface-container-high px-3 py-2 rounded-lg">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">category</span>
+<select class="bg-transparent text-label-md text-on-surface outline-none border-0 cursor-pointer">
+<option>All Categories (Potholes, Lighting, Sanitation)</option>
+<option>Potholes & Road Damage</option>
+<option>Streetlights & Electrical</option>
+<option>Sanitation & Waste</option>
+<option>Water & Drainage</option>
+</select>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-high px-3 py-2 rounded-lg">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">location_on</span>
+<select class="bg-transparent text-label-md text-on-surface outline-none border-0 cursor-pointer">
+<option>All Neighborhoods / Districts</option>
+<option>Downtown Core</option>
+<option>Northside Industrial</option>
+<option>Eastside Residential</option>
+<option>West End Harbor</option>
+</select>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-high px-3 py-2 rounded-lg">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">date_range</span>
+<select class="bg-transparent text-label-md text-on-surface outline-none border-0 cursor-pointer">
+<option>Last 30 Days</option>
+<option>Last 7 Days</option>
+<option>Year to Date</option>
+<option>Custom Range</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 bg-primary text-on-primary text-label-md rounded-lg flex items-center gap-2 shadow-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">download</span> Export Report
+      </button>
+</div>
+</div>
+<!-- Main Heatmap & Analytics Split Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+<!-- Interactive Geographic Heatmap Module -->
+<div class="lg:col-span-8 bg-surface-container-low rounded-xl shadow-sm p-6 flex flex-col">
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="font-headline-md text-on-surface">City-Wide Issue Heatmap</h3>
+<p class="text-body-sm text-on-surface-variant">Real-time spatial density of active civic complaints</p>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-high p-1 rounded-lg">
+<button class="px-3 py-1 bg-primary text-on-primary text-label-sm rounded-md shadow-sm">Heatmap</button>
+<button class="px-3 py-1 text-on-surface-variant text-label-sm rounded-md hover:text-on-surface">Pins</button>
+<button class="px-3 py-1 text-on-surface-variant text-label-sm rounded-md hover:text-on-surface">Clusters</button>
+</div>
+</div>
+<!-- Map Container with High Visual Impact -->
+<div class="relative w-full h-[460px] rounded-xl overflow-hidden shadow-inner flex items-center justify-center" data-location="Metropolitan City Center" style="">
+<div class="absolute inset-0 bg-cover bg-center filter contrast-125 opacity-90" data-alt="An overhead aerial satellite map visualization of a modern grid-planned metropolis overlayed with glowing semi-transparent red, yellow, and green thermal heatmap gradients indicating high civic issue densities across downtown blocks and arterial roadways." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDRohR2Pl6wS3TP9R8LKhmEAkm0LeTe0FpfUZAhh_K0XyKmGw6GcS5gUqI7JGC2ZCost9R7xo55Ne99GsCHo8eD3fxmeHn10shVtiMtyliZhAHh75lNcpFxWzIKsqu_1p6rfOwGg7o7AnOjaGI-dNFFaEjbQ4B2qgvcc2bfqvmDYs0Bbs1l3ddRIwKHiPCDN2V8VgK-Fef35cvcUjxwBQy6vL5K0QRru5HDiDmAVEl6ySV_zuSDJnUi')"></div>
+<!-- Floating Interactive Map Overlays -->
+<div class="absolute top-4 left-4 bg-surface/90 backdrop-blur-md p-3 rounded-xl shadow-lg border-0">
+<div class="flex items-center gap-2 text-label-sm text-on-surface mb-1">
+<span class="w-3 h-3 rounded-full bg-error inline-block"></span> High Density (>50 reports)
+          </div>
+<div class="flex items-center gap-2 text-label-sm text-on-surface mb-1">
+<span class="w-3 h-3 rounded-full bg-tertiary-container inline-block"></span> Moderate Density (20-50)
+          </div>
+<div class="flex items-center gap-2 text-label-sm text-on-surface">
+<span class="w-3 h-3 rounded-full bg-primary inline-block"></span> Low Density (<20 reports)
+          </div>
+</div>
+<div class="absolute bottom-4 right-4 bg-inverse-surface/90 backdrop-blur-md text-inverse-on-surface px-4 py-2 rounded-xl shadow-lg flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px] text-primary-fixed">my_location</span>
+<div class="text-body-sm">
+<div class="font-label-md">Viewing Sector 4B</div>
+<div class="text-inverse-surface text-opacity-80 text-surface-container-low">Radius: 15 km coverage</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Category Breakdown & Metrics Panel -->
+<div class="lg:col-span-4 flex flex-col gap-8">
+<!-- Category Breakdown Card -->
+<div class="bg-surface-container-low rounded-xl shadow-sm p-6 flex-1 flex flex-col justify-between">
+<div>
+<h3 class="font-headline-md text-on-surface mb-1">Category Breakdown</h3>
+<p class="text-body-sm text-on-surface-variant mb-6">Distribution of reports by civic sector</p>
+<!-- Custom Visual Progress Bars for Categories -->
+<div class="space-y-4">
+<div>
+<div class="flex justify-between text-label-md mb-1">
+<span class="text-on-surface flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-primary"></span> Potholes & Roads</span>
+<span class="text-on-surface-variant">42% (600)</span>
+</div>
+<div class="w-full h-3 bg-surface-container-high rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 42%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-label-md mb-1">
+<span class="text-on-surface flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-secondary"></span> Streetlights</span>
+<span class="text-on-surface-variant">28% (400)</span>
+</div>
+<div class="w-full h-3 bg-surface-container-high rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 28%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-label-md mb-1">
+<span class="text-on-surface flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-tertiary-container"></span> Sanitation</span>
+<span class="text-on-surface-variant">18% (256)</span>
+</div>
+<div class="w-full h-3 bg-surface-container-high rounded-full overflow-hidden">
+<div class="bg-tertiary-container h-full rounded-full" style="width: 18%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-label-md mb-1">
+<span class="text-on-surface flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-outline"></span> Water & Drainage</span>
+<span class="text-on-surface-variant">12% (172)</span>
+</div>
+<div class="w-full h-3 bg-surface-container-high rounded-full overflow-hidden">
+<div class="bg-outline h-full rounded-full" style="width: 12%;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Trends & Hotspot Table Section -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Trend Chart: Complaints vs Resolutions -->
+<div class="lg:col-span-7 bg-surface-container-low rounded-xl shadow-sm p-6">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="font-headline-md text-on-surface">Monthly Trend Analysis</h3>
+<p class="text-body-sm text-on-surface-variant">Complaints submitted vs. successfully resolved over time</p>
+</div>
+<div class="flex items-center gap-4 text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full bg-error"></span>
+<span class="text-on-surface-variant">Submitted</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="text-on-surface-variant">Resolved</span>
+</div>
+</div>
+</div>
+<!-- Simulated Trend Bar Chart -->
+<div class="h-64 flex items-end justify-between gap-4 pt-8 px-4 border-b border-surface-container-high">
+<!-- Month Columns -->
+<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+<div class="w-full flex items-end justify-center gap-1 h-48">
+<div class="w-3/5 bg-error rounded-t-sm h-[85%] relative group transition-all hover:opacity-90"></div>
+<div class="w-3/5 bg-primary rounded-t-sm h-[70%] relative group transition-all hover:opacity-90"></div>
+</div>
+<span class="text-body-sm text-on-surface-variant">Jan</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+<div class="w-full flex items-end justify-center gap-1 h-48">
+<div class="w-3/5 bg-error rounded-t-sm h-[90%] relative group transition-all hover:opacity-90"></div>
+<div class="w-3/5 bg-primary rounded-t-sm h-[80%] relative group transition-all hover:opacity-90"></div>
+</div>
+<span class="text-body-sm text-on-surface-variant">Feb</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+<div class="w-full flex items-end justify-center gap-1 h-48">
+<div class="w-3/5 bg-error rounded-t-sm h-[75%] relative group transition-all hover:opacity-90"></div>
+<div class="w-3/5 bg-primary rounded-t-sm h-[78%] relative group transition-all hover:opacity-90"></div>
+</div>
+<span class="text-body-sm text-on-surface-variant">Mar</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+<div class="w-full flex items-end justify-center gap-1 h-48">
+<div class="w-3/5 bg-error rounded-t-sm h-[60%] relative group transition-all hover:opacity-90"></div>
+<div class="w-3/5 bg-primary rounded-t-sm h-[65%] relative group transition-all hover:opacity-90"></div>
+</div>
+<span class="text-body-sm text-on-surface-variant">Apr</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+<div class="w-full flex items-end justify-center gap-1 h-48">
+<div class="w-3/5 bg-error rounded-t-sm h-[70%] relative group transition-all hover:opacity-90"></div>
+<div class="w-3/5 bg-primary rounded-t-sm h-[75%] relative group transition-all hover:opacity-90"></div>
+</div>
+<span class="text-body-sm text-on-surface-variant">May</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+<div class="w-full flex items-end justify-center gap-1 h-48">
+<div class="w-3/5 bg-error rounded-t-sm h-[50%] relative group transition-all hover:opacity-90"></div>
+<div class="w-3/5 bg-primary rounded-t-sm h-[60%] relative group transition-all hover:opacity-90"></div>
+</div>
+<span class="text-body-sm text-on-surface-variant">Jun</span>
+</div>
+</div>
+<div class="flex justify-between items-center mt-4 text-body-sm text-on-surface-variant px-2">
+<span>Peak reporting period: January - March</span>
+<span class="text-primary font-label-sm">Efficiency up by 12% YoY</span>
+</div>
+</div>
+<!-- Top Hotspot Districts Table -->
+<div class="lg:col-span-5 bg-surface-container-low rounded-xl shadow-sm p-6 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="font-headline-md text-on-surface">Top Hotspot Districts</h3>
+<p class="text-body-sm text-on-surface-variant">Areas requiring immediate resource dispatch</p>
+</div>
+<button class="text-label-md text-primary hover:underline">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-surface-container-high text-label-sm text-on-surface-variant">
+<th class="py-3 px-2">District</th>
+<th class="py-3 px-2">Primary Issue</th>
+<th class="py-3 px-2">Total Reports</th>
+<th class="py-3 px-2">Severity</th>
+</tr>
+</thead>
+<tbody class="text-body-md text-on-surface">
+<tr class="border-b border-surface-container-high hover:bg-surface-container-high/50 transition-colors">
+<td class="py-3 px-2 font-label-md">Downtown Core</td>
+<td class="py-3 px-2 text-on-surface-variant">Potholes</td>
+<td class="py-3 px-2">342</td>
+<td class="py-3 px-2"><span class="px-2.5 py-1 rounded-full bg-error-container text-on-error-container text-label-sm">High</span></td>
+</tr>
+<tr class="border-b border-surface-container-high hover:bg-surface-container-high/50 transition-colors">
+<td class="py-3 px-2 font-label-md">North Industrial</td>
+<td class="py-3 px-2 text-on-surface-variant">Streetlights</td>
+<td class="py-3 px-2">289</td>
+<td class="py-3 px-2"><span class="px-2.5 py-1 rounded-full bg-tertiary-container text-on-tertiary-container text-label-sm">Medium</span></td>
+</tr>
+<tr class="border-b border-surface-container-high hover:bg-surface-container-high/50 transition-colors">
+<td class="py-3 px-2 font-label-md">Eastside Residential</td>
+<td class="py-3 px-2 text-on-surface-variant">Sanitation</td>
+<td class="py-3 px-2">210</td>
+<td class="py-3 px-2"><span class="px-2.5 py-1 rounded-full bg-tertiary-container text-on-tertiary-container text-label-sm">Medium</span></td>
+</tr>
+<tr class="hover:bg-surface-container-high/50 transition-colors">
+<td class="py-3 px-2 font-label-md">West End Harbor</td>
+<td class="py-3 px-2 text-on-surface-variant">Drainage</td>
+<td class="py-3 px-2">145</td>
+<td class="py-3 px-2"><span class="px-2.5 py-1 rounded-full bg-primary-container text-on-primary-container text-label-sm">Low</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="mt-6 pt-4 border-t border-surface-container-high flex items-center justify-between text-body-sm text-on-surface-variant">
+<span>Auto-syncing every 15 minutes</span>
+<span class="flex items-center gap-1 text-primary font-label-sm"><span class="material-symbols-outlined text-[16px]">sync</span> Live Data Active</span>
+</div>
+</div>
+</div>
+</div></main></body></html>

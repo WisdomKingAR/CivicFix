@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container": "#e5eeff", "on-surface-variant": "#3d4a3d", "inverse-surface": "#213145", "primary-container": "#22c55e", "on-tertiary-fixed": "#2f1500", "on-background": "#0b1c30", "on-primary-container": "#004b1e", "error": "#ba1a1a", "primary-fixed": "#6bff8f", "tertiary": "#904d00", "secondary-fixed": "#dbe1ff", "on-secondary-fixed-variant": "#003ea8", "on-tertiary-fixed-variant": "#6e3900", "surface-variant": "#d3e4fe", "inverse-on-surface": "#eaf1ff", "error-container": "#ffdad6", "on-tertiary": "#ffffff", "primary": "#006e2f", "on-primary-fixed-variant": "#005321", "tertiary-container": "#fb922a", "secondary": "#0051d5", "inverse-primary": "#4ae176", "secondary-fixed-dim": "#b4c5ff", "surface-container-lowest": "#ffffff", "tertiary-fixed": "#ffdcc3", "outline-variant": "#bccbb9", "surface": "#f8f9ff", "on-primary-fixed": "#002109", "tertiary-fixed-dim": "#ffb77d", "surface-tint": "#006e2f", "surface-dim": "#cbdbf5", "on-surface": "#0b1c30", "on-tertiary-container": "#643300", "on-secondary-fixed": "#00174b", "primary-fixed-dim": "#4ae176", "on-error": "#ffffff", "secondary-container": "#316bf3", "surface-container-low": "#eff4ff", "background": "#f8f9ff", "surface-bright": "#f8f9ff", "on-secondary": "#ffffff", "on-primary": "#ffffff", "surface-container-high": "#dce9ff", "on-secondary-container": "#fefcff", "on-error-container": "#93000a", "outline": "#6d7b6c", "surface-container-highest": "#d3e4fe" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-desktop": "1.5rem", "margin-container": "2rem", "gutter-mobile": "1rem", "column-count": "12" }, "fontFamily": { "body-lg": ["Inter"], "label-md": ["Inter"], "body-md": ["Inter"], "body-sm": ["Inter"], "label-sm": ["Inter"], "headline-sm": ["Inter"], "headline-lg": ["Inter"], "headline-md": ["Inter"], "headline-xl": ["Inter"] }, "fontSize": { "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }] } } } }</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/></head><body class="bg-surface font-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low z-50 flex flex-col pt-6 pb-8 shadow-[1px_0_8px_rgba(0,0,0,0.02)]"><div class="px-6 mb-8 flex items-center gap-3"><img alt="CivicFix Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEMBNYPyF8-ZMCKtNhbSSe54_788GDSa3RZg9_BI8acROFxl2MQaFP5V2XcMONebWTJUaVhOa-9Wh8a2a2RNB04KmPQUObY_bjsj5sYVLC4wLCOVkxRggwZ4CpVDLS4ek4DEGF51pSUpJ6qndQ40mx9nGLmz5sAmO8jtxMT0nrZjy36449dgMpfCMWPlt8jpTkdXBzh_bK6_ABzHU4h0T8cxBu8o_qQ631AE5XjUXQcdD13pQTAdj1"/><span class="font-headline-md text-on-surface">CivicFix</span></div><div class="px-4 mb-6"><label class="block text-label-sm text-on-surface-variant mb-2">Active Role Mode</label><select class="w-full bg-surface-container-high text-on-surface text-label-md rounded-lg px-3 py-2 outline-none border-0 focus:ring-2 focus:ring-primary"><option>Citizen Portal</option><option>Authority Dispatch</option><option>System Admin</option></select></div><nav class="flex-1 px-4 space-y-1 overflow-y-auto" data-active-classes="bg-primary-container text-on-primary-container font-label-md rounded-xl"><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="citizen-dashboard" href="#">Overview</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="report-issue" href="#">Report Issue</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="my-reports" href="#">My Reports</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="issue-map" href="#">Live Map</a><a aria-current="page" class="flex items-center px-4 py-3 transition-all bg-primary-container text-on-primary-container font-label-md rounded-xl" data-path="municipal-admin-dashboard" href="#">Municipal Admin Dashboard</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="city-analytics-heatmap" href="#">City Analytics & Heatmap</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="department-staff-view" href="#">Department Staff View</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="settings" href="#">Settings</a></nav><div class="px-4 pt-4 border-t border-surface-container-high"><div class="flex items-center gap-3 px-2"><div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="overflow-hidden"><div class="text-label-md text-on-surface truncate">Alex Johnson</div><div class="text-body-sm text-on-surface-variant truncate">Citizen Tier 2</div></div></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/85 backdrop-blur-xl z-40 flex items-center justify-between px-margin-container shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-4 w-96"><div class="relative w-full"><span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span></span><input class="w-full bg-surface-container-low text-on-surface text-body-sm rounded-full pl-9 pr-4 py-2 outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="Search ticket ID, category, location..." type="text"/></div></div><div class="flex items-center gap-4"><button class="relative p-2 rounded-full hover:bg-surface-container-high hover:text-on-surface text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span></button><button class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary-container text-on-primary-container text-label-md font-label-md hover:opacity-90 transition-opacity"><span class="material-symbols-outlined text-[18px]">add</span>New Report</button></div></header></div><main class="relative pt-16 bg-surface min-h-[calc(100vh-4rem)] p-margin-container"><div class="flex flex-col w-full">
+<!-- Metrics Overview Bar -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+<div class="bg-surface-container-low rounded-xl p-6 shadow-sm flex items-center justify-between">
+<div>
+<div class="text-body-sm text-on-surface-variant font-label-sm uppercase tracking-wider mb-1">Total Open</div>
+<div class="text-headline-lg text-on-surface font-headline-lg">1,248</div>
+<div class="flex items-center gap-1 mt-2 text-primary text-body-sm">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+12% from last week</span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-xl bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">folder_open</span>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-xl p-6 shadow-sm flex items-center justify-between">
+<div>
+<div class="text-body-sm text-on-surface-variant font-label-sm uppercase tracking-wider mb-1">Resolved Today</div>
+<div class="text-headline-lg text-on-surface font-headline-lg">84</div>
+<div class="flex items-center gap-1 mt-2 text-primary text-body-sm">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>Target: 75/day</span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-xl bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">task_alt</span>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-xl p-6 shadow-sm flex items-center justify-between">
+<div>
+<div class="text-body-sm text-on-surface-variant font-label-sm uppercase tracking-wider mb-1">Avg Resolution Time</div>
+<div class="text-headline-lg text-on-surface font-headline-lg">18.4 hrs</div>
+<div class="flex items-center gap-1 mt-2 text-primary text-body-sm">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>-2.1 hrs efficiency</span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-xl bg-secondary-fixed flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[24px]">timer</span>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-xl p-6 shadow-sm flex items-center justify-between">
+<div>
+<div class="text-body-sm text-on-surface-variant font-label-sm uppercase tracking-wider mb-1">SLA Compliance</div>
+<div class="text-headline-lg text-on-surface font-headline-lg">94.2%</div>
+<div class="flex items-center gap-1 mt-2 text-primary text-body-sm">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span>Above 90% target</span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-xl bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">security</span>
+</div>
+</div>
+</div>
+<!-- Main Triage & Control Panel -->
+<div class="bg-surface-container-low rounded-xl p-6 shadow-sm">
+<!-- Filters and Actions Header -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+<div class="flex flex-wrap items-center gap-3">
+<!-- Search within table -->
+<div class="relative">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span>
+</span>
+<input class="bg-surface-container-high text-on-surface text-body-sm rounded-lg pl-9 pr-4 py-2 outline-none focus:ring-2 focus:ring-primary w-64 transition-all" id="triage-search" placeholder="Filter tickets..." type="text"/>
+</div>
+<!-- Department Filter -->
+<select class="bg-surface-container-high text-on-surface text-body-sm rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-primary" id="filter-dept">
+<option value="">All Departments</option>
+<option value="Roads">Roads & Infrastructure</option>
+<option value="Sanitation">Sanitation</option>
+<option value="Electrical">Electrical</option>
+<option value="Water">Water & Sewage</option>
+</select>
+<!-- Priority Filter -->
+<select class="bg-surface-container-high text-on-surface text-body-sm rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-primary" id="filter-priority">
+<option value="">All Priorities</option>
+<option value="High">High Priority</option>
+<option value="Medium">Medium Priority</option>
+<option value="Low">Low Priority</option>
+</select>
+<!-- SLA Status Filter -->
+<select class="bg-surface-container-high text-on-surface text-body-sm rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-primary" id="filter-sla">
+<option value="">All SLA Status</option>
+<option value="On-Time">On-Time</option>
+<option value="Warning">Warning</option>
+<option value="Breached">Breached</option>
+</select>
+</div>
+<!-- Bulk Actions Bar -->
+<div class="flex items-center gap-3">
+<span class="text-body-sm text-on-surface-variant" id="selected-count">0 selected</span>
+<select class="bg-surface-container-high text-on-surface text-body-sm rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-primary disabled:opacity-50" disabled="" id="bulk-department">
+<option value="">Assign Dept...</option>
+<option value="Roads">Roads</option>
+<option value="Sanitation">Sanitation</option>
+<option value="Electrical">Electrical</option>
+<option value="Water">Water</option>
+</select>
+<button class="px-4 py-2 bg-primary-container text-on-primary-container text-label-md rounded-lg font-label-md hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-1.5" disabled="" id="bulk-resolve-btn">
+<span class="material-symbols-outlined text-[16px]">done_all</span>
+          Bulk Resolve
+        </button>
+</div>
+</div>
+<!-- Issues Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-surface-container-high text-body-sm text-on-surface-variant font-label-sm uppercase tracking-wider">
+<th class="py-3 px-4 w-10">
+<input class="rounded accent-primary cursor-pointer" id="select-all" type="checkbox"/>
+</th>
+<th class="py-3 px-4">Ticket ID & Title</th>
+<th class="py-3 px-4">Category</th>
+<th class="py-3 px-4">Department</th>
+<th class="py-3 px-4">Priority</th>
+<th class="py-3 px-4">SLA Status</th>
+<th class="py-3 px-4">Location</th>
+<th class="py-3 px-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="text-body-md text-on-surface divide-y divide-surface-container-high" id="triage-table-body">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container/50 transition-colors" data-dept="Roads" data-id="CF-8492" data-priority="High" data-sla="Breached">
+<td class="py-4 px-4">
+<input class="row-select rounded accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-4 px-4">
+<div class="font-label-md text-on-surface">CF-8492</div>
+<div class="text-body-sm text-on-surface-variant truncate max-w-xs">Deep pothole causing traffic slowdown on 5th Ave</div>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm bg-surface-container-high text-on-surface">Infrastructure</span>
+</td>
+<td class="py-4 px-4">
+<select class="dept-select bg-surface-container-high text-on-surface text-body-sm rounded px-2 py-1 outline-none focus:ring-1 focus:ring-primary">
+<option selected="" value="Roads">Roads</option>
+<option value="Sanitation">Sanitation</option>
+<option value="Electrical">Electrical</option>
+<option value="Water">Water</option>
+</select>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center gap-1 text-label-sm text-error font-medium">
+<span class="w-2 h-2 rounded-full bg-error"></span> High
+              </span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm bg-error-container text-on-error-container font-medium">
+                Breached (-4h)
+              </span>
+</td>
+<td class="py-4 px-4 text-body-sm text-on-surface-variant">
+              Downtown Sector 4
+            </td>
+<td class="py-4 px-4 text-right">
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-on-surface-variant hover:text-on-surface transition-colors" title="View details">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container/50 transition-colors" data-dept="Sanitation" data-id="CF-8493" data-priority="Medium" data-sla="Warning">
+<td class="py-4 px-4">
+<input class="row-select rounded accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-4 px-4">
+<div class="font-label-md text-on-surface">CF-8493</div>
+<div class="text-body-sm text-on-surface-variant truncate max-w-xs">Overflowing public dumpster near Central Park</div>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm bg-surface-container-high text-on-surface">Sanitation</span>
+</td>
+<td class="py-4 px-4">
+<select class="dept-select bg-surface-container-high text-on-surface text-body-sm rounded px-2 py-1 outline-none focus:ring-1 focus:ring-primary">
+<option value="Roads">Roads</option>
+<option selected="" value="Sanitation">Sanitation</option>
+<option value="Electrical">Electrical</option>
+<option value="Water">Water</option>
+</select>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center gap-1 text-label-sm text-tertiary font-medium">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span> Medium
+              </span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm bg-tertiary-fixed text-on-tertiary-fixed font-medium">
+                Warning (2h left)
+              </span>
+</td>
+<td class="py-4 px-4 text-body-sm text-on-surface-variant">
+              North District
+            </td>
+<td class="py-4 px-4 text-right">
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-on-surface-variant hover:text-on-surface transition-colors" title="View details">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container/50 transition-colors" data-dept="Electrical" data-id="CF-8494" data-priority="High" data-sla="On-Time">
+<td class="py-4 px-4">
+<input class="row-select rounded accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-4 px-4">
+<div class="font-label-md text-on-surface">CF-8494</div>
+<div class="text-body-sm text-on-surface-variant truncate max-w-xs">Streetlight pole leaning precariously after storm</div>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm bg-surface-container-high text-on-surface">Electrical</span>
+</td>
+<td class="py-4 px-4">
+<select class="dept-select bg-surface-container-high text-on-surface text-body-sm rounded px-2 py-1 outline-none focus:ring-1 focus:ring-primary">
+<option value="Roads">Roads</option>
+<option value="Sanitation">Sanitation</option>
+<option selected="" value="Electrical">Electrical</option>
+<option value="Water">Water</option>
+</select>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center gap-1 text-label-sm text-error font-medium">
+<span class="w-2 h-2 rounded-full bg-error"></span> High
+              </span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm bg-primary-container/20 text-primary font-medium">
+                On-Time (18h left)
+              </span>
+</td>
+<td class="py-4 px-4 text-body-sm text-on-surface-variant">
+              Westside Blvd
+            </td>
+<td class="py-4 px-4 text-right">
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-on-surface-variant hover:text-on-surface transition-colors" title="View details">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container/50 transition-colors" data-dept="Water" data-id="CF-8495" data-priority="Low" data-sla="On-Time">
+<td class="py-4 px-4">
+<input class="row-select rounded accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-4 px-4">
+<div class="font-label-md text-on-surface">CF-8495</div>
+<div class="text-body-sm text-on-surface-variant truncate max-w-xs">Minor water hydrant leak near curb</div>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm bg-surface-container-high text-on-surface">Water & Sewage</span>
+</td>
+<td class="py-4 px-4">
+<select class="dept-select bg-surface-container-high text-on-surface text-body-sm rounded px-2 py-1 outline-none focus:ring-1 focus:ring-primary">
+<option value="Roads">Roads</option>
+<option value="Sanitation">Sanitation</option>
+<option value="Electrical">Electrical</option>
+<option selected="" value="Water">Water</option>
+</select>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center gap-1 text-label-sm text-on-surface-variant font-medium">
+<span class="w-2 h-2 rounded-full bg-outline"></span> Low
+              </span>
+</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm bg-primary-container/20 text-primary font-medium">
+                On-Time (48h left)
+              </span>
+</td>
+<td class="py-4 px-4 text-body-sm text-on-surface-variant">
+              South Suburbs
+            </td>
+<td class="py-4 px-4 text-right">
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-on-surface-variant hover:text-on-surface transition-colors" title="View details">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="flex items-center justify-between mt-6 pt-4 border-t border-surface-container-high">
+<div class="text-body-sm text-on-surface-variant">
+        Showing <span class="font-medium text-on-surface">1-4</span> of <span class="font-medium text-on-surface">1,248</span> complaints
+      </div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface text-label-sm disabled:opacity-50" disabled="">Previous</button>
+<button class="px-3 py-1.5 rounded-lg bg-primary text-on-primary text-label-sm">1</button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface text-label-sm hover:bg-surface-container-highest">2</button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface text-label-sm hover:bg-surface-container-highest">3</button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface text-label-sm hover:bg-surface-container-highest">Next</button>
+</div>
+</div>
+</div>
+<script>
+    // Simple interactive behaviors for demo triage filtering and row selection
+    document.addEventListener('DOMContentLoaded', () => {
+      const selectAllCheckbox = document.getElementById('select-all');
+      const rowCheckboxes = document.querySelectorAll('.row-select');
+      const selectedCountLabel = document.getElementById('selected-count');
+      const bulkDeptSelect = document.getElementById('bulk-department');
+      const bulkResolveBtn = document.getElementById('bulk-resolve-btn');
+
+      function updateSelectionState() {
+        const checkedCount = document.querySelectorAll('.row-select:checked').length;
+        selectedCountLabel.textContent = `${checkedCount} selected`;
+        if (checkedCount > 0) {
+          bulkDeptSelect.removeAttribute('disabled');
+          bulkResolveBtn.removeAttribute('disabled');
+        } else {
+          bulkDeptSelect.setAttribute('disabled', 'true');
+          bulkResolveBtn.setAttribute('disabled', 'true');
+        }
+      }
+
+      selectAllCheckbox.addEventListener('change', (e) => {
+        rowCheckboxes.forEach(cb => {
+          cb.checked = e.target.checked;
+        });
+        updateSelectionState();
+      });
+
+      rowCheckboxes.forEach(cb => {
+        cb.addEventListener('change', updateSelectionState);
+      });
+
+      // Filter handling simulation
+      const searchInput = document.getElementById('triage-search');
+      const deptFilter = document.getElementById('filter-dept');
+      const priorityFilter = document.getElementById('filter-priority');
+      const slaFilter = document.getElementById('filter-sla');
+      const rows = document.querySelectorAll('#triage-table-body tr');
+
+      function filterTable() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const deptVal = deptFilter.value;
+        const priorityVal = priorityFilter.value;
+        const slaVal = slaFilter.value;
+
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          const dept = row.getAttribute('data-dept');
+          const priority = row.getAttribute('data-priority');
+          const sla = row.getAttribute('data-sla');
+
+          const matchesSearch = text.includes(searchTerm);
+          const matchesDept = !deptVal || dept === deptVal;
+          const matchesPriority = !priorityVal || priority === priorityVal;
+          const matchesSla = !slaVal || sla === slaVal;
+
+          if (matchesSearch && matchesDept && matchesPriority && matchesSla) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      }
+
+      searchInput.addEventListener('input', filterTable);
+      deptFilter.addEventListener('change', filterTable);
+      priorityFilter.addEventListener('change', filterTable);
+      slaFilter.addEventListener('change', filterTable);
+    });
+  </script>
+</div></main></body></html>

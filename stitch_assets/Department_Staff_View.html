@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container": "#e5eeff", "on-surface-variant": "#3d4a3d", "inverse-surface": "#213145", "primary-container": "#22c55e", "on-tertiary-fixed": "#2f1500", "on-background": "#0b1c30", "on-primary-container": "#004b1e", "error": "#ba1a1a", "primary-fixed": "#6bff8f", "tertiary": "#904d00", "secondary-fixed": "#dbe1ff", "on-secondary-fixed-variant": "#003ea8", "on-tertiary-fixed-variant": "#6e3900", "surface-variant": "#d3e4fe", "inverse-on-surface": "#eaf1ff", "error-container": "#ffdad6", "on-tertiary": "#ffffff", "primary": "#006e2f", "on-primary-fixed-variant": "#005321", "tertiary-container": "#fb922a", "secondary": "#0051d5", "inverse-primary": "#4ae176", "secondary-fixed-dim": "#b4c5ff", "surface-container-lowest": "#ffffff", "tertiary-fixed": "#ffdcc3", "outline-variant": "#bccbb9", "surface": "#f8f9ff", "on-primary-fixed": "#002109", "tertiary-fixed-dim": "#ffb77d", "surface-tint": "#006e2f", "surface-dim": "#cbdbf5", "on-surface": "#0b1c30", "on-tertiary-container": "#643300", "on-secondary-fixed": "#00174b", "primary-fixed-dim": "#4ae176", "on-error": "#ffffff", "secondary-container": "#316bf3", "surface-container-low": "#eff4ff", "background": "#f8f9ff", "surface-bright": "#f8f9ff", "on-secondary": "#ffffff", "on-primary": "#ffffff", "surface-container-high": "#dce9ff", "on-secondary-container": "#fefcff", "on-error-container": "#93000a", "outline": "#6d7b6c", "surface-container-highest": "#d3e4fe" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-desktop": "1.5rem", "margin-container": "2rem", "gutter-mobile": "1rem", "column-count": "12" }, "fontFamily": { "body-lg": ["Inter"], "label-md": ["Inter"], "body-md": ["Inter"], "body-sm": ["Inter"], "label-sm": ["Inter"], "headline-sm": ["Inter"], "headline-lg": ["Inter"], "headline-md": ["Inter"], "headline-xl": ["Inter"] }, "fontSize": { "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }] } } } }</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/></head><body class="bg-surface font-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low z-50 flex flex-col pt-6 pb-8 shadow-[1px_0_8px_rgba(0,0,0,0.02)]"><div class="px-6 mb-8 flex items-center gap-3"><img alt="CivicFix Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtirlDIyRKa1PsGGhUcN4JiBbfcKvt7Ds_yTDk6TL3PgCb-Hs3yMcb2CErpGICSJubU4YW-bOKVbhl0-csCk4VdMFODrHk9gaFUU-Qs0pSMFMQzW_KM4eSgQ7dAgTeWXyjSwuJc40xZLYpSLCKBjW4sYmRIO10y0BtyWJTiCYeQMbWkGFjgrvb7fqWApoxyGzuIRIeHlG88hNfVcD6PqQltbQ7UL2bsiW6GwouFlj9EdW-N5Lqe1BN"/><span class="font-headline-md text-on-surface">CivicFix</span></div><div class="px-4 mb-6"><label class="block text-label-sm text-on-surface-variant mb-2">Active Role Mode</label><select class="w-full bg-surface-container-high text-on-surface text-label-md rounded-lg px-3 py-2 outline-none border-0 focus:ring-2 focus:ring-primary"><option>Citizen Portal</option><option>Authority Dispatch</option><option>System Admin</option></select></div><nav class="flex-1 px-4 space-y-1 overflow-y-auto" data-active-classes="bg-primary-container text-on-primary-container font-label-md rounded-xl"><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="citizen-dashboard" href="#">Overview</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="report-issue" href="#">Report Issue</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="my-reports" href="#">My Reports</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="issue-map" href="#">Live Map</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="municipal-admin-dashboard" href="#">Municipal Admin Dashboard</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="city-analytics-heatmap" href="#">City Analytics & Heatmap</a><a aria-current="page" class="flex items-center px-4 py-3 transition-all bg-primary-container text-on-primary-container font-label-md rounded-xl" data-path="department-staff-view" href="#">Department Staff View</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="settings" href="#">Settings</a></nav><div class="px-4 pt-4 border-t border-surface-container-high"><div class="flex items-center gap-3 px-2"><div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="overflow-hidden"><div class="text-label-md text-on-surface truncate">Alex Johnson</div><div class="text-body-sm text-on-surface-variant truncate">Citizen Tier 2</div></div></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/85 backdrop-blur-xl z-40 flex items-center justify-between px-margin-container shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-4 w-96"><div class="relative w-full"><span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span></span><input class="w-full bg-surface-container-low text-on-surface text-body-sm rounded-full pl-9 pr-4 py-2 outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="Search ticket ID, category, location..." type="text"/></div></div><div class="flex items-center gap-4"><button class="relative p-2 rounded-full hover:bg-surface-container-high hover:text-on-surface text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span></button><button class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary-container text-on-primary-container text-label-md font-label-md hover:opacity-90 transition-opacity"><span class="material-symbols-outlined text-[18px]">add</span>New Report</button></div></header></div><main class="relative pt-16 bg-surface min-h-[calc(100vh-4rem)] p-margin-container"><div class="flex flex-col w-full pb-16">
+<!-- Top Banner / Crew Status Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 bg-surface-container-low p-6 rounded-xl shadow-sm">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-16 h-16 rounded-full bg-primary-container flex items-center justify-center overflow-hidden shadow-inner">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a municipal field crew supervisor wearing high-visibility neon safety vest and hard hat, smiling confidently in bright morning daylight, professional urban background, Corporate Modern style, civic green and blue tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYE4suRmnapAk_kgcuCtSfgtfBHf5-FMEYpny41LG_rwTNvadQtcrg6XiyYplK-AqGATtCUXK04ePIa_29Ichtlnw3aVb_GRdYA7oa7IkQMQOmHr72lJe79kEzp8JAI9gVat4pUu0ZOVWHJUl2ZPWwNfbQBxHGlqf2h6HN37wxg5EYpuI5n_GOy7lcieGj0NpOGvYAfJ6ocsTiME2-P04J0ZCn23UFAz1c7-mloiZI8mShOEw9-Yd6"/>
+</div>
+<span class="absolute bottom-0 right-0 w-4 h-4 bg-primary rounded-full ring-2 ring-surface"></span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-on-surface">Crew Alpha-4</span>
+<span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary-container text-label-sm">Active Duty</span>
+</div>
+<p class="text-body-md text-on-surface-variant">Lead: Marcus Vance • Public Works & Infrastructure Division</p>
+</div>
+</div>
+<div class="flex items-center gap-3 overflow-x-auto pb-2 md:pb-0">
+<div class="bg-surface-container-high px-4 py-2.5 rounded-xl flex flex-col min-w-[120px]">
+<span class="text-body-sm text-on-surface-variant">Assigned Today</span>
+<span class="font-headline-sm text-on-surface">6 Work Orders</span>
+</div>
+<div class="bg-surface-container-high px-4 py-2.5 rounded-xl flex flex-col min-w-[120px]">
+<span class="text-body-sm text-on-surface-variant">Completed</span>
+<span class="font-headline-sm text-primary">4 Resolved</span>
+</div>
+<div class="bg-surface-container-high px-4 py-2.5 rounded-xl flex flex-col min-w-[120px]">
+<span class="text-body-sm text-on-surface-variant">Route Efficiency</span>
+<span class="font-headline-sm text-secondary">94% Optimal</span>
+</div>
+</div>
+</div>
+<!-- Main Grid Layout: Work Orders & Route Panel -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left Column: Active Assigned Work Orders (8 cols) -->
+<div class="lg:col-span-8 space-y-6">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-lg text-on-surface">Assigned Field Tasks</h2>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface text-label-md hover:bg-surface-container-highest transition-all flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">filter_list</span> Filter
+          </button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface text-label-md hover:bg-surface-container-highest transition-all flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">sort</span> Priority
+          </button>
+</div>
+</div>
+<!-- Work Order Card 1: Pothole / Road Repair (Expanded Action State) -->
+<div class="bg-surface-container-low rounded-xl p-6 shadow-sm transition-all hover:shadow-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+<div class="flex items-center gap-3">
+<span class="px-2.5 py-1 rounded-lg bg-error-container text-on-error-container text-label-sm font-label-md">Urgent P1</span>
+<span class="text-body-sm text-on-surface-variant font-mono">WO-8842-FL</span>
+</div>
+<div class="flex items-center gap-2 text-label-sm text-secondary">
+<span class="material-symbols-outlined text-[16px]">schedule</span> Due by 03:00 PM
+          </div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+<div class="md:col-span-2 space-y-3">
+<h3 class="font-headline-sm text-on-surface">Severe Pothole Cluster on 5th & Elm St</h3>
+<p class="text-body-md text-on-surface-variant">Multiple deep structural potholes resulting from recent frost heave. Hazard to vehicular traffic and cyclists. Requires cold-patch milling and heavy compaction.</p>
+<div class="flex items-center gap-2 text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-primary">location_on</span>
+<span>Intersection of 5th Ave and Elm Street, Sector 4</span>
+</div>
+</div>
+<div class="relative rounded-xl overflow-hidden h-36 bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="Close-up photo of severe municipal road damage with large jagged potholes filled with rainwater, overcast urban environment, clear focal point on asphalt cracks, Corporate Modern aesthetic with high contrast." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2sez2t3jTU6NEmw6wCj6vFlAiNZkMmNKX3sGICNUHJ0NePw7qoClv7f9o9g8zzdiAJ0TxZVBqqBJsXA1GFpiPN64_KEBsxbe8d1t6mLdfKuwF-8aa62EMYjoPb6GXgjgt8Eov_aQ3uDkN4O4VktFLLckFMgxBC5PyBdiQQ637VkYK3g_kptlnJaC1tkOYTMak3AXJiCQXQFWQTWMVSclPuhob_vmWrOad_puFygMV4jm1XXsw0Hk5"/>
+<span class="absolute top-2 left-2 px-2 py-0.5 bg-inverse-surface/80 text-inverse-on-surface text-body-sm rounded">Before State</span>
+</div>
+</div>
+<!-- Live Status Selector & Action Bar -->
+<div class="pt-4 border-t border-surface-container-high flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2 w-full md:w-auto">
+<span class="text-label-md text-on-surface-variant">Status:</span>
+<select class="bg-surface-container-high text-on-surface text-label-md rounded-lg px-3 py-1.5 outline-none border-0 focus:ring-2 focus:ring-primary">
+<option>Dispatched</option>
+<option selected="">In Progress</option>
+<option>Resolved / Signed Off</option>
+</select>
+</div>
+<div class="flex items-center gap-2 w-full md:w-auto justify-end">
+<button class="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface text-label-md hover:bg-surface-container-highest transition-all flex items-center gap-2" onclick="openPhotoModal('WO-8842-FL')">
+<span class="material-symbols-outlined text-[18px]">photo_camera</span> Before/After Upload
+            </button>
+<button class="px-4 py-2 rounded-lg bg-primary text-on-primary text-label-md hover:opacity-90 transition-opacity flex items-center gap-2" onclick="openSignOffModal('WO-8842-FL')">
+<span class="material-symbols-outlined text-[18px]">draw</span> Digital Sign-off
+            </button>
+</div>
+</div>
+</div>
+<!-- Work Order Card 2: Streetlight Outage -->
+<div class="bg-surface-container-low rounded-xl p-6 shadow-sm transition-all hover:shadow-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+<div class="flex items-center gap-3">
+<span class="px-2.5 py-1 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed text-label-sm font-label-md">Medium P2</span>
+<span class="text-body-sm text-on-surface-variant font-mono">WO-8845-LT</span>
+</div>
+<div class="flex items-center gap-2 text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">schedule</span> Due by 05:30 PM
+          </div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+<div class="md:col-span-2 space-y-3">
+<h3 class="font-headline-sm text-on-surface">Broken Luminaire Arm on Oakwood Blvd</h3>
+<p class="text-body-md text-on-surface-variant">LED street fixture flickering and housing unit loose due to high wind branch impact. Bucket truck required for ballast replacement and bracket tightening.</p>
+<div class="flex items-center gap-2 text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-primary">location_on</span>
+<span>1204 Oakwood Blvd, Pole #44B</span>
+</div>
+</div>
+<div class="relative rounded-xl overflow-hidden h-36 bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="Municipal streetlight pole during daytime with damaged overhead fixture and dangling wiring harness, clear blue sky background, professional field inspection view." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCE1-if3qEATwhlYuolSK87FvvTwEuFLMRfMCS9peM8GPLbB_beKzRfrIxt9AngzT09mZlCQvHedKGwrZJ5CbKkOyeDVHc16K8CIj37UJx62cZahXvd6gD0qTeCmVZARzIMoNMILnSbtuLSc1-5BxrAk3MAw3g11vscRjFJFEqTPrae56Z68uPFEcqrcMPKr_IYADnxMSaej6e744_63xygTM8sTv80N8SKiLDmQ3s_aURoyMc4vzn"/>
+<span class="absolute top-2 left-2 px-2 py-0.5 bg-inverse-surface/80 text-inverse-on-surface text-body-sm rounded">Before State</span>
+</div>
+</div>
+<div class="pt-4 border-t border-surface-container-high flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2 w-full md:w-auto">
+<span class="text-label-md text-on-surface-variant">Status:</span>
+<select class="bg-surface-container-high text-on-surface text-label-md rounded-lg px-3 py-1.5 outline-none border-0 focus:ring-2 focus:ring-primary">
+<option selected="">Dispatched</option>
+<option>In Progress</option>
+<option>Resolved / Signed Off</option>
+</select>
+</div>
+<div class="flex items-center gap-2 w-full md:w-auto justify-end">
+<button class="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface text-label-md hover:bg-surface-container-highest transition-all flex items-center gap-2" onclick="openPhotoModal('WO-8845-LT')">
+<span class="material-symbols-outlined text-[18px]">photo_camera</span> Before/After Upload
+            </button>
+<button class="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface text-label-md hover:bg-surface-container-highest transition-all flex items-center gap-2" onclick="openSignOffModal('WO-8845-LT')">
+<span class="material-symbols-outlined text-[18px]">draw</span> Digital Sign-off
+            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Route Planning & Notes (4 cols) -->
+<div class="lg:col-span-4 space-y-6">
+<!-- Live Interactive Map / Route Widget -->
+<div class="bg-surface-container-low rounded-xl p-6 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline-sm text-on-surface">Optimized Route</h3>
+<span class="text-body-sm text-primary font-label-md">GPS Connected</span>
+</div>
+<div class="w-full h-48 bg-cover bg-center rounded-xl mb-4 relative shadow-inner overflow-hidden" data-location="Civic Center District, Sector 4 Route Grid" style="background-image: url('https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg')">
+<div class="absolute inset-0 bg-inverse-surface/10 flex items-center justify-center">
+<div class="px-3 py-1.5 rounded-full bg-surface/90 backdrop-blur-md text-on-surface text-label-sm shadow-md flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+<span>Next Stop: 1.2 miles away</span>
+</div>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex items-start gap-3 p-3 rounded-lg bg-surface-container-high">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center text-label-sm flex-shrink-0">1</span>
+<div class="overflow-hidden">
+<div class="text-label-md text-on-surface truncate">5th & Elm St (Current)</div>
+<div class="text-body-sm text-on-surface-variant truncate">Pothole Repair • ETA 15 mins</div>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-lg opacity-75">
+<span class="w-6 h-6 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center text-label-sm flex-shrink-0">2</span>
+<div class="overflow-hidden">
+<div class="text-label-md text-on-surface truncate">1204 Oakwood Blvd</div>
+<div class="text-body-sm text-on-surface-variant truncate">Streetlight Maintenance • ETA 45 mins</div>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-lg opacity-75">
+<span class="w-6 h-6 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center text-label-sm flex-shrink-0">3</span>
+<div class="overflow-hidden">
+<div class="text-label-md text-on-surface truncate">Pine Crest Drainage Grate</div>
+<div class="text-body-sm text-on-surface-variant truncate">Debris Clearing • ETA 02:15 PM</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Field Notes & Dispatch Instructions -->
+<div class="bg-surface-container-low rounded-xl p-6 shadow-sm space-y-4">
+<h3 class="font-headline-sm text-on-surface">Crew Field Notes</h3>
+<p class="text-body-md text-on-surface-variant">Add operational remarks, equipment status, or traffic control notes for dispatchers.</p>
+<textarea class="w-full h-28 bg-surface-container-high text-on-surface text-body-md rounded-xl p-3 outline-none resize-none focus:ring-2 focus:ring-primary" placeholder="Type field observation or parts requested..."></textarea>
+<button class="w-full py-2.5 rounded-lg bg-primary text-on-primary text-label-md font-label-md hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">send</span> Broadcast Note to Dispatch
+        </button>
+</div>
+</div>
+</div>
+<!-- Interactive Modal Mockup for Before/After Photo Upload -->
+<div class="fixed inset-0 bg-inverse-surface/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" id="photoModal">
+<div class="bg-surface-container-lowest max-w-lg w-full rounded-2xl p-6 shadow-xl space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-on-surface">Before & After Verification</h3>
+<button class="p-1 rounded-full hover:bg-surface-container text-on-surface-variant" onclick="closePhotoModal()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<p class="text-body-md text-on-surface-variant">Upload geotagged photographic proof of completed work to automatically update citizen records.</p>
+<div class="grid grid-cols-2 gap-4">
+<div class="border-2 border-dashed border-outline-variant rounded-xl p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-primary text-[32px] mb-2">add_a_photo</span>
+<span class="text-label-md text-on-surface">Before Photo</span>
+<span class="text-body-sm text-on-surface-variant">Attached</span>
+</div>
+<div class="border-2 border-dashed border-outline-variant rounded-xl p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-primary text-[32px] mb-2">photo_camera</span>
+<span class="text-label-md text-on-surface">After Photo</span>
+<span class="text-body-sm text-on-surface-variant">Tap to Capture</span>
+</div>
+</div>
+<div class="flex items-center justify-end gap-3 pt-4 border-t border-surface-container">
+<button class="px-4 py-2 rounded-lg bg-surface-container text-on-surface text-label-md" onclick="closePhotoModal()">Cancel</button>
+<button class="px-4 py-2 rounded-lg bg-primary text-on-primary text-label-md" onclick="closePhotoModal()">Upload & Attach</button>
+</div>
+</div>
+</div>
+<!-- Interactive Modal Mockup for Digital Sign-off -->
+<div class="fixed inset-0 bg-inverse-surface/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" id="signOffModal">
+<div class="bg-surface-container-lowest max-w-lg w-full rounded-2xl p-6 shadow-xl space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-on-surface">Digital Repair Sign-Off</h3>
+<button class="p-1 rounded-full hover:bg-surface-container text-on-surface-variant" onclick="closeSignOffModal()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<p class="text-body-md text-on-surface-variant">Verify completion of municipal standard requirements. Supervisor signature required for final dispatch clearance.</p>
+<div class="space-y-3">
+<label class="block text-label-sm text-on-surface-variant">Supervisor Approval Signature</label>
+<div class="w-full h-32 bg-surface-container-low rounded-xl border border-outline-variant flex items-center justify-center text-on-surface-variant font-mono text-body-sm relative">
+<span class="absolute inset-0 flex items-center justify-center opacity-40">Sign in box with stylus or finger</span>
+<span class="text-primary font-headline-sm">Marcus Vance (Verified ID #9042)</span>
+</div>
+</div>
+<div class="flex items-center justify-end gap-3 pt-4 border-t border-surface-container">
+<button class="px-4 py-2 rounded-lg bg-surface-container text-on-surface text-label-md" onclick="closeSignOffModal()">Cancel</button>
+<button class="px-4 py-2 rounded-lg bg-primary text-on-primary text-label-md" onclick="closeSignOffModal()">Submit Sign-Off & Resolve</button>
+</div>
+</div>
+</div>
+<script>
+    function openPhotoModal(id) {
+      document.getElementById('photoModal').classList.remove('hidden');
+    }
+    function closePhotoModal() {
+      document.getElementById('photoModal').classList.add('hidden');
+    }
+    function openSignOffModal(id) {
+      document.getElementById('signOffModal').classList.remove('hidden');
+    }
+    function closeSignOffModal() {
+      document.getElementById('signOffModal').classList.add('hidden');
+    }
+  </script>
+</div></main></body></html>

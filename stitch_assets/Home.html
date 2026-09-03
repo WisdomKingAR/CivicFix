@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container": "#e5eeff", "on-surface-variant": "#3d4a3d", "inverse-surface": "#213145", "primary-container": "#22c55e", "on-tertiary-fixed": "#2f1500", "on-background": "#0b1c30", "on-primary-container": "#004b1e", "error": "#ba1a1a", "primary-fixed": "#6bff8f", "tertiary": "#904d00", "secondary-fixed": "#dbe1ff", "on-secondary-fixed-variant": "#003ea8", "on-tertiary-fixed-variant": "#6e3900", "surface-variant": "#d3e4fe", "inverse-on-surface": "#eaf1ff", "error-container": "#ffdad6", "on-tertiary": "#ffffff", "primary": "#006e2f", "on-primary-fixed-variant": "#005321", "tertiary-container": "#fb922a", "secondary": "#0051d5", "inverse-primary": "#4ae176", "secondary-fixed-dim": "#b4c5ff", "surface-container-lowest": "#ffffff", "tertiary-fixed": "#ffdcc3", "outline-variant": "#bccbb9", "surface": "#f8f9ff", "on-primary-fixed": "#002109", "tertiary-fixed-dim": "#ffb77d", "surface-tint": "#006e2f", "surface-dim": "#cbdbf5", "on-surface": "#0b1c30", "on-tertiary-container": "#643300", "on-secondary-fixed": "#00174b", "primary-fixed-dim": "#4ae176", "on-error": "#ffffff", "secondary-container": "#316bf3", "surface-container-low": "#eff4ff", "background": "#f8f9ff", "surface-bright": "#f8f9ff", "on-secondary": "#ffffff", "on-primary": "#ffffff", "surface-container-high": "#dce9ff", "on-secondary-container": "#fefcff", "on-error-container": "#93000a", "outline": "#6d7b6c", "surface-container-highest": "#d3e4fe" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-desktop": "1.5rem", "margin-container": "2rem", "gutter-mobile": "1rem", "column-count": "12" }, "fontFamily": { "body-lg": ["Inter"], "label-md": ["Inter"], "body-md": ["Inter"], "body-sm": ["Inter"], "label-sm": ["Inter"], "headline-sm": ["Inter"], "headline-lg": ["Inter"], "headline-md": ["Inter"], "headline-xl": ["Inter"] }, "fontSize": { "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }] } } } }</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/></head><body class="bg-surface font-body-md text-on-surface"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 max-w-7xl mx-auto px-margin-container flex items-center justify-between"><div class="flex items-center gap-3"><img alt="CivicFix Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBM2U4gadQqKrGGLNV9GY5gxbyiVeTyLJl5zrWYxvFJzgkHr52zydV7wZ5DDXw0urMaxhoLNsK136gBoI-7AXFt8JvKjku4S_9x62NLiNpfN2Hr3StAoa_c4_AZNFeADRGJcuWBPxCAOwX3zNFBV8YEl2HA-SeaxzTMxj_UJ9A2bgZKC8TppNNXOytRzg1C_QnC-w65hQHywOBYnLAJ2a1yHt0XxLhmqOzWl1AzK_eT2UMGELGsqdGw"/><span class="font-headline-md text-on-surface">CivicFix</span></div><nav class="hidden md:flex items-center gap-6" data-active-classes="bg-primary-container text-on-primary-container font-label-md rounded-lg px-3 py-1.5"><a aria-current="page" class="transition-colors bg-primary-container text-on-primary-container font-label-md rounded-lg px-3 py-1.5" data-path="landing-page" href="#">Home</a><a class="text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-active-classes="bg-primary-container text-on-primary-container font-label-md rounded-lg px-3 py-1.5" data-path="explore-issues" href="#">Explore Issues</a><a class="text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="how-it-works" href="#">How It Works</a></nav><div class="flex items-center gap-4"><div class="relative hidden sm:block"><span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span></span><input class="bg-surface-container-low text-on-surface text-body-sm rounded-full pl-9 pr-4 py-2 outline-none focus:ring-2 focus:ring-primary w-48 lg:w-64 transition-all" placeholder="Search reports..." type="text"/></div><button class="relative p-2 rounded-full hover:bg-surface-container-high hover:text-on-surface text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<!-- Hero Section -->
+<section class="relative w-full bg-surface-container-low overflow-hidden pt-12 pb-24 md:pt-20 md:pb-32">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/5 pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-margin-container relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<div class="lg:col-span-7 flex flex-col items-start gap-6">
+<div class="inline-flex items-center gap-2 bg-surface-container-high px-3.5 py-1.5 rounded-full text-label-md text-primary font-label-md">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span>Official Municipal Partner Network</span>
+</div>
+<h1 class="font-headline-xl text-on-surface text-4xl md:text-6xl tracking-tight">
+          Report Civic Issues.<br/>
+<span class="text-primary">Get Them Fixed.</span>
+</h1>
+<p class="font-body-lg text-on-surface-variant max-w-xl">
+          Empowering communities and local governments to bridge the gap. Snap a photo, drop a pin, and track your neighborhood repairs in real-time with total transparency.
+        </p>
+<div class="flex flex-wrap items-center gap-4 pt-2">
+<a class="bg-primary hover:bg-primary/90 text-on-primary font-label-md px-6 py-3.5 rounded-xl transition-all shadow-lg shadow-primary/25 flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-[20px]">add_a_photo</span>
+<span>Report an Issue</span>
+</a>
+<a class="bg-surface-container-highest hover:bg-surface-variant text-on-surface font-label-md px-6 py-3.5 rounded-xl transition-all flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-[20px]">login</span>
+<span>Citizen Login</span>
+</a>
+</div>
+<div class="flex items-center gap-6 pt-6 border-t border-outline-variant/20 w-full text-body-sm text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Anonymous or Public</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>GPS Auto-Tagging</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Direct Authority Routing</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-5 relative">
+<div class="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-3xl blur-2xl opacity-50"></div>
+<div class="relative bg-surface-container-lowest rounded-2xl shadow-xl overflow-hidden p-6 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container/30 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<div>
+<div class="font-headline-sm text-on-surface">Live Report Feed</div>
+<div class="text-body-sm text-on-surface-variant">Real-time municipal updates</div>
+</div>
+</div>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-label-sm bg-primary/10 text-primary animate-pulse">Live</span>
+</div>
+<div class="space-y-3">
+<div class="p-3.5 rounded-xl bg-surface-container-low flex items-center justify-between gap-4">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-2.5 h-2.5 rounded-full bg-warning shrink-0"></div>
+<div class="min-w-0">
+<div class="font-label-md text-on-surface truncate">Streetlight Outage #4092</div>
+<div class="text-body-sm text-on-surface-variant">Downtown District • 12m ago</div>
+</div>
+</div>
+<span class="text-label-sm px-2.5 py-1 rounded-lg bg-surface-container-high text-on-surface-variant shrink-0">In Progress</span>
+</div>
+<div class="p-3.5 rounded-xl bg-surface-container-low flex items-center justify-between gap-4">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-2.5 h-2.5 rounded-full bg-primary shrink-0"></div>
+<div class="min-w-0">
+<div class="font-label-md text-on-surface truncate">Pothole Repaired on 5th Ave</div>
+<div class="text-body-sm text-on-surface-variant">North Sector • 2h ago</div>
+</div>
+</div>
+<span class="text-label-sm px-2.5 py-1 rounded-lg bg-primary/10 text-primary shrink-0">Resolved</span>
+</div>
+<div class="p-3.5 rounded-xl bg-surface-container-low flex items-center justify-between gap-4">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-2.5 h-2.5 rounded-full bg-error shrink-0"></div>
+<div class="min-w-0">
+<div class="font-label-md text-on-surface truncate">Water Main Leakage</div>
+<div class="text-body-sm text-on-surface-variant">Westside • 4h ago</div>
+</div>
+</div>
+<span class="text-label-sm px-2.5 py-1 rounded-lg bg-error-container text-on-error-container shrink-0">Reported</span>
+</div>
+</div>
+<div class="w-full h-36 rounded-xl bg-cover bg-center mt-2 relative overflow-hidden" data-location="City Center Metropolitan Map" style="background-image: url('https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg')">
+<div class="absolute inset-0 bg-inverse-surface/20 flex items-center justify-center">
+<span class="bg-surface/90 text-on-surface px-3 py-1.5 rounded-full text-label-sm shadow-sm flex items-center gap-1.5 backdrop-blur-md">
+<span class="material-symbols-outlined text-[16px] text-primary">location_on</span> View Interactive Ward Map
+              </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Stats Section -->
+<section class="py-12 bg-surface-container-lowest">
+<div class="max-w-7xl mx-auto px-margin-container">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="bg-surface-container-low p-8 rounded-2xl flex flex-col gap-2 relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 text-surface-container-high opacity-50">
+<span class="material-symbols-outlined text-[120px]">assignment</span>
+</div>
+<span class="text-label-md text-on-surface-variant uppercase tracking-wider">Issues Reported</span>
+<div class="font-headline-xl text-on-surface text-4xl font-bold">48,215</div>
+<div class="flex items-center gap-1 text-label-sm text-primary mt-2">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+12% from last month</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-8 rounded-2xl flex flex-col gap-2 relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 text-surface-container-high opacity-50">
+<span class="material-symbols-outlined text-[120px]">task_alt</span>
+</div>
+<span class="text-label-md text-on-surface-variant uppercase tracking-wider">Issues Resolved</span>
+<div class="font-headline-xl text-on-surface text-4xl font-bold">42,980</div>
+<div class="flex items-center gap-1 text-label-sm text-primary mt-2">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span>Verified by municipal audit</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-8 rounded-2xl flex flex-col gap-2 relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 text-surface-container-high opacity-50">
+<span class="material-symbols-outlined text-[120px]">speed</span>
+</div>
+<span class="text-label-md text-on-surface-variant uppercase tracking-wider">Resolution Rate</span>
+<div class="font-headline-xl text-on-surface text-4xl font-bold">89.1%</div>
+<div class="flex items-center gap-1 text-label-sm text-primary mt-2">
+<span class="material-symbols-outlined text-[16px]">bolt</span>
+<span>Avg. response time: 24 hrs</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 6 Category Cards Section -->
+<section class="py-20 bg-surface">
+<div class="max-w-7xl mx-auto px-margin-container flex flex-col gap-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<span class="text-label-md text-primary uppercase tracking-wider">Category Directory</span>
+<h2 class="font-headline-lg text-on-surface text-3xl md:text-4xl mt-1">What needs fixing in your area?</h2>
+</div>
+<p class="text-body-md text-on-surface-variant max-w-md">
+          Select a category to instantly route your report to the designated municipal department with precise geotagging.
+        </p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Pothole -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm hover:shadow-md transition-all flex flex-col gap-4 group cursor-pointer">
+<div class="w-14 h-14 rounded-xl bg-surface-container-low flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[28px]">domain_disabled</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-on-surface text-lg">Pothole & Road Cracks</h3>
+<p class="text-body-sm text-on-surface-variant mt-1">Report road surface damage, hazardous dips, and asphalt erosion for urgent patching.</p>
+</div>
+<div class="flex items-center gap-1 text-label-md text-primary pt-2 mt-auto">
+<span>Report Pothole</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</div>
+</div>
+<!-- Streetlight -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm hover:shadow-md transition-all flex flex-col gap-4 group cursor-pointer">
+<div class="w-14 h-14 rounded-xl bg-surface-container-low flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[28px]">lightbulb</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-on-surface text-lg">Streetlight Outage</h3>
+<p class="text-body-sm text-on-surface-variant mt-1">Dark alleys, flickering bulbs, or completely broken light poles needing electrical repair.</p>
+</div>
+<div class="flex items-center gap-1 text-label-md text-primary pt-2 mt-auto">
+<span>Report Light</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</div>
+</div>
+<!-- Garbage -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm hover:shadow-md transition-all flex flex-col gap-4 group cursor-pointer">
+<div class="w-14 h-14 rounded-xl bg-surface-container-low flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[28px]">delete</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-on-surface text-lg">Garbage & Dumping</h3>
+<p class="text-body-sm text-on-surface-variant mt-1">Overflowing public bins, illegal waste dumping sites, and uncollected neighborhood refuse.</p>
+</div>
+<div class="flex items-center gap-1 text-label-md text-primary pt-2 mt-auto">
+<span>Report Waste</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</div>
+</div>
+<!-- Water Leakage -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm hover:shadow-md transition-all flex flex-col gap-4 group cursor-pointer">
+<div class="w-14 h-14 rounded-xl bg-surface-container-low flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[28px]">water_drop</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-on-surface text-lg">Water Leakage</h3>
+<p class="text-body-sm text-on-surface-variant mt-1">Burst pipes, major street flooding, open hydrant issues, or contaminated supply leaks.</p>
+</div>
+<div class="flex items-center gap-1 text-label-md text-primary pt-2 mt-auto">
+<span>Report Leak</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</div>
+</div>
+<!-- Road Damage -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm hover:shadow-md transition-all flex flex-col gap-4 group cursor-pointer">
+<div class="w-14 h-14 rounded-xl bg-surface-container-low flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[28px]">construction</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-on-surface text-lg">Road Sign & Traffic Damage</h3>
+<p class="text-body-sm text-on-surface-variant mt-1">Fallen street signs, broken traffic lights, missing guardrails, or damaged sidewalks.</p>
+</div>
+<div class="flex items-center gap-1 text-label-md text-primary pt-2 mt-auto">
+<span>Report Signage</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</div>
+</div>
+<!-- Other -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm hover:shadow-md transition-all flex flex-col gap-4 group cursor-pointer">
+<div class="w-14 h-14 rounded-xl bg-surface-container-low flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[28px]">category</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-on-surface text-lg">Other Civic Issues</h3>
+<p class="text-body-sm text-on-surface-variant mt-1">Stray animal control, overgrown park vegetation, graffiti, or noise ordinance violations.</p>
+</div>
+<div class="flex items-center gap-1 text-label-md text-primary pt-2 mt-auto">
+<span>Report Other</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- How It Works (3 Steps) -->
+<section class="py-20 bg-surface-container-low">
+<div class="max-w-7xl mx-auto px-margin-container flex flex-col gap-12">
+<div class="text-center max-w-2xl mx-auto flex flex-col gap-2">
+<span class="text-label-md text-primary uppercase tracking-wider">Simple Workflow</span>
+<h2 class="font-headline-lg text-on-surface text-3xl md:text-4xl">How CivicFix Works</h2>
+<p class="text-body-md text-on-surface-variant">From reporting an issue to final municipal resolution in three effortless steps.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+<!-- Step 1 -->
+<div class="bg-surface-container-lowest p-8 rounded-2xl shadow-sm flex flex-col gap-6 relative">
+<div class="w-12 h-12 rounded-full bg-primary text-on-primary font-headline-sm flex items-center justify-center text-lg">1</div>
+<div class="space-y-2">
+<h3 class="font-headline-sm text-on-surface text-xl">Snap & Tag Location</h3>
+<p class="text-body-md text-on-surface-variant">Take a photo of the problem using your smartphone. Our platform automatically attaches precise GPS coordinates.</p>
+</div>
+<div class="h-32 rounded-xl bg-cover bg-center mt-auto" data-alt="A smartphone interface capturing a photo of a municipal street issue with automated geo-location pin dropped on an urban map background." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDmGvKI4dKeOOVpPjKNFeqk803s42j_yEIjpGqJvkB66pilaUYpUxogN5v80qWAY8M-XYEECOhxHCCALQi0TF0MguJFyvXtEMMcNYuwhc0QZ_-eRhjq7Temdk3kEnnWWHmef0vqkaHvXfLwkmhi0ztvkIKS0SyyIg1H0m3kx-sdNFqnIkyNFLyAyTXa7RYBoSe8ebYqOJE7inzipd5qSJbeH61mUxKPhSa9ceG_uO7kEG_rGO6rmGMA')"></div>
+</div>
+<!-- Step 2 -->
+<div class="bg-surface-container-lowest p-8 rounded-2xl shadow-sm flex flex-col gap-6 relative">
+<div class="w-12 h-12 rounded-full bg-primary text-on-primary font-headline-sm flex items-center justify-center text-lg">2</div>
+<div class="space-y-2">
+<h3 class="font-headline-sm text-on-surface text-xl">Direct Municipal Routing</h3>
+<p class="text-body-md text-on-surface-variant">The report is instantly queued to the correct city department work order system, bypassing red tape.</p>
+</div>
+<div class="h-32 rounded-xl bg-cover bg-center mt-auto" data-alt="A digital dashboard visualization showing automated workflow routing of civic tickets to municipal department queues." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCw4poCnzs0rb8kW2ypcW6aNQG1_mk3qbyJTGtvVpRh75sC1LtHhk1ZJ5KwxPncJoazg00NKo9VHAHWwHuThhyAu3a31hYDlKlXPiEmmtEMtyc530ZE1dXehjEAHucnLvty3kiTJYAq-kYh3VRMh12CzDnWIVQyMK3aWUE9vlovMirGaS-midy6ZB97NmpLuqv5qdzyxJW1kSqHpRRWNiwEx4NlIX1PvVvL2nNn5RBLeX02Ed5mtI8n')"></div>
+</div>
+<!-- Step 3 -->
+<div class="bg-surface-container-lowest p-8 rounded-2xl shadow-sm flex flex-col gap-6 relative">
+<div class="w-12 h-12 rounded-full bg-primary text-on-primary font-headline-sm flex items-center justify-center text-lg">3</div>
+<div class="space-y-2">
+<h3 class="font-headline-sm text-on-surface text-xl">Track & Get Resolved</h3>
+<p class="text-body-md text-on-surface-variant">Receive live status push notifications as field crews are dispatched, work begins, and the issue is fixed.</p>
+</div>
+<div class="h-32 rounded-xl bg-cover bg-center mt-auto" data-alt="A completed public repair showing a freshly paved pothole with a verified green resolution stamp on mobile screen." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCrcAluXkYNzz-bI0wYEoD-0XIrYaWIqw4aaBpycA8Oujtnhv31F38IBMteZKDUx7Og0A5pxC_gU-1kHZvZeYAJK6fG28gm8XJqCsmA6kac_G67w82p3Tx5Gn2ECC4EBWxWzjK5zGnK1IoFrnCp-aTRL3dmzyFzb5xKrj9TQI0s5cqs2red8Y_aRkWggU5UD-na4dcUPhw9QKAYzRVGh5bgkH-YveLn4nWs-l4f9kDqoPkVVTq_fUQp')"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Call to Action Section -->
+<section class="py-20 bg-surface">
+<div class="max-w-7xl mx-auto px-margin-container">
+<div class="bg-inverse-surface rounded-3xl p-8 md:p-16 text-inverse-on-surface relative overflow-hidden flex flex-col items-center text-center gap-6">
+<div class="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-secondary/20 pointer-events-none"></div>
+<span class="inline-flex items-center gap-2 bg-primary/20 text-primary-fixed px-4 py-1.5 rounded-full text-label-md">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+<span>Join 120,000+ Active Citizens</span>
+</span>
+<h2 class="font-headline-xl text-3xl md:text-5xl max-w-2xl text-white">Ready to make your neighborhood better?</h2>
+<p class="text-body-lg text-slate-300 max-w-xl">
+          Report your first civic issue in under 60 seconds or log in to manage your submitted reports and community contributions.
+        </p>
+<div class="flex flex-wrap items-center justify-center gap-4 pt-4">
+<a class="bg-primary hover:bg-primary/90 text-on-primary font-label-md px-8 py-4 rounded-xl transition-all shadow-lg flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-[20px]">add_a_photo</span>
+<span>Report an Issue Now</span>
+</a>
+<a class="bg-white/10 hover:bg-white/20 text-white font-label-md px-8 py-4 rounded-xl transition-all flex items-center gap-2 backdrop-blur-md" href="#">
+<span class="material-symbols-outlined text-[20px]">login</span>
+<span>Citizen Login / Register</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+</div></main><footer class="w-full bg-surface-container-low py-12"><div class="max-w-7xl mx-auto px-margin-container flex flex-col md:flex-row justify-between items-center gap-6 text-on-surface-variant text-body-sm"><div>© 2024 CivicFix Inc. Empowering communities together.</div><div class="flex gap-6"><a class="hover:text-on-surface transition-colors" href="#">Privacy Policy</a><a class="hover:text-on-surface transition-colors" href="#">Terms of Service</a><a class="hover:text-on-surface transition-colors" href="#">Contact Support</a></div></div></footer></body></html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container": "#e5eeff", "on-surface-variant": "#3d4a3d", "inverse-surface": "#213145", "primary-container": "#22c55e", "on-tertiary-fixed": "#2f1500", "on-background": "#0b1c30", "on-primary-container": "#004b1e", "error": "#ba1a1a", "primary-fixed": "#6bff8f", "tertiary": "#904d00", "secondary-fixed": "#dbe1ff", "on-secondary-fixed-variant": "#003ea8", "on-tertiary-fixed-variant": "#6e3900", "surface-variant": "#d3e4fe", "inverse-on-surface": "#eaf1ff", "error-container": "#ffdad6", "on-tertiary": "#ffffff", "primary": "#006e2f", "on-primary-fixed-variant": "#005321", "tertiary-container": "#fb922a", "secondary": "#0051d5", "inverse-primary": "#4ae176", "secondary-fixed-dim": "#b4c5ff", "surface-container-lowest": "#ffffff", "tertiary-fixed": "#ffdcc3", "outline-variant": "#bccbb9", "surface": "#f8f9ff", "on-primary-fixed": "#002109", "tertiary-fixed-dim": "#ffb77d", "surface-tint": "#006e2f", "surface-dim": "#cbdbf5", "on-surface": "#0b1c30", "on-tertiary-container": "#643300", "on-secondary-fixed": "#00174b", "primary-fixed-dim": "#4ae176", "on-error": "#ffffff", "secondary-container": "#316bf3", "surface-container-low": "#eff4ff", "background": "#f8f9ff", "surface-bright": "#f8f9ff", "on-secondary": "#ffffff", "on-primary": "#ffffff", "surface-container-high": "#dce9ff", "on-secondary-container": "#fefcff", "on-error-container": "#93000a", "outline": "#6d7b6c", "surface-container-highest": "#d3e4fe" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-desktop": "1.5rem", "margin-container": "2rem", "gutter-mobile": "1rem", "column-count": "12" }, "fontFamily": { "body-lg": ["Inter"], "label-md": ["Inter"], "body-md": ["Inter"], "body-sm": ["Inter"], "label-sm": ["Inter"], "headline-sm": ["Inter"], "headline-lg": ["Inter"], "headline-md": ["Inter"], "headline-xl": ["Inter"] }, "fontSize": { "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }] } } } }</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/></head><body class="bg-surface font-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low z-50 flex flex-col pt-6 pb-8 shadow-[1px_0_8px_rgba(0,0,0,0.02)]"><div class="px-6 mb-8 flex items-center gap-3"><img alt="CivicFix Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOWcC51pmQ6Z-2fqmYYAgc628pWj7ez3bZjDwRNv_K7ZCJrsp6ODoASebqECn1cSDAy_d35i4iRMwFun6JzR00svQvi8rDimxKBLRKOxjvYDL3bzgYy_ysvcprWvfYrQshOzmT0WRqmkc2gKY-LBrzmLBLZDNZ-dc0vJbUbDKvWsnzVQXRIFqE0jmibxBwdo6IsIkBwYF6FIi4VS-mBA30M-Ju887pqzzGtQL5t6TiI46q19SfsDJ9"/><span class="font-headline-md text-on-surface">CivicFix</span></div><div class="px-4 mb-6"><label class="block text-label-sm text-on-surface-variant mb-2">Active Role Mode</label><select class="w-full bg-surface-container-high text-on-surface text-label-md rounded-lg px-3 py-2 outline-none border-0 focus:ring-2 focus:ring-primary"><option>Citizen Portal</option><option>Authority Dispatch</option><option>System Admin</option></select></div><nav class="flex-1 px-4 space-y-1 overflow-y-auto" data-active-classes="bg-primary-container text-on-primary-container font-label-md rounded-xl"><a aria-current="page" class="flex items-center px-4 py-3 transition-all bg-primary-container text-on-primary-container font-label-md rounded-xl" data-path="citizen-dashboard" href="#"><span class="material-symbols-outlined mr-3 text-[20px]">dashboard</span>Overview</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="report-issue" href="#"><span class="material-symbols-outlined mr-3 text-[20px]">add_circle</span>Report Issue</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="my-reports" href="#"><span class="material-symbols-outlined mr-3 text-[20px]">list_alt</span>My Reports</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="issue-map" href="#"><span class="material-symbols-outlined mr-3 text-[20px]">map</span>Live Map</a><a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="settings" href="#"><span class="material-symbols-outlined mr-3 text-[20px]">settings</span>Settings</a></nav><div class="px-4 pt-4 border-t border-surface-container-high"><div class="flex items-center gap-3 px-2"><div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="overflow-hidden"><div class="text-label-md text-on-surface truncate">Alex Johnson</div><div class="text-body-sm text-on-surface-variant truncate">Citizen Tier 2</div></div></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-margin-container"><div class="flex items-center gap-4 w-96"><div class="relative w-full"><span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span></span><input class="w-full bg-surface-container-low text-on-surface text-body-sm rounded-full pl-9 pr-4 py-2 outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="Search ticket ID, category, location..." type="text"/></div></div><div class="flex items-center gap-4"><button class="relative p-2 rounded-full hover:bg-surface-container-high hover:text-on-surface text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span></button><button class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary-container text-on-primary-container text-label-md font-label-md hover:opacity-90 transition-opacity"><span class="material-symbols-outlined text-[18px]">add</span>New Report</button></div></header></div><main class="relative pt-16 bg-surface min-h-[calc(100vh-4rem)] p-margin-container"><div class="flex flex-col w-full max-w-3xl mx-auto pb-16">
+<!-- Top Progress Bar & Header -->
+<div class="mb-8">
+<div class="flex items-center justify-between mb-4">
+<div>
+<span class="text-label-sm font-label-sm tracking-wider uppercase text-primary mb-1 block">Civic Incident Workflow</span>
+<h1 class="text-headline-lg font-headline-lg text-on-surface">Report a Civic Issue</h1>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-high px-3 py-1.5 rounded-full text-label-sm font-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-primary">verified_user</span>
+<span>Verified Citizen ID #8849-AX</span>
+</div>
+</div>
+<!-- 4-Step Indicator -->
+<div class="grid grid-cols-4 gap-3 bg-surface-container-low p-2 rounded-xl">
+<div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary text-on-primary transition-all" id="step-ind-1">
+<span class="w-6 h-6 rounded-full bg-on-primary/20 flex items-center justify-center text-label-sm">1</span>
+<span class="text-label-md truncate">Type</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-2 rounded-lg text-on-surface-variant transition-all" id="step-ind-2">
+<span class="w-6 h-6 rounded-full bg-surface-container-high flex items-center justify-center text-label-sm">2</span>
+<span class="text-label-md truncate">Photo</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-2 rounded-lg text-on-surface-variant transition-all" id="step-ind-3">
+<span class="w-6 h-6 rounded-full bg-surface-container-high flex items-center justify-center text-label-sm">3</span>
+<span class="text-label-md truncate">Details</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-2 rounded-lg text-on-surface-variant transition-all" id="step-ind-4">
+<span class="w-6 h-6 rounded-full bg-surface-container-high flex items-center justify-center text-label-sm">4</span>
+<span class="text-label-md truncate">Location</span>
+</div>
+</div>
+</div>
+<!-- Form Card Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.04)] p-8">
+<form class="space-y-6" id="civic-report-form">
+<!-- STEP 1: Issue Type -->
+<div class="space-y-6" id="form-step-1">
+<div>
+<h2 class="text-headline-md font-headline-md text-on-surface mb-1">Select Issue Category</h2>
+<p class="text-body-md text-on-surface-variant">Choose the category that best describes the municipal problem you encountered.</p>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<!-- Option 1 -->
+<label class="relative flex flex-col items-center justify-center p-5 rounded-xl bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-all group">
+<input checked="" class="absolute top-3 right-3 accent-primary" name="issue_type" type="radio" value="pothole"/>
+<span class="text-3xl mb-3 group-hover:scale-110 transition-transform">🕳️</span>
+<span class="text-label-md text-on-surface text-center font-label-md">Pothole & Road Cracks</span>
+</label>
+<!-- Option 2 -->
+<label class="relative flex flex-col items-center justify-center p-5 rounded-xl bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-all group">
+<input class="absolute top-3 right-3 accent-primary" name="issue_type" type="radio" value="streetlight"/>
+<span class="text-3xl mb-3 group-hover:scale-110 transition-transform">💡</span>
+<span class="text-label-md text-on-surface text-center font-label-md">Streetlight Outage</span>
+</label>
+<!-- Option 3 -->
+<label class="relative flex flex-col items-center justify-center p-5 rounded-xl bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-all group">
+<input class="absolute top-3 right-3 accent-primary" name="issue_type" type="radio" value="garbage"/>
+<span class="text-3xl mb-3 group-hover:scale-110 transition-transform">🗑️</span>
+<span class="text-label-md text-on-surface text-center font-label-md">Garbage & Dumping</span>
+</label>
+<!-- Option 4 -->
+<label class="relative flex flex-col items-center justify-center p-5 rounded-xl bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-all group">
+<input class="absolute top-3 right-3 accent-primary" name="issue_type" type="radio" value="water"/>
+<span class="text-3xl mb-3 group-hover:scale-110 transition-transform">🚰</span>
+<span class="text-label-md text-on-surface text-center font-label-md">Water Leakage</span>
+</label>
+<!-- Option 5 -->
+<label class="relative flex flex-col items-center justify-center p-5 rounded-xl bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-all group">
+<input class="absolute top-3 right-3 accent-primary" name="issue_type" type="radio" value="signage"/>
+<span class="text-3xl mb-3 group-hover:scale-110 transition-transform">🚸</span>
+<span class="text-label-md text-on-surface text-center font-label-md">Road Sign & Traffic Damage</span>
+</label>
+<!-- Option 6 -->
+<label class="relative flex flex-col items-center justify-center p-5 rounded-xl bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-all group">
+<input class="absolute top-3 right-3 accent-primary" name="issue_type" type="radio" value="other"/>
+<span class="text-3xl mb-3 group-hover:scale-110 transition-transform">⚠️</span>
+<span class="text-label-md text-on-surface text-center font-label-md">Other Civic Issues</span>
+</label>
+</div>
+</div>
+<!-- STEP 2: Photo Upload & Cluster Detection Simulation -->
+<div class="space-y-6 hidden" id="form-step-2">
+<div>
+<h2 class="text-headline-md font-headline-md text-on-surface mb-1">Attach Visual Evidence</h2>
+<p class="text-body-md text-on-surface-variant">Upload a clear photo to help dispatch teams assess severity quickly.</p>
+</div>
+<!-- Upload Dropzone -->
+<div class="relative flex flex-col items-center justify-center p-8 rounded-xl bg-surface-container-low border-2 border-dashed border-outline-variant hover:border-primary transition-colors cursor-pointer group">
+<input accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" id="photo-file" type="file"/>
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center mb-3 group-hover:bg-primary-container/20 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px] text-on-surface-variant">add_a_photo</span>
+</div>
+<p class="text-label-md text-on-surface mb-1">Click to upload or drag & drop</p>
+<p class="text-body-sm text-on-surface-variant">SVG, PNG, JPG or GIF (max. 5MB)</p>
+</div>
+<!-- Simulated Cluster Banner -->
+<div class="p-4 rounded-xl bg-secondary-fixed/50 flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-0.5">info</span>
+<div>
+<div class="text-label-md text-on-secondary-fixed font-label-md">Cluster Detection Alert</div>
+<div class="text-body-sm text-on-surface-variant mt-0.5">⚠ Similar issue already reported 200m away — your report joins the cluster and increases priority.</div>
+</div>
+</div>
+</div>
+<!-- STEP 3: Description -->
+<div class="space-y-6 hidden" id="form-step-3">
+<div>
+<h2 class="text-headline-md font-headline-md text-on-surface mb-1">Describe the Issue</h2>
+<p class="text-body-md text-on-surface-variant">Provide specific details like landmark hints or exact hazard scope.</p>
+</div>
+<div class="space-y-2">
+<textarea class="w-full bg-surface-container-low text-on-surface text-body-md rounded-xl p-4 outline-none focus:ring-2 focus:ring-primary transition-all" id="issue-desc" placeholder="Describe the hazard in detail (e.g., deep pothole near crosswalk causing swerving vehicles)..." rows="4"></textarea>
+<div class="flex justify-between items-center text-body-sm text-on-surface-variant px-1">
+<span>Minimum 10 characters required</span>
+<span id="char-counter">0 / 1000</span>
+</div>
+</div>
+</div>
+<!-- STEP 4: Location -->
+<div class="space-y-6 hidden" id="form-step-4">
+<div>
+<h2 class="text-headline-md font-headline-md text-on-surface mb-1">Confirm Location</h2>
+<p class="text-body-md text-on-surface-variant">Verify automated GPS coordinates or pinpoint manually.</p>
+</div>
+<!-- Detected Location Badge & Link -->
+<div class="p-4 rounded-xl bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[24px]">location_on</span>
+<div>
+<div class="text-label-md text-on-surface">📍 Detected: 37.7749, -122.4194</div>
+<div class="text-body-sm text-on-surface-variant">Downtown District 4 · High Priority Zone</div>
+</div>
+</div>
+<button class="text-label-sm text-secondary hover:underline" type="button">Set manually</button>
+</div>
+<!-- Map Simulation Preview -->
+<div class="w-full h-56 rounded-xl bg-cover bg-center relative overflow-hidden flex items-end p-4" data-alt="A detailed digital map interface showing downtown city streets with a highlighted geo-location pin representing a civic hazard in District 4. Clean modern cartography style with civic green accents and roads clearly laid out." data-location="Downtown District 4, San Francisco" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCcMSrz3LkrraGrUCazJzlMmbqD9NMTq3onEZKXYIYYVG7-L86ppNAIP5mUdKg9X40Ash6p199y34nlVcI05ktsP6wL5IJy34UlqwG-ly1vB90e_D1b9yCFtHnta91LI53nQ6SUK_qTz4cs-ZZHoxbaH5utl5OUKKmlge_ilMdTM547lzTpssTq81G7w93c2AjjNgzOLfzruk2tv9IgvsY_03K0WJrVbxQekA09_DZfUwSfBBCs-8AM')">
+<div class="absolute inset-0 bg-gradient-to-t from-on-background/60 via-transparent to-transparent"></div>
+<div class="relative z-10 text-inverse-on-surface flex items-center gap-2 bg-inverse-surface/80 backdrop-blur-md px-3 py-1.5 rounded-lg">
+<span class="material-symbols-outlined text-[16px] text-primary-fixed">my_location</span>
+<span class="text-label-sm">GPS Accuracy: ± 4 meters</span>
+</div>
+</div>
+</div>
+<!-- Action Navigation Buttons -->
+<div class="pt-6 flex items-center justify-between border-t border-surface-container-high">
+<button class="px-5 py-2.5 rounded-xl text-label-md font-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors invisible" id="prev-btn" type="button">
+          Back
+        </button>
+<button class="px-6 py-2.5 rounded-xl bg-primary text-on-primary text-label-md font-label-md hover:opacity-90 transition-opacity flex items-center gap-2" id="next-btn" type="button">
+<span>Continue</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+<!-- Success Modal State (Hidden by default) -->
+<div class="hidden flex-col items-center justify-center p-12 text-center bg-surface-container-lowest rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.04)] mt-6" id="success-state">
+<div class="w-16 h-16 rounded-full bg-primary-container/30 text-primary flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-[32px]">check_circle</span>
+</div>
+<h3 class="text-headline-lg font-headline-lg text-on-surface mb-2">Report Submitted Successfully!</h3>
+<p class="text-body-md text-on-surface-variant max-w-md mb-6">Your ticket ID is <span class="font-label-md text-on-surface">#CIV-94821</span>. It has been routed to Authority Dispatch for review.</p>
+<a class="px-6 py-2.5 rounded-xl bg-primary text-on-primary text-label-md font-label-md" href="#">View My Reports</a>
+</div>
+<!-- Interactive Script -->
+<script>
+    let currentStep = 1;
+    const totalSteps = 4;
+
+    const nextBtn = document.getElementById('next-btn');
+    const prevBtn = document.getElementById('prev-btn');
+    const form = document.getElementById('civic-report-form');
+    const descTextarea = document.getElementById('issue-desc');
+    const charCounter = document.getElementById('char-counter');
+
+    descTextarea.addEventListener('input', (e) => {
+      const len = e.target.value.length;
+      charCounter.innerText = `${len} / 1000`;
+    });
+
+    function updateSteps() {
+      for (let i = 1; i <= totalSteps; i++) {
+        const stepEl = document.getElementById(`form-step-${i}`);
+        const indEl = document.getElementById(`step-ind-${i}`);
+        
+        if (i === currentStep) {
+          stepEl.classList.remove('hidden');
+        } else {
+          stepEl.classList.add('hidden');
+        }
+
+        if (i < currentStep) {
+          indEl.className = "flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-container-high text-on-surface opacity-60 transition-all";
+          indEl.querySelector('span').className = "w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center text-label-sm";
+        } else if (i === currentStep) {
+          indEl.className = "flex items-center gap-2 px-3 py-2 rounded-lg bg-primary text-on-primary transition-all";
+          indEl.querySelector('span').className = "w-6 h-6 rounded-full bg-on-primary/20 flex items-center justify-center text-label-sm";
+        } else {
+          indEl.className = "flex items-center gap-2 px-3 py-2 rounded-lg text-on-surface-variant transition-all";
+          indEl.querySelector('span').className = "w-6 h-6 rounded-full bg-surface-container-high flex items-center justify-center text-label-sm";
+        }
+      }
+
+      if (currentStep > 1) {
+        prevBtn.classList.remove('invisible');
+      } else {
+        prevBtn.classList.add('invisible');
+      }
+
+      if (currentStep === totalSteps) {
+        nextBtn.innerHTML = '<span>Submit Report</span><span class="material-symbols-outlined text-[18px]">send</span>';
+      } else {
+        nextBtn.innerHTML = '<span>Continue</span><span class="material-symbols-outlined text-[18px]">arrow_forward</span>';
+      }
+    }
+
+    nextBtn.addEventListener('click', () => {
+      if (currentStep < totalSteps) {
+        currentStep++;
+        updateSteps();
+      } else {
+        form.classList.add('hidden');
+        document.getElementById('success-state').classList.remove('hidden');
+        document.getElementById('success-state').classList.add('flex');
+        document.querySelector('.grid.grid-cols-4').parentElement.classList.add('hidden');
+      }
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentStep > 1) {
+        currentStep--;
+        updateSteps();
+      }
+    });
+  </script>
+</div></main></body></html>
