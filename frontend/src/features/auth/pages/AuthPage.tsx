@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 interface AuthPageProps {
-  onSuccess: () => void;
+  onSuccess: (user?: any) => void;
 }
 
 function getPasswordStrength(pwd: string): { score: number; label: string; color: string } {
@@ -26,18 +26,15 @@ function getPasswordStrength(pwd: string): { score: number; label: string; color
   if (/[A-Z]/.test(pwd)) score++;
   if (/[0-9]/.test(pwd)) score++;
   if (/[^A-Za-z0-9]/.test(pwd)) score++;
-  const map: Record<number, { label: string; color: string }> = {
-    0: { label: 'Too weak', color: 'bg-rose-500' },
-    1: { label: 'Weak', color: 'bg-orange-500' },
-    2: { label: 'Fair', color: 'bg-amber-500' },
-    3: { label: 'Good', color: 'bg-blue-500' },
-    4: { label: 'Strong', color: 'bg-green-600' },
-  };
-  return { score, ...map[score] };
+
+  if (score <= 1) return { score, label: 'Weak', color: 'bg-rose-500 text-rose-700' };
+  if (score === 2) return { score, label: 'Fair', color: 'bg-amber-500 text-amber-700' };
+  if (score === 3) return { score, label: 'Good', color: 'bg-blue-500 text-blue-700' };
+  return { score, label: 'Strong', color: 'bg-green-600 text-green-700' };
 }
 
 export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
-  const { login, register, demoLogin } = useAuth();
+  const { login, register } = useAuth();
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -83,10 +80,11 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
 
     setLoading(true);
     try {
+      let authedUser: any;
       if (isLogin) {
-        await login(email, password);
+        authedUser = await login(email, password);
       } else {
-        await register({
+        authedUser = await register({
           name: name.trim(),
           email,
           password,
@@ -95,22 +93,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
           jurisdiction: role === 'AUTHORITY' ? jurisdiction : undefined,
         });
       }
-      onSuccess();
+      onSuccess(authedUser);
     } catch (err: any) {
       setError(err.message || 'Authentication failed. Please check your credentials.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDemoPersona = async (personaRole: Role) => {
-    setError(null);
-    setLoading(true);
-    try {
-      await demoLogin(personaRole);
-      onSuccess();
-    } catch (err: any) {
-      setError(err.message || 'Demo authentication failed');
     } finally {
       setLoading(false);
     }
@@ -375,36 +360,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
             )}
           </button>
         </form>
-
-        {/* Demo Personas */}
-        <div className="pt-4 border-t border-slate-100 space-y-3">
-          <div className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 text-center">
-            One-Click Demo Login
-          </div>
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              type="button"
-              onClick={() => handleDemoPersona('CITIZEN')}
-              className="px-2 py-2 rounded-xl bg-green-50 hover:bg-green-100 text-green-800 text-[11px] font-bold border border-green-200 transition-colors"
-            >
-              Citizen
-            </button>
-            <button
-              type="button"
-              onClick={() => handleDemoPersona('AUTHORITY')}
-              className="px-2 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-800 text-[11px] font-bold border border-blue-200 transition-colors"
-            >
-              Officer
-            </button>
-            <button
-              type="button"
-              onClick={() => handleDemoPersona('ADMIN')}
-              className="px-2 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-800 text-[11px] font-bold border border-purple-200 transition-colors"
-            >
-              Admin
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );

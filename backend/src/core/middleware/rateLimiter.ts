@@ -5,7 +5,8 @@ import { Request, Response } from 'express';
 const createRateLimiter = (
   windowMs: number,
   max: number,
-  message = 'Too many requests. Please try again later.'
+  message = 'Too many requests. Please try again later.',
+  extraOptions: Partial<Parameters<typeof rateLimit>[0]> = {}
 ) => {
   return rateLimit({
     windowMs,
@@ -19,28 +20,36 @@ const createRateLimiter = (
         code: 'RATE_LIMITED',
       });
     },
+    ...extraOptions,
   });
 };
 
-// 1. Auth Login: 5 requests / 15 minutes (brute-force defense)
+// 1. Auth Login: 50 requests / 15 minutes, skips successful logins so only failed attempts count
 export const authLoginLimiter = createRateLimiter(
   15 * 60 * 1000,
-  5,
-  'Too many login attempts. Please try again after 15 minutes.'
+  50,
+  'Too many failed login attempts. Please try again after 15 minutes.',
+  {
+    skipSuccessfulRequests: true,
+    keyGenerator: (req: Request) => {
+      const email = typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+      return `${req.ip}_${email}`;
+    },
+  }
 );
 
-// 2. Auth Register: 3 requests / 1 hour (account farming defense)
+// 2. Auth Register: 30 requests / 1 hour (account farming defense)
 export const authRegisterLimiter = createRateLimiter(
   60 * 60 * 1000,
-  3,
+  30,
   'Too many accounts registered from this IP. Please try again after an hour.'
 );
 
-// 3. Complaint Submission: 10 requests / 1 hour (spam submission defense)
+// 3. Complaint Submission: 30 requests / 1 hour (spam submission defense)
 export const complaintSubmitLimiter = createRateLimiter(
   60 * 60 * 1000,
-  10,
-  'Submission limit reached (10 complaints per hour). Please wait before reporting more.'
+  30,
+  'Submission limit reached (30 complaints per hour). Please wait before reporting more.'
 );
 
 // 4. Global API (authenticated): 100 requests / 1 minute

@@ -40,16 +40,17 @@ export const AppContent: React.FC = () => {
     setActiveTab('detail');
   };
 
-  const handleAuthSuccess = (loggedInUser: User) => {
+  const handleAuthSuccess = (loggedInUser?: User) => {
     if (pendingTab) {
       const target = pendingTab;
       setPendingTab(null);
       setActiveTab(target);
       return;
     }
-    if (loggedInUser.role === 'AUTHORITY') {
+    const role = loggedInUser?.role || user?.role || 'CITIZEN';
+    if (role === 'AUTHORITY') {
       setActiveTab('authority');
-    } else if (loggedInUser.role === 'ADMIN') {
+    } else if (role === 'ADMIN') {
       setActiveTab('admin');
     } else {
       setActiveTab('citizen');
