@@ -37,9 +37,12 @@ export const CitizenDashboard: React.FC<CitizenDashboardProps> = ({
     setLoading(true);
     try {
       const res = await complaintsService.getMyComplaints();
-      if (res.data) setComplaints(res.data);
+      const list = Array.isArray(res.data)
+        ? res.data
+        : (res.data as any)?.complaints || [];
+      setComplaints(list);
     } catch {
-      // ignore
+      setComplaints([]);
     } finally {
       setLoading(false);
     }
@@ -55,23 +58,25 @@ export const CitizenDashboard: React.FC<CitizenDashboardProps> = ({
     setShowConfirmModal(true);
   };
 
-  const filtered = complaints.filter((c) => {
+  const safeComplaints = Array.isArray(complaints) ? complaints : [];
+
+  const filtered = safeComplaints.filter((c) => {
     const matchesStatus = statusFilter === 'ALL' || c.status === statusFilter;
     const matchesSearch =
-      c.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (c.description || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (c.category || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       (c.address && c.address.toLowerCase().includes(searchTerm.toLowerCase()));
     return matchesStatus && matchesSearch;
   });
 
-  const activeCount = complaints.filter((c) => c.status === 'SUBMITTED' || c.status === 'UNDER_REVIEW').length;
-  const inProgressCount = complaints.filter((c) => c.status === 'ASSIGNED' || c.status === 'IN_PROGRESS').length;
-  const resolvedCount = complaints.filter((c) => c.status === 'RESOLVED').length;
+  const activeCount = safeComplaints.filter((c) => c.status === 'SUBMITTED' || c.status === 'UNDER_REVIEW').length;
+  const inProgressCount = safeComplaints.filter((c) => c.status === 'ASSIGNED' || c.status === 'IN_PROGRESS').length;
+  const resolvedCount = safeComplaints.filter((c) => c.status === 'RESOLVED').length;
 
   const avgFixDays =
     resolvedCount > 0
       ? (
-          complaints
+          safeComplaints
             .filter((c) => c.status === 'RESOLVED')
             .reduce(
               (acc, c) => acc + (new Date(c.updatedAt).getTime() - new Date(c.createdAt).getTime()),

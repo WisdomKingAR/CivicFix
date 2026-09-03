@@ -44,10 +44,17 @@ export const AuthorityTriage: React.FC = () => {
         }),
         authorityService.getStaff().catch(() => ({ data: [] })),
       ]);
-      if (queueRes.data) setQueue(queueRes.data);
-      if (staffRes.data) setStaffUsers(staffRes.data);
+      const list = Array.isArray(queueRes.data)
+        ? queueRes.data
+        : (queueRes.data as any)?.complaints || [];
+      setQueue(list);
+
+      const staffList = Array.isArray(staffRes.data)
+        ? staffRes.data
+        : (staffRes.data as any)?.users || [];
+      setStaffUsers(staffList);
     } catch {
-      // ignore
+      setQueue([]);
     } finally {
       setLoading(false);
     }

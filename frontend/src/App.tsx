@@ -14,6 +14,8 @@ import { CityAnalyticsView } from './features/analytics/pages/CityAnalyticsView'
 import { SettingsView } from './features/settings/pages/SettingsView';
 import type { Complaint } from './core/types';
 
+import { ErrorBoundary } from './core/components/ErrorBoundary';
+
 export const AppContent: React.FC = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<string>('landing');
@@ -41,6 +43,10 @@ export const AppContent: React.FC = () => {
       const target = pendingTab;
       setPendingTab(null);
       setActiveTab(target);
+    } else if (user?.role === 'AUTHORITY') {
+      setActiveTab('authority');
+    } else if (user?.role === 'ADMIN') {
+      setActiveTab('admin');
     } else {
       setActiveTab('citizen');
     }
@@ -112,8 +118,10 @@ export const AppContent: React.FC = () => {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }

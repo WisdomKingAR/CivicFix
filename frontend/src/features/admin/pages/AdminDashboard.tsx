@@ -28,10 +28,13 @@ export const AdminDashboard: React.FC = () => {
         adminService.getUsers().catch(() => ({ data: [] })),
         adminService.getAnalytics().catch(() => ({ data: null })),
       ]);
-      if (usersRes.data) setUsers(usersRes.data);
+      const userList = Array.isArray(usersRes.data)
+        ? usersRes.data
+        : (usersRes.data as any)?.users || [];
+      setUsers(userList);
       if (analyticsRes.data) setAnalytics(analyticsRes.data);
     } catch {
-      // ignore
+      setUsers([]);
     } finally {
       setLoading(false);
     }
