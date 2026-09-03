@@ -42,4 +42,21 @@ export class AIController {
       sendError(res, msg, 500, 'CLASSIFICATION_FAILED');
     }
   }
+
+  public static async healthCheck(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { getGeminiModel } = await import('../../core/external/gemini');
+      const model = getGeminiModel();
+      if (!model) {
+        sendError(res, 'GEMINI_API_KEY not configured.', 503, 'AI_UNAVAILABLE');
+        return;
+      }
+      const ping = await model.generateContent('Reply with the word OK only.');
+      const text = ping.response.text().trim();
+      sendSuccess(res, { status: 'ok', response: text, model: 'gemini-1.5-flash' }, 'Gemini reachable.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Gemini quota or connection error';
+      sendError(res, msg, 503, 'AI_QUOTA_OR_KEY_ERROR');
+    }
+  }
 }

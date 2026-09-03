@@ -93,12 +93,12 @@ export class ClusteringService {
       const seedComplaint = cluster?.complaints[0];
       if (!seedComplaint?.photoUrl) continue;
 
-      const { similarity } = await AIService.compareImages(
+      const { isSameIssue, confidence } = await AIService.arePhotosSameIssue(
         seedComplaint.photoUrl,
         complaint.photoUrl
       );
 
-      if (similarity >= SIMILARITY_THRESHOLD) {
+      if (isSameIssue || confidence >= SIMILARITY_THRESHOLD) {
         return this.attachToExistingCluster(complaint, clusterId);
       }
     }

@@ -18,17 +18,21 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   clusters = [],
   sensitiveLocations,
   onSelectComplaint,
-  center = [12.9716, 77.5946],
-  zoom = 13,
+  center = [19.076, 72.8777],
+  zoom = 12,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const layerGroupRef = useRef<L.LayerGroup | null>(null);
 
   const defaultSensitiveLocations: SensitiveLocation[] = sensitiveLocations || [
-    { id: '1', name: "St. John's Hospital", type: 'HOSPITAL', lat: 12.9344, lng: 77.6101 },
-    { id: '2', name: 'National Public School', type: 'SCHOOL', lat: 12.9783, lng: 77.6408 },
-    { id: '3', name: 'Manipal Hospital Indiranagar', type: 'HOSPITAL', lat: 12.9585, lng: 77.6482 },
+    { id: '1', name: 'KEM Hospital', type: 'HOSPITAL', lat: 18.9388, lng: 72.8258 },
+    { id: '2', name: 'Nair Hospital (BYL Nair)', type: 'HOSPITAL', lat: 18.9629, lng: 72.8193 },
+    { id: '3', name: 'Hinduja Hospital Mahim', type: 'HOSPITAL', lat: 19.033, lng: 72.8397 },
+    { id: '4', name: 'Lilavati Hospital Bandra', type: 'HOSPITAL', lat: 19.0543, lng: 72.8266 },
+    { id: '5', name: 'Kokilaben Hospital Andheri', type: 'HOSPITAL', lat: 19.1337, lng: 72.8272 },
+    { id: '6', name: 'Don Bosco High School Matunga', type: 'SCHOOL', lat: 19.0216, lng: 72.8427 },
+    { id: '7', name: "St. Xavier's High School Fort", type: 'SCHOOL', lat: 18.9322, lng: 72.8264 },
   ];
 
   // 1. Initialize Map ONCE and cleanup on unmount
@@ -62,6 +66,13 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       }
     };
   }, []);
+
+  // Re-pan map when center or zoom prop changes
+  useEffect(() => {
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.setView(center, zoom);
+    }
+  }, [center, zoom]);
 
   // 2. Update Map Layers whenever data changes
   useEffect(() => {

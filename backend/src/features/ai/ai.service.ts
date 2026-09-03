@@ -4,15 +4,25 @@ import { memoryCache } from '../../core/cache/memoryCache';
 import { sha256 } from '../../core/utils/hash';
 
 export interface ImageComparisonResult {
-  similarity: number; // 0.0 to 1.0 (higher = more different/resolved)
+  similarity: number; // 0.0 to 1.0 (higher = more resolved/different)
   resolved: boolean;
   reasoning: string;
   cacheHit?: boolean;
+  aiAvailable: boolean;
+}
+
+export interface IssueDuplicateResult {
+  isSameIssue: boolean;
+  confidence: number;
+  reasoning: string;
+  cacheHit?: boolean;
+  aiAvailable: boolean;
 }
 
 export interface CategoryClassificationResult {
   category: string;
   confidence: number;
+  aiAvailable?: boolean;
 }
 
 const AI_CACHE_TTL = 86400; // 24 Hours
@@ -40,15 +50,15 @@ export class AIService {
       const fallback: ImageComparisonResult = {
         similarity: 0.85,
         resolved: true,
-        reasoning: 'Automated fallback: Gemini API key not initialized.',
+        reasoning: 'Automated fallback: Gemini API key not configured.',
         cacheHit: false,
+        aiAvailable: false,
       };
       memoryCache.set(cacheKey, fallback, AI_CACHE_TTL);
       return fallback;
     }
 
     try {
-      // Fetch both images and format as vision parts
       const [beforePart, afterPart] = await Promise.all([
         urlToInlinePart(beforeUrl),
         urlToInlinePart(afterUrl),
@@ -86,6 +96,7 @@ Respond ONLY with valid JSON — no markdown, no backticks:
         resolved: Boolean(parsed.resolved),
         reasoning: parsed.reasoning || 'Image inspected by Gemini Vision.',
         cacheHit: false,
+        aiAvailable: true,
       };
 
       memoryCache.set(cacheKey, result, AI_CACHE_TTL);
@@ -98,6 +109,88 @@ Respond ONLY with valid JSON — no markdown, no backticks:
         reasoning:
           'AI image comparison temporarily unavailable. Routed for citizen confirmation.',
         cacheHit: false,
+        aiAvailable: false,
+      };
+    }
+  }
+
+  /**
+   * Compares two incident photos to detect whether they depict the SAME civic problem
+   * at the same location (used for duplicate clustering).
+   */
+  public static async arePhotosSameIssue(
+    photo1Url: string,
+    photo2Url: string
+  ): Promise<IssueDuplicateResult> {
+    const cacheKey = `ai:duplicate:${sha256(`${photo1Url}|${photo2Url}`)}`;
+    const cached = memoryCache.get<IssueDuplicateResult>(cacheKey);
+
+    if (cached) {
+      return { ...cached, cacheHit: true };
+    }
+
+    const model = getGeminiModel();
+
+    if (!model) {
+      const fallback: IssueDuplicateResult = {
+        isSameIssue: false,
+        confidence: 0.5,
+        reasoning: 'AI model offline; clustering by geographic proximity only.',
+        cacheHit: false,
+        aiAvailable: false,
+      };
+      memoryCache.set(cacheKey, fallback, AI_CACHE_TTL);
+      return fallback;
+    }
+
+    try {
+      const [p1Part, p2Part] = await Promise.all([
+        urlToInlinePart(photo1Url),
+        urlToInlinePart(photo2Url),
+      ]);
+
+      const prompt = `You are an urban municipal incident triage system analyzing two citizen photos reported in the same 500-meter radius.
+
+Determine whether Photo 1 and Photo 2 depict the SAME civic issue (e.g. the same pothole, same garbage overflow, same broken pole, or same road damage).
+
+Respond ONLY with valid JSON — no markdown, no backticks:
+{
+  "isSameIssue": true,
+  "confidence": 0.95,
+  "reasoning": "Brief explanation of physical landmarks, angle, or hazard alignment"
+}
+
+"confidence" ranges 0.0 to 1.0.`;
+
+      const response = await model.generateContent([p1Part, p2Part, prompt]);
+      const text = response.response.text().replace(/```json|```/g, '').trim();
+      const parsed = JSON.parse(text) as {
+        isSameIssue: boolean;
+        confidence: number;
+        reasoning: string;
+      };
+
+      const result: IssueDuplicateResult = {
+        isSameIssue: Boolean(parsed.isSameIssue),
+        confidence:
+          typeof parsed.confidence === 'number'
+            ? Math.min(1, Math.max(0, parsed.confidence))
+            : 0.7,
+        reasoning: parsed.reasoning || 'Visual feature alignment evaluated by Gemini Vision.',
+        cacheHit: false,
+        aiAvailable: true,
+      };
+
+      memoryCache.set(cacheKey, result, AI_CACHE_TTL);
+      return result;
+    } catch (err) {
+      console.error('Gemini duplicate comparison error:', err);
+      return {
+        isSameIssue: false,
+        confidence: 0.5,
+        reasoning: 'Visual deduplication temporarily unavailable.',
+        cacheHit: false,
+        aiAvailable: false,
       };
     }
   }
@@ -117,7 +210,7 @@ Respond ONLY with valid JSON — no markdown, no backticks:
 
     const model = getGeminiModel();
     if (!model) {
-      return { category: 'OTHER', confidence: 0.5 };
+      return { category: 'OTHER', confidence: 0.5, aiAvailable: false };
     }
 
     try {
@@ -147,13 +240,14 @@ Respond ONLY with valid JSON — no markdown:
       const result: CategoryClassificationResult = {
         category: validCategories.includes(parsed.category) ? parsed.category : 'OTHER',
         confidence: typeof parsed.confidence === 'number' ? parsed.confidence : 0.7,
+        aiAvailable: true,
       };
 
       memoryCache.set(cacheKey, result, AI_CACHE_TTL);
       return result;
     } catch (err) {
       console.error('Gemini categorization error:', err);
-      return { category: 'OTHER', confidence: 0.5 };
+      return { category: 'OTHER', confidence: 0.5, aiAvailable: false };
     }
   }
 }

@@ -20,9 +20,18 @@ export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) =
   const [geoJsonData, setGeoJsonData] = useState<GeoJsonFeatureCollection | null>(null);
   const [clusters, setClusters] = useState<ComplaintCluster[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [radiusKm, setRadiusKm] = useState<number>(5);
-  const [selectedSector, setSelectedSector] = useState<string>('All Sectors');
+  const [radiusKm, setRadiusKm] = useState<number>(15);
+  const [selectedSector, setSelectedSector] = useState<string>('All Areas');
   const [selectedStatus, setSelectedStatus] = useState<string>('ALL');
+
+  // Mumbai regional centroids for sector filtering
+  const MUMBAI_SECTORS: Record<string, { lat: number; lng: number; zoom: number; maxDist?: number }> = {
+    'All Areas': { lat: 19.076, lng: 72.8777, zoom: 12 },
+    'South Mumbai': { lat: 18.9388, lng: 72.8258, zoom: 13, maxDist: 8 },
+    'Western Suburbs': { lat: 19.1197, lng: 72.8464, zoom: 13, maxDist: 10 },
+    'Eastern Suburbs': { lat: 19.0657, lng: 72.9106, zoom: 13, maxDist: 10 },
+    'Central Mumbai': { lat: 19.0216, lng: 72.8427, zoom: 13, maxDist: 7 },
+  };
 
   useEffect(() => {
     const loadMapData = async () => {
@@ -44,10 +53,32 @@ export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) =
   }, []);
 
   const features = geoJsonData?.features || [];
+  const currentSectorConfig = MUMBAI_SECTORS[selectedSector] || MUMBAI_SECTORS['All Areas'];
 
   const filteredFeatures = features.filter((f) => {
-    if (selectedStatus === 'ALL') return true;
-    return f.properties.status === selectedStatus;
+    if (selectedStatus !== 'ALL' && f.properties.status !== selectedStatus) {
+      return false;
+    }
+
+    const [lng, lat] = f.geometry.coordinates;
+
+    // Filter by distance from active sector / Mumbai center
+    const dLat = (lat - currentSectorConfig.lat) * 111;
+    const dLng =
+      (lng - currentSectorConfig.lng) *
+      111 *
+      Math.cos((currentSectorConfig.lat * Math.PI) / 180);
+    const distKm = Math.sqrt(dLat * dLat + dLng * dLng);
+
+    // Apply radius slider
+    if (distKm > radiusKm) return false;
+
+    // If specific sector selected, apply sector boundary limit
+    if (currentSectorConfig.maxDist && distKm > currentSectorConfig.maxDist) {
+      return false;
+    }
+
+    return true;
   });
 
   const handleSelectById = async (id: string) => {
@@ -113,7 +144,7 @@ export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) =
               className="w-full accent-green-600 cursor-pointer"
             />
             <div className="flex gap-1.5 flex-wrap pt-1">
-              {['All Sectors', 'Downtown', 'North Sector', 'Central Ward'].map((sector) => (
+              {['All Areas', 'South Mumbai', 'Western Suburbs', 'Eastern Suburbs', 'Central Mumbai'].map((sector) => (
                 <button
                   key={sector}
                   onClick={() => setSelectedSector(sector)}
@@ -242,8 +273,13 @@ export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) =
       {/* Right Interactive Map Canvas */}
       <div className="flex-1 relative h-full">
         <InteractiveMap
-          geoJsonData={geoJsonData}
+          geoJsonData={{
+            type: 'FeatureCollection',
+            features: filteredFeatures,
+          }}
           clusters={clusters}
+          center={[currentSectorConfig.lat, currentSectorConfig.lng]}
+          zoom={currentSectorConfig.zoom}
           onSelectComplaint={handleSelectById}
         />
       </div>

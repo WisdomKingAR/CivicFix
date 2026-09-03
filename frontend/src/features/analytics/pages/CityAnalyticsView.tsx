@@ -270,10 +270,11 @@ export const CityAnalyticsView: React.FC = () => {
             onChange={(e) => setSelectedDistrict(e.target.value)}
             className="px-3 py-2 rounded-xl bg-slate-50 text-xs font-bold text-slate-800 border border-slate-200 outline-none"
           >
-            <option value="ALL">All Neighborhoods / Districts</option>
-            <option value="DOWNTOWN">Downtown Core (Ward 84)</option>
-            <option value="NORTH">Northside Industrial (Ward 85)</option>
-            <option value="EAST">Eastside Residential (Ward 86)</option>
+            <option value="ALL">All Municipal Wards (Mumbai BMC)</option>
+            <option value="WARD_KW">Ward K/W — Andheri West &amp; Juhu</option>
+            <option value="WARD_HE">Ward H/E — Bandra East &amp; BKC</option>
+            <option value="WARD_A">Ward A — Colaba, Fort &amp; Marine Drive</option>
+            <option value="WARD_FN">Ward F/N — Matunga &amp; Sion</option>
           </select>
         </div>
 
@@ -319,13 +320,13 @@ export const CityAnalyticsView: React.FC = () => {
 
         {/* Right: Ward Performance & Resolution Velocity */}
         <div className="lg:col-span-6 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-5">
-          <h3 className="text-base font-bold text-slate-900">Ward SLA &amp; Resolution Velocity</h3>
+          <h3 className="text-base font-bold text-slate-900">Mumbai Ward SLA &amp; Resolution Velocity</h3>
 
           <div className="space-y-4 text-xs">
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
               <div>
-                <div className="font-bold text-slate-800">Ward 12 — Central Zone</div>
-                <div className="text-slate-500">Officer Sunita Sharma • Dispatch Unit Alpha</div>
+                <div className="font-bold text-slate-800">Ward K/W — Andheri West &amp; Juhu</div>
+                <div className="text-slate-500">Officer Ramesh Patil • Rapid Road Works Unit</div>
               </div>
               <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-700">
                 96% SLA Compliance
@@ -334,21 +335,21 @@ export const CityAnalyticsView: React.FC = () => {
 
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
               <div>
-                <div className="font-bold text-slate-800">Ward 84 — Downtown Core</div>
-                <div className="text-slate-500">Lead Inspector • Rapid Triage Squad</div>
+                <div className="font-bold text-slate-800">Ward H/E — Bandra East &amp; BKC</div>
+                <div className="text-slate-500">Officer Priya Nair • Electrical &amp; Traffic Hub</div>
               </div>
               <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700">
-                91% SLA Compliance
+                92% SLA Compliance
               </span>
             </div>
 
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
               <div>
-                <div className="font-bold text-slate-800">Ward 85 — North Industrial Corridor</div>
-                <div className="text-slate-500">Heavy Repairs Dept • Civil Work Group</div>
+                <div className="font-bold text-slate-800">Ward A — Colaba, Fort &amp; Marine Drive</div>
+                <div className="text-slate-500">Inspector Kumar Shinde • Heritage Zone Civil Repairs</div>
               </div>
               <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">
-                87% SLA Compliance
+                88% SLA Compliance
               </span>
             </div>
           </div>

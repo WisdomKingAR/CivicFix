@@ -14,6 +14,7 @@ interface AISimilarityViewerProps {
   aiSimilarityScore?: number | null;
   verificationMethod: VerificationMethod;
   citizenConfirmed?: boolean | null;
+  aiAvailable?: boolean;
 }
 
 export const AISimilarityViewer: React.FC<AISimilarityViewerProps> = ({
@@ -22,6 +23,7 @@ export const AISimilarityViewer: React.FC<AISimilarityViewerProps> = ({
   aiSimilarityScore,
   verificationMethod,
   citizenConfirmed,
+  aiAvailable = true,
 }) => {
   const hasScore = aiSimilarityScore !== null && aiSimilarityScore !== undefined;
   const percentage = hasScore ? Math.round((aiSimilarityScore as number) * 100) : null;
@@ -40,10 +42,17 @@ export const AISimilarityViewer: React.FC<AISimilarityViewerProps> = ({
           </div>
         </div>
 
-        <span className="px-3 py-1 bg-green-500/10 text-green-400 text-xs font-mono font-bold rounded-full border border-green-500/20 flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-          {verificationMethod}
-        </span>
+        <div className="flex items-center gap-2">
+          {!aiAvailable && (
+            <span className="px-2.5 py-1 bg-amber-500/10 text-amber-400 text-[11px] font-bold rounded-full border border-amber-500/30 flex items-center gap-1">
+              ⚠️ AI Offline — Fallback Mode
+            </span>
+          )}
+          <span className="px-3 py-1 bg-green-500/10 text-green-400 text-xs font-mono font-bold rounded-full border border-green-500/20 flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            {verificationMethod}
+          </span>
+        </div>
       </div>
 
       {/* Side by Side Photos */}

@@ -53,17 +53,43 @@ async function main() {
   });
   console.log('✅ Seeded admin user:', admin.email);
 
-  // 4. Sensitive Locations (Schools & Hospitals for proximity scoring)
+  // 4. Sensitive Locations (Schools & Hospitals for proximity scoring across Mumbai)
   await prisma.sensitiveLocation.createMany({
     data: [
-      { name: 'Mumbai General Hospital', type: 'HOSPITAL', lat: 18.9388, lng: 72.8258 },
-      { name: 'St. Xavier High School', type: 'SCHOOL', lat: 18.9322, lng: 72.8264 },
-      { name: 'Andheri Metro Hospital', type: 'HOSPITAL', lat: 19.1197, lng: 72.8464 },
-      { name: 'Holy Family School', type: 'SCHOOL', lat: 19.1142, lng: 72.8521 },
+      // South Mumbai
+      { name: 'KEM Hospital (King Edward Memorial)', type: 'HOSPITAL', lat: 18.9388, lng: 72.8258 },
+      { name: 'Nair Hospital (BYL Nair)', type: 'HOSPITAL', lat: 18.9629, lng: 72.8193 },
+      { name: 'St. George Hospital', type: 'HOSPITAL', lat: 18.9338, lng: 72.8392 },
+      { name: "St. Xavier's High School Fort", type: 'SCHOOL', lat: 18.9322, lng: 72.8264 },
+      { name: 'Cathedral and John Connon School', type: 'SCHOOL', lat: 18.9356, lng: 72.8338 },
+
+      // Central / Matunga / Dadar
+      { name: 'Hinduja Hospital Mahim', type: 'HOSPITAL', lat: 19.033, lng: 72.8397 },
+      { name: 'Sion Hospital (Lokmanya Tilak Municipal)', type: 'HOSPITAL', lat: 19.0397, lng: 72.86 },
+      { name: 'Don Bosco High School Matunga', type: 'SCHOOL', lat: 19.0216, lng: 72.8427 },
+      { name: 'Balmohan Vidyamandir Dadar', type: 'SCHOOL', lat: 19.0182, lng: 72.8417 },
+
+      // Bandra / Kurla / BKC
+      { name: 'Lilavati Hospital Bandra', type: 'HOSPITAL', lat: 19.0543, lng: 72.8266 },
+      { name: 'Holy Family Hospital Bandra', type: 'HOSPITAL', lat: 19.0606, lng: 72.8363 },
+      { name: 'Dhirubhai Ambani International School BKC', type: 'SCHOOL', lat: 19.0633, lng: 72.8681 },
+
+      // Andheri / Jogeshwari
+      { name: 'Kokilaben Dhirubhai Ambani Hospital', type: 'HOSPITAL', lat: 19.1337, lng: 72.8272 },
+      { name: 'Seven Hills Hospital Andheri', type: 'HOSPITAL', lat: 19.1197, lng: 72.8464 },
+      { name: 'Holy Family School Andheri', type: 'SCHOOL', lat: 19.1142, lng: 72.8521 },
+
+      // Borivali / Kandivali
+      { name: 'Bhagwati Hospital Borivali', type: 'HOSPITAL', lat: 19.2247, lng: 72.8561 },
+      { name: 'Ryan International School Kandivali', type: 'SCHOOL', lat: 19.2086, lng: 72.8357 },
+
+      // Mulund / Thane / Powai
+      { name: 'Fortis Hospital Mulund', type: 'HOSPITAL', lat: 19.1723, lng: 72.9561 },
+      { name: 'Hiranandani Hospital Powai', type: 'HOSPITAL', lat: 19.1197, lng: 72.9093 },
     ],
     skipDuplicates: true,
   });
-  console.log('✅ Seeded sensitive landmark locations');
+  console.log('✅ Seeded 20 sensitive Mumbai landmark locations');
 
   console.log('✨ Seed complete!');
 }

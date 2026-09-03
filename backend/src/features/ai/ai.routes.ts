@@ -24,4 +24,6 @@ router.post(
   AIController.classifyImage
 );
 
+router.get('/health', AIController.healthCheck);
+
 export default router;
