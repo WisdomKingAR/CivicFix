@@ -1,7 +1,7 @@
 // frontend/src/features/admin/pages/AdminDashboard.tsx
 import React, { useState, useEffect } from 'react';
 import { adminService } from '../services/adminService';
-import type { User, Role } from '../../../core/types';
+import type { User, Role, Complaint } from '../../../core/types';
 import { MetricSkeleton } from '../../../core/components/LoadingSkeleton';
 import { toast } from '../../../core/components/Toast';
 import {
@@ -13,29 +13,43 @@ import {
   TrendingUp,
   Clock,
   ShieldCheck,
+  ClipboardList,
+  AlertCircle,
+  MapPin,
+  Calendar,
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [analytics, setAnalytics] = useState<any>(null);
+  const [complaints, setComplaints] = useState<Complaint[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [roleFilter, setRoleFilter] = useState<string>('ALL');
+  const [complaintFilter, setComplaintFilter] = useState<string>('ALL');
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [usersRes, analyticsRes] = await Promise.all([
+      const [usersRes, analyticsRes, complaintsRes] = await Promise.all([
         adminService.getUsers().catch(() => ({ data: [] })),
         adminService.getAnalytics().catch(() => ({ data: null })),
+        adminService.getComplaints().catch(() => ({ data: [] })),
       ]);
       const userList = Array.isArray(usersRes.data)
         ? usersRes.data
         : (usersRes.data as any)?.users || [];
       setUsers(userList);
+
       if (analyticsRes.data) setAnalytics(analyticsRes.data);
+
+      const complaintList = Array.isArray(complaintsRes.data)
+        ? complaintsRes.data
+        : (complaintsRes.data as any)?.complaints || [];
+      setComplaints(complaintList);
     } catch {
       setUsers([]);
+      setComplaints([]);
     } finally {
       setLoading(false);
     }
@@ -76,6 +90,28 @@ export const AdminDashboard: React.FC = () => {
     return matchesRole && matchesSearch;
   });
 
+  const filteredComplaints = complaints.filter((c) => {
+    if (complaintFilter === 'ALL') return true;
+    return c.status === complaintFilter;
+  });
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'RESOLVED':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'IN_PROGRESS':
+        return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'ASSIGNED':
+        return 'bg-amber-100 text-amber-800 border-amber-200';
+      case 'UNDER_REVIEW':
+        return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'REJECTED':
+        return 'bg-rose-100 text-rose-800 border-rose-200';
+      default:
+        return 'bg-slate-100 text-slate-800 border-slate-200';
+    }
+  };
+
   return (
     <div className="space-y-6 pb-12">
       {/* Top Banner */}
@@ -98,14 +134,14 @@ export const AdminDashboard: React.FC = () => {
       {loading ? (
         <MetricSkeleton />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Registered</div>
-              <div className="text-2xl font-black text-slate-900 mt-1">{users.length || 18} Users</div>
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Registered Accounts</div>
+              <div className="text-2xl font-black text-slate-900 mt-1">{users.length}</div>
               <div className="flex items-center gap-1 mt-1 text-xs text-green-700 font-semibold">
                 <TrendingUp className="w-3.5 h-3.5" />
-                <span>+12% from last month</span>
+                <span>Active platform users</span>
               </div>
             </div>
             <div className="w-11 h-11 rounded-xl bg-green-50 text-green-700 flex items-center justify-center border border-green-200">
@@ -115,17 +151,16 @@ export const AdminDashboard: React.FC = () => {
 
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Authority Officers</div>
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Flagged Abuse Accounts</div>
               <div className="text-2xl font-black text-slate-900 mt-1">
-                {users.filter((u) => u.role === 'AUTHORITY').length || 4} Active
+                {users.filter((u) => u.isFlagged).length}
               </div>
-              <div className="flex items-center gap-1 mt-1 text-xs text-green-700 font-semibold">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Target: 5/Ward</span>
+              <div className="flex items-center gap-1 mt-1 text-xs text-rose-600 font-semibold">
+                <span>Suspended / Moderated</span>
               </div>
             </div>
-            <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center border border-blue-200">
-              <ShieldCheck className="w-5 h-5" />
+            <div className="w-11 h-11 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center border border-rose-200">
+              <AlertCircle className="w-5 h-5" />
             </div>
           </div>
 
@@ -159,6 +194,94 @@ export const AdminDashboard: React.FC = () => {
         </div>
       )}
 
+      {/* Central Complaints Audit Queue Section */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <ClipboardList className="w-5 h-5 text-green-700" />
+              All City Complaints &amp; Incident Audits
+            </h2>
+            <p className="text-xs text-slate-500">Live feed across all municipal sectors and wards ({filteredComplaints.length} tickets)</p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <select
+              value={complaintFilter}
+              onChange={(e) => setComplaintFilter(e.target.value)}
+              className="px-3 py-1.5 rounded-xl bg-slate-50 text-xs font-bold text-slate-700 border border-slate-200 outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="ALL">All Statuses</option>
+              <option value="SUBMITTED">Submitted</option>
+              <option value="ASSIGNED">Assigned</option>
+              <option value="IN_PROGRESS">In Progress</option>
+              <option value="RESOLVED">Resolved</option>
+              <option value="UNDER_REVIEW">Under Review</option>
+              <option value="REJECTED">Rejected</option>
+            </select>
+          </div>
+        </div>
+
+        {loading ? (
+          <div className="text-center py-8 text-xs text-slate-500">Loading complaints audit...</div>
+        ) : filteredComplaints.length === 0 ? (
+          <div className="text-center py-10 border border-dashed border-slate-200 rounded-xl bg-slate-50/50">
+            <ClipboardList className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+            <div className="text-xs font-bold text-slate-700">No complaints found</div>
+            <div className="text-[11px] text-slate-400 mt-0.5">There are no complaints matching the selected filter.</div>
+          </div>
+        ) : (
+          <div className="overflow-x-auto border border-slate-200 rounded-xl max-h-[380px] overflow-y-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead className="bg-slate-50 text-slate-500 font-bold sticky top-0 border-b border-slate-200">
+                <tr>
+                  <th className="py-2.5 px-3">Complaint / Category</th>
+                  <th className="py-2.5 px-3">Status</th>
+                  <th className="py-2.5 px-3">Priority Score</th>
+                  <th className="py-2.5 px-3">Location</th>
+                  <th className="py-2.5 px-3 text-right">Submitted</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredComplaints.map((c: any) => {
+                  const priority = c.cluster?.priorityScore ?? c.priorityScore ?? 0;
+                  return (
+                    <tr key={c.id} className="hover:bg-slate-50/60 transition-colors">
+                      <td className="py-3 px-3">
+                        <div className="font-bold text-slate-900">{c.category?.replace('_', ' ')}</div>
+                        <div className="text-[11px] text-slate-500 line-clamp-1 max-w-xs">{c.description || 'No description provided'}</div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${getStatusBadge(c.status)}`}>
+                          {c.status}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3">
+                        <span className={`font-bold ${priority >= 70 ? 'text-rose-600' : priority >= 40 ? 'text-amber-600' : 'text-slate-700'}`}>
+                          {Math.round(priority)}/100
+                        </span>
+                      </td>
+                      <td className="py-3 px-3 text-slate-600">
+                        <div className="flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                          <span className="truncate max-w-[160px]">{c.address || `${c.lat.toFixed(3)}, ${c.lng.toFixed(3)}`}</span>
+                        </div>
+                      </td>
+                      <td className="py-3 px-3 text-right text-slate-400 text-[11px]">
+                        <div className="flex items-center justify-end gap-1">
+                          <Calendar className="w-3 h-3 text-slate-300" />
+                          <span>{new Date(c.createdAt).toLocaleDateString()}</span>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
       {/* User Moderation Section */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -172,17 +295,17 @@ export const AdminDashboard: React.FC = () => {
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
               <input
                 type="text"
+                placeholder="Search user..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search name or email..."
-                className="pl-9 pr-3 py-1.5 rounded-xl bg-slate-50 text-xs text-slate-900 border border-slate-200 outline-none focus:ring-2 focus:ring-green-500 w-56"
+                className="pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-green-500 w-44"
               />
             </div>
 
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
-              className="px-3 py-1.5 rounded-xl bg-slate-50 text-xs font-semibold text-slate-800 border border-slate-200 outline-none focus:ring-2 focus:ring-green-500"
+              className="px-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 outline-none"
             >
               <option value="ALL">All Roles</option>
               <option value="CITIZEN">Citizen</option>
@@ -192,30 +315,29 @@ export const AdminDashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead>
-              <tr className="border-b border-slate-200 text-slate-400 font-bold uppercase">
-                <th className="pb-3 px-3">User</th>
-                <th className="pb-3 px-3">Assigned Role</th>
-                <th className="pb-3 px-3">Jurisdiction / Ward</th>
-                <th className="pb-3 px-3">Reports</th>
-                <th className="pb-3 px-3">Account Status</th>
-                <th className="pb-3 px-3 text-right">Moderation Actions</th>
+        <div className="overflow-x-auto border border-slate-200 rounded-xl">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead className="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+              <tr>
+                <th className="py-2.5 px-3">User Profile</th>
+                <th className="py-2.5 px-3">Assigned Role</th>
+                <th className="py-2.5 px-3">Jurisdiction</th>
+                <th className="py-2.5 px-3">Status</th>
+                <th className="py-2.5 px-3 text-right">Moderation Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredUsers.map((u) => (
-                <tr key={u.id} className="hover:bg-slate-50 transition-colors">
+                <tr key={u.id} className="hover:bg-slate-50/50">
                   <td className="py-3 px-3">
                     <div className="font-bold text-slate-900">{u.name}</div>
-                    <div className="text-[11px] text-slate-500">{u.email}</div>
+                    <div className="text-[11px] text-slate-400">{u.email}</div>
                   </td>
                   <td className="py-3 px-3">
                     <select
                       value={u.role}
                       onChange={(e) => handleRoleChange(u.id, e.target.value as Role)}
-                      className="px-2.5 py-1 rounded-lg bg-slate-100 text-[11px] font-bold text-slate-800 border border-slate-200"
+                      className="px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-slate-800 font-semibold outline-none focus:ring-1 focus:ring-green-500 text-[11px]"
                     >
                       <option value="CITIZEN">CITIZEN</option>
                       <option value="AUTHORITY">AUTHORITY</option>
@@ -223,19 +345,16 @@ export const AdminDashboard: React.FC = () => {
                     </select>
                   </td>
                   <td className="py-3 px-3 text-slate-600 font-medium">
-                    {u.jurisdiction || 'Ward 84 Central'}
-                  </td>
-                  <td className="py-3 px-3 font-bold text-green-700">
-                    {u._count?.complaints || 0}
+                    {u.jurisdiction || 'City-Wide General'}
                   </td>
                   <td className="py-3 px-3">
                     {u.isFlagged ? (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-200">
-                        Flagged
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-200">
+                        FLAGGED (Abuse)
                       </span>
                     ) : (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-700 border border-green-200">
-                        Active
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-700 border border-green-200">
+                        VERIFIED
                       </span>
                     )}
                   </td>

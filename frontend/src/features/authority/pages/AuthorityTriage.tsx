@@ -31,7 +31,7 @@ export const AuthorityTriage: React.FC = () => {
   const [resolving, setResolving] = useState<boolean>(false);
 
   const [showAssignModal, setShowAssignModal] = useState<boolean>(false);
-  const [assignedToId, setAssignedToId] = useState<string>('officer-101');
+  const [assignedToId, setAssignedToId] = useState<string>('');
   const [assigning, setAssigning] = useState<boolean>(false);
 
   const [categoryFilter, setCategoryFilter] = useState<string>('ALL');
@@ -43,7 +43,11 @@ export const AuthorityTriage: React.FC = () => {
         authorityService.getQueue({
           category: categoryFilter === 'ALL' ? undefined : categoryFilter,
         }),
-        authorityService.getStaff().catch(() => ({ data: [] })),
+        authorityService.getStaff().catch((err) => {
+          toast.error('Could not load staff list. Refresh to retry.');
+          console.error('getStaff error:', err);
+          return { data: [] };
+        }),
       ]);
       const list = Array.isArray(queueRes.data)
         ? queueRes.data
@@ -54,6 +58,9 @@ export const AuthorityTriage: React.FC = () => {
         ? staffRes.data
         : (staffRes.data as any)?.users || [];
       setStaffUsers(staffList);
+      if (staffList.length > 0 && !assignedToId) {
+        setAssignedToId(staffList[0].id);
+      }
     } catch {
       setQueue([]);
     } finally {
@@ -117,6 +124,10 @@ export const AuthorityTriage: React.FC = () => {
   const handleAssignSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedComplaint) return;
+    if (!assignedToId) {
+      toast.error('Please select an officer before assigning.');
+      return;
+    }
     setAssigning(true);
     try {
       await authorityService.assignStaff(selectedComplaint.id, assignedToId);
@@ -381,11 +392,9 @@ export const AuthorityTriage: React.FC = () => {
                       </option>
                     ))
                   ) : (
-                    <>
-                      <option value="officer-101">Officer Ramesh (Road Works)</option>
-                      <option value="officer-102">Officer Priya (Electrical)</option>
-                      <option value="officer-103">Officer Kumar (Sanitation)</option>
-                    </>
+                    <option value="" disabled>
+                      No staff available — check /authority/staff
+                    </option>
                   )}
                 </select>
               </div>

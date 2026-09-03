@@ -12,7 +12,7 @@ export const adminService = {
     id: string,
     payload: { role?: string; isFlagged?: boolean; flagReason?: string; jurisdiction?: string }
   ) => {
-    const res = await api.put<ApiResponse<User>>(`/admin/users/${id}`, payload);
+    const res = await api.patch<ApiResponse<User>>(`/admin/users/${id}`, payload);
     return res.data;
   },
 
@@ -23,6 +23,11 @@ export const adminService = {
 
   getSpamLogs: async () => {
     const res = await api.get<ApiResponse<any[]>>('/admin/spam-logs');
+    return res.data;
+  },
+
+  getComplaints: async (params?: { status?: string; category?: string; page?: number }) => {
+    const res = await api.get<ApiResponse<any>>('/authority/queue', { params });
     return res.data;
   },
 };

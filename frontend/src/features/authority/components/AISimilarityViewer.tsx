@@ -24,8 +24,9 @@ export const AISimilarityViewer: React.FC<AISimilarityViewerProps> = ({
   verificationMethod,
   citizenConfirmed,
 }) => {
-  const percentage = aiSimilarityScore ? Math.round(aiSimilarityScore * 100) : 85;
-  const isHighMatch = percentage >= 75;
+  const hasScore = aiSimilarityScore !== null && aiSimilarityScore !== undefined;
+  const percentage = hasScore ? Math.round((aiSimilarityScore as number) * 100) : null;
+  const isHighMatch = percentage !== null && percentage >= 75;
 
   return (
     <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-xl border border-slate-800 space-y-6">
@@ -74,12 +75,20 @@ export const AISimilarityViewer: React.FC<AISimilarityViewerProps> = ({
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="text-xs text-slate-300 font-semibold">Visual Repair Confidence:</span>
-            <span className={`text-lg font-black ${isHighMatch ? 'text-green-400' : 'text-amber-400'}`}>
-              {percentage}%
-            </span>
+            {percentage !== null ? (
+              <span className={`text-lg font-black ${isHighMatch ? 'text-green-400' : 'text-amber-400'}`}>
+                {percentage}%
+              </span>
+            ) : (
+              <span className="text-sm font-black text-slate-400">
+                Not calculated yet
+              </span>
+            )}
           </div>
           <p className="text-[11px] text-slate-400">
-            {isHighMatch
+            {percentage === null
+              ? 'Upload an after-repair photo to run AI verification.'
+              : isHighMatch
               ? 'AI confirmed high structural surface repair alignment and hazard mitigation.'
               : 'Moderate score. Requires field officer supervisor or citizen confirmation.'}
           </p>
