@@ -122,6 +122,7 @@ export interface ApiResponse<T = any> {
 export interface LoginResponseData {
   user: User;
   accessToken: string;
+  refreshToken?: string;
 }
 
 export interface GeoJsonFeatureProperties {

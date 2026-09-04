@@ -23,25 +23,70 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    try {
+      const saved = typeof window !== 'undefined' ? localStorage.getItem('civicfix_user') : null;
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const initAuth = async () => {
+      const token = getAccessToken();
+
+      // If no token exists, attempt a silent refresh first in case refresh cookie/storage exists
+      if (!token) {
+        try {
+          await authService.refreshToken();
+        } catch {
+          // No active session
+          setUser(null);
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('civicfix_user');
+          }
+          setLoading(false);
+          return;
+        }
+      }
+
       try {
-        // Attempt cookie-based token refresh on initial load
-        await authService.refreshToken().catch(() => null);
         const res = await authService.getMe();
         if (res.data) {
           setUser(res.data);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('civicfix_user', JSON.stringify(res.data));
+          }
         }
       } catch {
+        // Access token might be expired, attempt refresh
+        try {
+          const refreshRes = await authService.refreshToken();
+          if (refreshRes.data?.accessToken) {
+            const retryRes = await authService.getMe();
+            if (retryRes.data) {
+              setUser(retryRes.data);
+              if (typeof window !== 'undefined') {
+                localStorage.setItem('civicfix_user', JSON.stringify(retryRes.data));
+              }
+              return;
+            }
+          }
+        } catch {
+          // Refresh also failed
+        }
         setAccessToken(null);
         setUser(null);
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('civicfix_user');
+        }
       } finally {
         setLoading(false);
       }
     };
+
     initAuth();
   }, []);
 
@@ -49,6 +94,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const res = await authService.login({ email, password });
     if (res.data?.user) {
       setUser(res.data.user);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('civicfix_user', JSON.stringify(res.data.user));
+      }
       return res.data.user;
     }
     throw new Error(res.error || 'Login failed');
@@ -65,6 +113,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const res = await authService.register(payload);
     if (res.data?.user) {
       setUser(res.data.user);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('civicfix_user', JSON.stringify(res.data.user));
+      }
       return res.data.user;
     }
     throw new Error(res.error || 'Registration failed');
@@ -73,6 +124,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = async () => {
     await authService.logout();
     setUser(null);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('civicfix_user');
+    }
   };
 
   const refreshUser = async () => {
@@ -80,6 +134,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await authService.getMe();
       if (res.data) {
         setUser(res.data);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('civicfix_user', JSON.stringify(res.data));
+        }
       }
     } catch {
       // silently ignore refresh failure

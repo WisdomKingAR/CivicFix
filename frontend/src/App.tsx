@@ -19,8 +19,10 @@ import { ErrorBoundary } from './core/components/ErrorBoundary';
 import { Toaster } from './core/components/Toast';
 
 export const AppContent: React.FC = () => {
-  const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<string>('landing');
+  const { user, loading } = useAuth();
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    return (typeof window !== 'undefined' ? localStorage.getItem('civicfix_active_tab') : null) || 'landing';
+  });
   const [pendingTab, setPendingTab] = useState<string | null>(null);
   const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
 
@@ -30,9 +32,15 @@ export const AppContent: React.FC = () => {
     if (protectedTabs.includes(tab) && !user) {
       setPendingTab(tab);
       setActiveTab('auth');
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('civicfix_active_tab', 'auth');
+      }
       return;
     }
     setActiveTab(tab);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('civicfix_active_tab', tab);
+    }
   };
 
   const handleInspectComplaint = (comp: Complaint) => {
@@ -46,20 +54,35 @@ export const AppContent: React.FC = () => {
         const target = pendingTab;
         setPendingTab(null);
         setActiveTab(target);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('civicfix_active_tab', target);
+        }
         return;
       }
       const role = loggedInUser?.role ?? user?.role ?? 'CITIZEN';
+      let nextTab = 'citizen';
       if (role === 'AUTHORITY') {
-        setActiveTab('authority');
+        nextTab = 'authority';
       } else if (role === 'ADMIN') {
-        setActiveTab('admin');
-      } else {
-        setActiveTab('citizen');
+        nextTab = 'admin';
+      }
+      setActiveTab(nextTab);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('civicfix_active_tab', nextTab);
       }
     } catch {
       setActiveTab('citizen');
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#f8f9ff] flex flex-col items-center justify-center">
+        <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Restoring session...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f8f9ff] text-[#0b1c30] flex flex-col font-sans">

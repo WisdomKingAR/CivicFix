@@ -1,5 +1,5 @@
 // frontend/src/features/auth/services/authService.ts
-import { api, setAccessToken } from '../../../core/api/client';
+import { api, setAccessToken, setRefreshToken, getRefreshToken } from '../../../core/api/client';
 import type { ApiResponse, LoginResponseData, User } from '../../../core/types';
 
 export const authService = {
@@ -7,6 +7,9 @@ export const authService = {
     const res = await api.post<ApiResponse<LoginResponseData>>('/auth/login', credentials);
     if (res.data.data?.accessToken) {
       setAccessToken(res.data.data.accessToken);
+    }
+    if (res.data.data?.refreshToken) {
+      setRefreshToken(res.data.data.refreshToken);
     }
     return res.data;
   },
@@ -23,6 +26,9 @@ export const authService = {
     if (res.data.data?.accessToken) {
       setAccessToken(res.data.data.accessToken);
     }
+    if (res.data.data?.refreshToken) {
+      setRefreshToken(res.data.data.refreshToken);
+    }
     return res.data;
   },
 
@@ -33,6 +39,10 @@ export const authService = {
       // ignore
     } finally {
       setAccessToken(null);
+      setRefreshToken(null);
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('civicfix_user');
+      }
     }
   },
 
@@ -42,10 +52,14 @@ export const authService = {
   },
 
   refreshToken: async () => {
-    const res = await api.post<ApiResponse<{ accessToken: string }>>('/auth/refresh');
+    const fallbackToken = getRefreshToken();
+    const res = await api.post<ApiResponse<{ accessToken: string }>>('/auth/refresh', {
+      refreshToken: fallbackToken,
+    });
     if (res.data.data?.accessToken) {
       setAccessToken(res.data.data.accessToken);
     }
     return res.data;
   },
 };
+
