@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { InteractiveMap } from '../components/InteractiveMap';
 import { mapService } from '../services/mapService';
 import { complaintsService } from '../../complaints/services/complaintsService';
-import type { GeoJsonFeatureCollection, ComplaintCluster, Complaint } from '../../../core/types';
+import type { GeoJsonFeatureCollection, ComplaintCluster, Complaint, ComplaintCategory, ComplaintStatus } from '../../../core/types';
 import {
   Radar,
   MapPin,
@@ -102,9 +102,9 @@ export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) =
         onSelectComplaint({
           id: feature.properties.id,
           userId: 'public-viewer',
-          category: feature.properties.category,
+          category: (feature.properties.category as ComplaintCategory) || 'OTHER',
           description: feature.properties.description,
-          status: feature.properties.status,
+          status: (feature.properties.status as ComplaintStatus) || 'SUBMITTED',
           photoUrl: feature.properties.photoUrl,
           photoHash: 'hash',
           lat: feature.geometry.coordinates[1],
@@ -152,7 +152,7 @@ export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) =
               className="w-full accent-green-600 cursor-pointer"
             />
             <div className="flex gap-1.5 flex-wrap pt-1">
-              {['All Areas', 'South Mumbai', 'Western Suburbs', 'Eastern Suburbs', 'Central Mumbai'].map((sector) => (
+              {Object.keys(MUMBAI_SECTORS).map((sector) => (
                 <button
                   key={sector}
                   onClick={() => setSelectedSector(sector)}

@@ -134,6 +134,8 @@ export interface GeoJsonFeatureProperties {
   priorityScore?: number;
   complaintCount?: number;
   isCluster?: boolean;
+  address?: string | null;
+  isNearSensitive?: boolean;
 }
 
 export interface GeoJsonFeature {
