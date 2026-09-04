@@ -36,6 +36,7 @@ export class AIService {
     beforeUrl: string,
     afterUrl: string
   ): Promise<ImageComparisonResult> {
+    console.log(`[AIService] compareImages called for before="${beforeUrl}" and after="${afterUrl}"`);
     const cacheKey = `ai:compare:${sha256(`${beforeUrl}|${afterUrl}`)}`;
     const cached = memoryCache.get<ImageComparisonResult>(cacheKey);
 
@@ -122,6 +123,7 @@ Respond ONLY with valid JSON — no markdown, no backticks:
     photo1Url: string,
     photo2Url: string
   ): Promise<IssueDuplicateResult> {
+    console.log(`[AIService] arePhotosSameIssue called for photo1="${photo1Url}" and photo2="${photo2Url}"`);
     const cacheKey = `ai:duplicate:${sha256(`${photo1Url}|${photo2Url}`)}`;
     const cached = memoryCache.get<IssueDuplicateResult>(cacheKey);
 

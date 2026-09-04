@@ -1,5 +1,6 @@
 // src/features/admin/admin.controller.ts
 import { Request, Response, NextFunction } from 'express';
+import { ComplaintCategory } from '@prisma/client';
 import { AdminService } from './admin.service';
 import { sendSuccess, sendError } from '../../core/utils/response';
 
@@ -30,7 +31,11 @@ export class AdminController {
 
   public static async getAnalytics(req: Request, res: Response, next: NextFunction) {
     try {
-      const analytics = await AdminService.getAnalytics();
+      const { category, district } = req.query;
+      const analytics = await AdminService.getAnalytics({
+        category: category && category !== 'ALL' ? (category as ComplaintCategory) : undefined,
+        district: district && district !== 'ALL' ? String(district) : undefined,
+      });
       sendSuccess(res, analytics);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to compute analytics';

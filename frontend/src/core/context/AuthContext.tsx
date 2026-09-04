@@ -18,7 +18,6 @@ interface AuthContextType {
   }) => Promise<User>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
-  demoLogin: (role: Role) => Promise<User>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -87,19 +86,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const demoLogin = async (role: Role): Promise<User> => {
-    const credentialsMap: Record<Role, { email: string; pass: string }> = {
-      CITIZEN: { email: 'citizen@civicfix.com', pass: 'HackDemo@2025' },
-      AUTHORITY: { email: 'authority@civicfix.com', pass: 'HackAuth@2025' },
-      ADMIN: { email: 'admin@civicfix.com', pass: 'HackAdmin@2025' },
-    };
-
-    const target = credentialsMap[role];
-    return await login(target.email, target.pass);
-  };
-
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, refreshUser, demoLogin }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

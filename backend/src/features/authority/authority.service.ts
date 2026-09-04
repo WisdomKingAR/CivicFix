@@ -128,6 +128,15 @@ export class AuthorityService {
     data: AssignComplaintInput
   ) {
     const assignment = await prisma.$transaction(async (tx) => {
+      const current = await tx.complaint.findUnique({
+        where: { id: complaintId },
+        select: { status: true },
+      });
+
+      if (!current) {
+        throw new Error('Complaint not found.');
+      }
+
       const assign = await tx.complaintAssignment.create({
         data: {
           complaintId,
@@ -148,7 +157,7 @@ export class AuthorityService {
       await tx.statusHistory.create({
         data: {
           complaintId,
-          oldStatus: ComplaintStatus.SUBMITTED,
+          oldStatus: current.status,
           newStatus: ComplaintStatus.ASSIGNED,
           changedById: authorityId,
           notes: `Assigned to ${assign.assignedTo.name}.`,

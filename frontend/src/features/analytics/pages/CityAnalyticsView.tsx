@@ -51,12 +51,8 @@ export const CityAnalyticsView: React.FC = () => {
   const underReviewCount = overview.underReviewComplaints ?? 0;
   const flaggedUsers = overview.flaggedUsersCount ?? 0;
 
-  const categoryDistribution = analytics?.categoryDistribution || [
-    { category: 'POTHOLE', count: 542 },
-    { category: 'STREETLIGHT', count: 388 },
-    { category: 'GARBAGE', count: 312 },
-    { category: 'WATER_LEAKAGE', count: 186 },
-  ];
+  const categoryDistribution = analytics?.categoryDistribution || [];
+  const wardPerformance = analytics?.wardPerformance || [];
 
   const catTotal = categoryDistribution.reduce((acc: number, c: any) => acc + c.count, 0) || 1;
 
@@ -116,9 +112,13 @@ export const CityAnalyticsView: React.FC = () => {
       // Section 3: Ward Compliance
       csvRows.push('WARD-LEVEL SLA COMPLIANCE AUDIT');
       csvRows.push('Ward Name,Supervising Unit,SLA Compliance Rate,Status');
-      csvRows.push('"Ward 12 — Central Zone","Officer Sunita Sharma • Dispatch Unit Alpha",96%,COMPLIANT');
-      csvRows.push('"Ward 84 — Downtown Core","Lead Inspector • Rapid Triage Squad",91%,COMPLIANT');
-      csvRows.push('"Ward 85 — North Industrial Corridor","Heavy Repairs Dept • Civil Work Group",87%,COMPLIANT');
+      if (wardPerformance.length === 0) {
+        csvRows.push('"No Wards Active","N/A",100%,COMPLIANT');
+      } else {
+        wardPerformance.forEach((w: any) => {
+          csvRows.push(`"${(w.wardName || 'Ward').replace(/"/g, '""')}","${(w.officerInfo || 'Dispatch Unit').replace(/"/g, '""')}",${w.complianceRate ?? 100}%,${w.status || 'COMPLIANT'}`);
+        });
+      }
       csvRows.push('');
 
       csvRows.push('Report verified by CivicFix AI Engine & Municipal Command Center.');
@@ -291,67 +291,72 @@ export const CityAnalyticsView: React.FC = () => {
           <h3 className="text-base font-bold text-slate-900">Live Incident Volume by Category</h3>
 
           <div className="space-y-4 text-xs">
-            {categoryDistribution.map((stat: any) => {
-              const meta = categoryColors[stat.category] || {
-                bar: 'bg-green-600',
-                label: stat.category,
-              };
-              const pct = Math.round((stat.count / catTotal) * 100);
+            {categoryDistribution.length === 0 ? (
+              <div className="text-center py-8 text-slate-400 text-xs font-semibold">
+                No incident records found matching selected filters.
+              </div>
+            ) : (
+              categoryDistribution.map((stat: any) => {
+                const meta = categoryColors[stat.category] || {
+                  bar: 'bg-green-600',
+                  label: stat.category,
+                };
+                const pct = Math.round((stat.count / catTotal) * 100);
 
-              return (
-                <div key={stat.category}>
-                  <div className="flex justify-between font-semibold mb-1 text-slate-700">
-                    <span>{meta.label}</span>
-                    <span className="font-bold text-slate-900">
-                      {stat.count} ({pct}%)
-                    </span>
+                return (
+                  <div key={stat.category}>
+                    <div className="flex justify-between font-semibold mb-1 text-slate-700">
+                      <span>{meta.label}</span>
+                      <span className="font-bold text-slate-900">
+                        {stat.count} ({pct}%)
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                      <div
+                        className={`${meta.bar} h-2.5 rounded-full transition-all duration-500`}
+                        style={{ width: `${Math.max(pct, 4)}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-                    <div
-                      className={`${meta.bar} h-2.5 rounded-full transition-all duration-500`}
-                      style={{ width: `${Math.max(pct, 4)}%` }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
 
         {/* Right: Ward Performance & Resolution Velocity */}
         <div className="lg:col-span-6 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-5">
-          <h3 className="text-base font-bold text-slate-900">Mumbai Ward SLA &amp; Resolution Velocity</h3>
+          <h3 className="text-base font-bold text-slate-900">Municipal Ward SLA &amp; Resolution Velocity</h3>
 
           <div className="space-y-4 text-xs">
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-              <div>
-                <div className="font-bold text-slate-800">Ward K/W — Andheri West &amp; Juhu</div>
-                <div className="text-slate-500">Officer Ramesh Patil • Rapid Road Works Unit</div>
+            {wardPerformance.length === 0 ? (
+              <div className="text-center py-8 text-slate-400 text-xs font-semibold">
+                No active municipal ward dispatches recorded yet.
               </div>
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-700">
-                96% SLA Compliance
-              </span>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-              <div>
-                <div className="font-bold text-slate-800">Ward H/E — Bandra East &amp; BKC</div>
-                <div className="text-slate-500">Officer Priya Nair • Electrical &amp; Traffic Hub</div>
-              </div>
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700">
-                92% SLA Compliance
-              </span>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-              <div>
-                <div className="font-bold text-slate-800">Ward A — Colaba, Fort &amp; Marine Drive</div>
-                <div className="text-slate-500">Inspector Kumar Shinde • Heritage Zone Civil Repairs</div>
-              </div>
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">
-                88% SLA Compliance
-              </span>
-            </div>
+            ) : (
+              wardPerformance.map((ward: any) => (
+                <div
+                  key={ward.wardName}
+                  className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between"
+                >
+                  <div>
+                    <div className="font-bold text-slate-800">{ward.wardName}</div>
+                    <div className="text-slate-500">{ward.officerInfo}</div>
+                  </div>
+                  <span
+                    className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                      ward.complianceRate >= 90
+                        ? 'bg-green-100 text-green-700'
+                        : ward.complianceRate >= 80
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'bg-amber-100 text-amber-700'
+                    }`}
+                  >
+                    {ward.complianceRate}% SLA Compliance
+                  </span>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

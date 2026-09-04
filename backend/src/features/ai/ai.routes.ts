@@ -8,6 +8,9 @@ import { Role } from '@prisma/client';
 
 const router = Router();
 
+// Public health check route (rate limited by aiLimiter)
+router.get('/health', aiLimiter, AIController.healthCheck);
+
 router.use(authenticateToken);
 router.use(aiLimiter);
 
@@ -23,7 +26,5 @@ router.post(
   requireRole(Role.AUTHORITY, Role.ADMIN),
   AIController.classifyImage
 );
-
-router.get('/health', AIController.healthCheck);
 
 export default router;

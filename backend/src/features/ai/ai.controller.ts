@@ -53,7 +53,7 @@ export class AIController {
       }
       const ping = await model.generateContent('Reply with the word OK only.');
       const text = ping.response.text().trim();
-      sendSuccess(res, { status: 'ok', response: text, model: 'gemini-1.5-flash' }, 'Gemini reachable.');
+      sendSuccess(res, { status: 'ok', response: text, model: 'gemini-2.0-flash' }, 'Gemini reachable.');
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Gemini quota or connection error';
       sendError(res, msg, 503, 'AI_QUOTA_OR_KEY_ERROR');

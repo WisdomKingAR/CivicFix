@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { authorityService } from '../services/authorityService';
 import { complaintsService } from '../../complaints/services/complaintsService';
+import { useAuth } from '../../../core/context/AuthContext';
 import type { Complaint, User } from '../../../core/types';
 import { toast } from '../../../core/components/Toast';
 import {
@@ -19,6 +20,7 @@ import {
 } from 'lucide-react';
 
 export const AuthorityTriage: React.FC = () => {
+  const { user } = useAuth();
   const [queue, setQueue] = useState<Complaint[]>([]);
   const [staffUsers, setStaffUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -142,6 +144,7 @@ export const AuthorityTriage: React.FC = () => {
   };
 
   const resolvedCount = queue.filter((c) => c.status === 'RESOLVED').length;
+  const efficiencyRate = queue.length > 0 ? Math.round((resolvedCount / queue.length) * 100) : 100;
 
   return (
     <div className="space-y-6 pb-12">
@@ -156,12 +159,16 @@ export const AuthorityTriage: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-xl text-slate-900">Crew Alpha-4 Dispatch</span>
+              <span className="font-extrabold text-xl text-slate-900">
+                {user?.name ? `${user.name} Dispatch` : 'Field Officer Dispatch'}
+              </span>
               <span className="px-2.5 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-bold border border-green-200">
                 Active Duty
               </span>
             </div>
-            <p className="text-xs text-slate-500">Public Works &amp; Infrastructure Division • Municipal Ward 84</p>
+            <p className="text-xs text-slate-500">
+              Public Works &amp; Infrastructure Division • {user?.jurisdiction || 'Municipal Command'}
+            </p>
           </div>
         </div>
 
@@ -176,7 +183,7 @@ export const AuthorityTriage: React.FC = () => {
           </div>
           <div className="bg-white px-4 py-2.5 rounded-xl border border-slate-200 flex flex-col min-w-[120px]">
             <span className="text-[10px] text-slate-500 font-bold uppercase">Route Efficiency</span>
-            <span className="font-black text-blue-600 text-lg">94% Optimal</span>
+            <span className="font-black text-blue-600 text-lg">{efficiencyRate}% Optimal</span>
           </div>
         </div>
       </div>
