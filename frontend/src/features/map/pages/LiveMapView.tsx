@@ -27,8 +27,9 @@ export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) =
   // Mumbai regional centroids for sector filtering
   const MUMBAI_SECTORS: Record<string, { lat: number; lng: number; zoom: number; maxDist?: number }> = {
     'All Areas': { lat: 19.076, lng: 72.8777, zoom: 12 },
-    'South Mumbai': { lat: 18.9388, lng: 72.8258, zoom: 13, maxDist: 8 },
+    'Juhu / Vile Parle (Hackathon)': { lat: 19.1077, lng: 72.8362, zoom: 15, maxDist: 4 },
     'Western Suburbs': { lat: 19.1197, lng: 72.8464, zoom: 13, maxDist: 10 },
+    'South Mumbai': { lat: 18.9388, lng: 72.8258, zoom: 13, maxDist: 8 },
     'Eastern Suburbs': { lat: 19.0657, lng: 72.9106, zoom: 13, maxDist: 10 },
     'Central Mumbai': { lat: 19.0216, lng: 72.8427, zoom: 13, maxDist: 7 },
   };

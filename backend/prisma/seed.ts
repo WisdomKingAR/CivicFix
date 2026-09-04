@@ -84,7 +84,8 @@ async function main() {
       // Andheri / Vile Parle / Jogeshwari
       { name: 'Kokilaben Dhirubhai Ambani Hospital', type: 'HOSPITAL', lat: 19.1337, lng: 72.8272 },
       { name: 'Seven Hills Hospital Andheri', type: 'HOSPITAL', lat: 19.1197, lng: 72.8464 },
-      { name: 'Cooper Hospital (RDMT) Juhu Vile Parle', type: 'HOSPITAL', lat: 19.1010, lng: 72.8340 },
+      { name: 'Dr. R. N. Cooper Municipal General Hospital (HBT Medical College)', type: 'HOSPITAL', lat: 19.1077, lng: 72.8362 },
+      { name: 'Shri Bhagubhai Mafatlal Polytechnic (SBMP) Vile Parle', type: 'SCHOOL', lat: 19.1073, lng: 72.8368 },
       { name: 'Holy Family School Andheri', type: 'SCHOOL', lat: 19.1142, lng: 72.8521 },
       { name: 'St. Mary SSC School Mazgaon', type: 'SCHOOL', lat: 18.9556, lng: 72.8408 },
       { name: 'Arya Vidya Mandir Juhu', type: 'SCHOOL', lat: 19.1022, lng: 72.8278 },

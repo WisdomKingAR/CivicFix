@@ -34,12 +34,12 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
     { id: 'h5', name: 'Lilavati Hospital Bandra', type: 'HOSPITAL', lat: 19.0543, lng: 72.8266 },
     { id: 'h6', name: 'Holy Family Hospital Bandra', type: 'HOSPITAL', lat: 19.0606, lng: 72.8363 },
     { id: 'h7', name: 'Kokilaben Hospital Andheri', type: 'HOSPITAL', lat: 19.1337, lng: 72.8272 },
-    { id: 'h8', name: 'Cooper Hospital (RDMT) Juhu', type: 'HOSPITAL', lat: 19.1010, lng: 72.8340 },
+    { id: 'h8', name: 'Dr. R. N. Cooper Municipal General Hospital (HBT Medical College)', type: 'HOSPITAL', lat: 19.1077, lng: 72.8362 },
     { id: 'h9', name: 'Seven Hills Hospital Andheri', type: 'HOSPITAL', lat: 19.1197, lng: 72.8464 },
     { id: 'h10', name: 'Bhagwati Hospital Borivali', type: 'HOSPITAL', lat: 19.2247, lng: 72.8561 },
     { id: 'h11', name: 'Fortis Hospital Mulund', type: 'HOSPITAL', lat: 19.1723, lng: 72.9561 },
     { id: 'h12', name: 'Hiranandani Hospital Powai', type: 'HOSPITAL', lat: 19.1197, lng: 72.9093 },
-    // Schools
+    // Schools & Colleges
     { id: 's1', name: "St. Xavier's High School Fort", type: 'SCHOOL', lat: 18.9322, lng: 72.8264 },
     { id: 's2', name: 'Cathedral and John Connon School', type: 'SCHOOL', lat: 18.9356, lng: 72.8338 },
     { id: 's3', name: 'Campion School Mumbai', type: 'SCHOOL', lat: 18.9381, lng: 72.8292 },
@@ -51,10 +51,11 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
     { id: 's9', name: 'Dhirubhai Ambani International School BKC', type: 'SCHOOL', lat: 19.0633, lng: 72.8681 },
     { id: 's10', name: 'Holy Family School Andheri', type: 'SCHOOL', lat: 19.1142, lng: 72.8521 },
     { id: 's11', name: 'Arya Vidya Mandir Juhu', type: 'SCHOOL', lat: 19.1022, lng: 72.8278 },
-    { id: 's12', name: 'Ryan International School Kandivali', type: 'SCHOOL', lat: 19.2086, lng: 72.8357 },
-    { id: 's13', name: 'Thakur Public School Kandivali East', type: 'SCHOOL', lat: 19.2018, lng: 72.8715 },
-    { id: 's14', name: 'Children Academy Malad East', type: 'SCHOOL', lat: 19.1836, lng: 72.8706 },
-    { id: 's15', name: 'Atomic Energy Central School Anushaktinagar', type: 'SCHOOL', lat: 19.0517, lng: 72.9261 },
+    { id: 's12', name: 'Shri Bhagubhai Mafatlal Polytechnic (SBMP) Vile Parle', type: 'SCHOOL', lat: 19.1073, lng: 72.8368 },
+    { id: 's13', name: 'Ryan International School Kandivali', type: 'SCHOOL', lat: 19.2086, lng: 72.8357 },
+    { id: 's14', name: 'Thakur Public School Kandivali East', type: 'SCHOOL', lat: 19.2018, lng: 72.8715 },
+    { id: 's15', name: 'Children Academy Malad East', type: 'SCHOOL', lat: 19.1836, lng: 72.8706 },
+    { id: 's16', name: 'Atomic Energy Central School Anushaktinagar', type: 'SCHOOL', lat: 19.0517, lng: 72.9261 },
   ];
 
   // 1. Initialize Map ONCE and cleanup on unmount
@@ -107,17 +108,20 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
     // Render Sensitive Location Radius Buffers (500m)
     defaultSensitiveLocations.forEach((loc) => {
       const isHospital = loc.type === 'HOSPITAL';
-      // Hospitals: red-rose, Schools: purple-violet
-      const color = isHospital ? '#F43F5E' : '#8B5CF6';
+      const isCooper = loc.name.toLowerCase().includes('cooper');
+      const isBhagubhai = loc.name.toLowerCase().includes('bhagubhai');
+
+      // Hospitals: red-rose, Schools: purple-violet. Special hackathon landmarks: vivid rose-red / indigo
+      const color = isCooper ? '#E11D48' : isHospital ? '#F43F5E' : isBhagubhai ? '#6366F1' : '#8B5CF6';
       const emoji = isHospital ? '🏥' : '🏫';
-      const iconSize = isHospital ? 14 : 12;
+      const iconSize = isCooper ? 20 : isBhagubhai ? 18 : isHospital ? 14 : 12;
 
       L.circle([loc.lat, loc.lng], {
         radius: 500,
         color,
         fillColor: color,
-        fillOpacity: 0.07,
-        weight: isHospital ? 1.8 : 1.2,
+        fillOpacity: isCooper || isBhagubhai ? 0.12 : 0.07,
+        weight: isCooper || isBhagubhai ? 2.5 : (isHospital ? 1.8 : 1.2),
         dashArray: isHospital ? '4, 6' : '2, 8',
       }).addTo(layerGroup);
 
@@ -127,12 +131,14 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           width: ${iconSize}px;
           height: ${iconSize}px;
           border-radius: ${isHospital ? '50%' : '3px'};
-          border: 2px solid white;
-          box-shadow: 0 0 8px ${color};
+          border: ${isCooper || isBhagubhai ? '3px solid white' : '2px solid white'};
+          box-shadow: 0 0 ${isCooper || isBhagubhai ? '14px ' + color : '8px ' + color};
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 8px;
+          font-size: ${isCooper || isBhagubhai ? '11px' : '8px'};
+          font-weight: bold;
+          color: white;
         ">${isHospital ? '+' : '✦'}</div>`;
 
       const customIcon = L.divIcon({
@@ -143,15 +149,35 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       });
 
       const marker = L.marker([loc.lat, loc.lng], { icon: customIcon });
+
+      const badgeHtml = isCooper
+        ? `<div style="background: #FFE4E6; color: #BE123C; padding: 2px 6px; border-radius: 4px; font-weight: 800; font-size: 10px; margin-bottom: 5px; display: inline-block;">★ NEAREST MAJOR HOSPITAL (Opp. Bhagubhai)</div>`
+        : isBhagubhai
+        ? `<div style="background: #EEF2FF; color: #4338CA; padding: 2px 6px; border-radius: 4px; font-weight: 800; font-size: 10px; margin-bottom: 5px; display: inline-block;">★ IGNITE 8.0 HACKATHON VENUE</div>`
+        : '';
+
       marker.bindPopup(`
-        <div style="font-family: 'Inter', sans-serif; font-size: 12px; min-width: 180px; padding: 2px 0;">
+        <div style="font-family: 'Inter', sans-serif; font-size: 12px; min-width: 200px; padding: 2px 0;">
+          ${badgeHtml}
           <div style="color: ${color}; font-size: 10px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 4px;">
-            ${emoji} ${isHospital ? 'Hospital' : 'School'} Zone — 500m Priority
+            ${emoji} ${isHospital ? 'Hospital' : 'School/College'} Zone — 500m Priority
           </div>
           <div style="font-weight: 700; color: #1e293b; font-size: 13px; line-height: 1.3;">${loc.name}</div>
-          <div style="margin-top: 4px; font-size: 10px; color: #64748b;">Civic complaints within this radius receive elevated priority scores</div>
+          <div style="margin-top: 4px; font-size: 10px; color: #64748b;">Civic complaints within this 500m radius receive maximum proximity priority scoring (+25 pts)</div>
         </div>
-      `, { maxWidth: 240 });
+      `, { maxWidth: 260 });
+
+      if (isCooper) {
+        marker.bindTooltip('🏥 Cooper Hospital (Nearest Medical Landmark)', {
+          permanent: false,
+          direction: 'top',
+        });
+      } else if (isBhagubhai) {
+        marker.bindTooltip('🏫 Bhagubhai Mafatlal Polytechnic (Hackathon Venue)', {
+          permanent: false,
+          direction: 'top',
+        });
+      }
 
       layerGroup.addLayer(marker);
     });
