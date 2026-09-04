@@ -52,4 +52,15 @@ export class AdminController {
       sendError(res, msg, 500, 'SPAM_REPORT_FAILED');
     }
   }
+
+  public static async recalculatePriorities(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { recalculateOpenClustersPriority } = await import('../../scripts/backfill-priority');
+      const result = await recalculateOpenClustersPriority();
+      sendSuccess(res, result, `Recalculated priority scores for ${result.updatedCount} open clusters.`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to recalculate priority scores';
+      sendError(res, msg, 500, 'PRIORITY_RECALCULATION_FAILED');
+    }
+  }
 }

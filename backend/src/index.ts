@@ -6,6 +6,26 @@ import { prisma } from './core/database/prisma';
 // Validate required environment variables immediately at boot
 validateEnv();
 
+// Recalculate 4-factor priority score for all active clusters every 6 hours
+// Combats SLA Aging milestone drift without requiring manual triggers
+const SIX_HOURS_MS = 6 * 60 * 60 * 1000;
+const priorityRecalculationTimer = setInterval(async () => {
+  try {
+    const { recalculateOpenClustersPriority } = await import('./scripts/backfill-priority');
+    console.log('[PriorityScheduler] ⏰ Initiating scheduled priority score drift recalculation...');
+    const result = await recalculateOpenClustersPriority();
+    console.log(
+      `[PriorityScheduler] ✅ Completed priority recalculation. Evaluated: ${result.totalEvaluated}, Updated: ${result.updatedCount}`
+    );
+  } catch (err) {
+    console.error('[PriorityScheduler] ❌ Priority recalculation job failed:', err);
+  }
+}, SIX_HOURS_MS);
+
+if (priorityRecalculationTimer.unref) {
+  priorityRecalculationTimer.unref();
+}
+
 const server = app.listen(env.PORT, () => {
   console.log(`
 🚀 ===================================================
@@ -20,6 +40,7 @@ const server = app.listen(env.PORT, () => {
 // Graceful shutdown handling
 const handleShutdown = async (signal: string) => {
   console.log(`\n🛑 Received ${signal}. Shutting down gracefully...`);
+  clearInterval(priorityRecalculationTimer);
   server.close(async () => {
     console.log('🔌 HTTP server closed.');
     await prisma.$disconnect();

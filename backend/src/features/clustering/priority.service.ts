@@ -6,7 +6,7 @@ const SENSITIVE_RADIUS_HIGH_METERS = 500;
 const SENSITIVE_RADIUS_MED_METERS = 1000;
 
 // Category-specific inherent hazard severity (0.0 to 1.0)
-const HAZARD_SCORES: Record<ComplaintCategory, number> = {
+export const HAZARD_SCORES: Record<ComplaintCategory, number> = {
   WATER_LEAKAGE: 1.0,  // Critical infrastructure, disease risk, erosion
   POTHOLE: 0.9,        // Immediate vehicular & pedestrian accident risk
   ROAD_DAMAGE: 0.85,    // Structural roadway collapse/barrier breakage
@@ -16,7 +16,7 @@ const HAZARD_SCORES: Record<ComplaintCategory, number> = {
 };
 
 // Expected resolution SLA in days before aging score hits maximum
-const SLA_DAYS: Record<ComplaintCategory, number> = {
+export const SLA_DAYS: Record<ComplaintCategory, number> = {
   WATER_LEAKAGE: 1,    // 24-hour critical turnaround
   POTHOLE: 3,          // 72 hours
   ROAD_DAMAGE: 3,      // 72 hours
@@ -48,9 +48,10 @@ export class PriorityService {
     // 1. Hazard Baseline Factor (35%)
     const hazardWeight = HAZARD_SCORES[cluster.category] ?? 0.5;
 
-    // 2. Volume / Consensus Factor (25%) - Logarithmic scaling up to 10 complaints
+    // 2. Volume / Consensus Factor (25%) - Ground truth from actual relation count
+    const actualCount = cluster.complaints ? cluster.complaints.length : cluster.complaintCount;
     const volumeWeight = Math.min(
-      Math.log2(cluster.complaintCount + 1) / Math.log2(11),
+      Math.log2(actualCount + 1) / Math.log2(11),
       1.0
     );
 

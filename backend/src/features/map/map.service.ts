@@ -1,7 +1,8 @@
 // backend/src/features/map/map.service.ts
-import { ComplaintStatus } from '@prisma/client';
+import { ComplaintStatus, ComplaintCategory } from '@prisma/client';
 import { prisma } from '../../core/database/prisma';
 import { memoryCache } from '../../core/cache/memoryCache';
+import { HAZARD_SCORES } from '../clustering/priority.service';
 
 const MAP_CACHE_KEY = 'map:geojson:v2';
 const MAP_CACHE_TTL = 30; // 30 seconds — lower so new complaints appear faster
@@ -177,7 +178,7 @@ export class MapService {
           properties: {
             id: c.id,
             isCluster: false,
-            priorityScore: 70,
+            priorityScore: Math.round((HAZARD_SCORES[c.category as ComplaintCategory] ?? 0.5) * 35),
             complaintCount: 1,
             category: c.category,
             status: c.status,

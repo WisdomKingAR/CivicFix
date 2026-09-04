@@ -72,3 +72,11 @@ export const uploadLimiter = createRateLimiter(
   5,
   'Upload limit reached (5 images per minute). Please wait a moment.'
 );
+
+// 7. Admin Operations: 30 requests / 15 minutes (sensitive batch/recalculation protection)
+export const adminApiLimiter = createRateLimiter(
+  15 * 60 * 1000,
+  30,
+  'Admin rate limit exceeded. Please wait a few minutes.'
+);
+

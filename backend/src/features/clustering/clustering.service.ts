@@ -144,7 +144,7 @@ export class ClusteringService {
     await prisma.complaintCluster.update({
       where: { id: clusterId },
       data: {
-        complaintCount: totalCount,
+        complaintCount: { increment: 1 },
         centroidLat: newLat,
         centroidLng: newLng,
       },
@@ -153,5 +153,35 @@ export class ClusteringService {
     await PriorityService.recalculate(clusterId);
 
     return { clusterId, isSeed: false };
+  }
+
+  /**
+   * Synchronizes cluster status based on the statuses of all its constituent complaints.
+   * If all complaints are terminal (RESOLVED or REJECTED), the cluster status transitions to match.
+   */
+  public static async syncClusterStatus(clusterId: string): Promise<void> {
+    if (!clusterId) return;
+
+    const cluster = await prisma.complaintCluster.findUnique({
+      where: { id: clusterId },
+      include: { complaints: { select: { status: true } } },
+    });
+
+    if (!cluster || !cluster.complaints.length) return;
+
+    const allResolved = cluster.complaints.every((c) => c.status === ComplaintStatus.RESOLVED);
+    const allRejected = cluster.complaints.every((c) => c.status === ComplaintStatus.REJECTED);
+
+    if (allResolved) {
+      await prisma.complaintCluster.update({
+        where: { id: clusterId },
+        data: { status: ComplaintStatus.RESOLVED },
+      });
+    } else if (allRejected) {
+      await prisma.complaintCluster.update({
+        where: { id: clusterId },
+        data: { status: ComplaintStatus.REJECTED },
+      });
+    }
   }
 }

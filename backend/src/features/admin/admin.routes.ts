@@ -6,6 +6,7 @@ import { requireRole } from '../../core/middleware/rbac.middleware';
 import { validate } from '../../core/middleware/validate';
 import { updateUserSchema } from './admin.schema';
 import { Role } from '@prisma/client';
+import { adminApiLimiter } from '../../core/middleware/rateLimiter';
 
 const router = Router();
 
@@ -17,5 +18,8 @@ router.patch('/users/:id', validate(updateUserSchema), AdminController.updateUse
 
 router.get('/analytics', AdminController.getAnalytics);
 router.get('/spam', AdminController.getSpamReport);
+
+// Periodic or manual priority score drift recalculation
+router.post('/recalculate-priorities', adminApiLimiter, AdminController.recalculatePriorities);
 
 export default router;
