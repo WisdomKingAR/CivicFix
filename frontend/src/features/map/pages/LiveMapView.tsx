@@ -1,5 +1,5 @@
 // frontend/src/features/map/pages/LiveMapView.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, type FC } from 'react';
 import { InteractiveMap } from '../components/InteractiveMap';
 import { mapService } from '../services/mapService';
 import { complaintsService } from '../../complaints/services/complaintsService';
@@ -16,7 +16,7 @@ interface LiveMapViewProps {
   onSelectComplaint?: (complaint: Complaint) => void;
 }
 
-export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) => {
+export const LiveMapView: FC<LiveMapViewProps> = ({ onSelectComplaint }) => {
   const [geoJsonData, setGeoJsonData] = useState<GeoJsonFeatureCollection | null>(null);
   const [clusters, setClusters] = useState<ComplaintCluster[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
