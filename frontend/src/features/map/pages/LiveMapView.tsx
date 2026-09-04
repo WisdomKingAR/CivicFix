@@ -37,12 +37,16 @@ export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) =
     const loadMapData = async (showSpinner = false) => {
       if (showSpinner) setLoading(true);
       try {
-        const [geoRes, clusterRes] = await Promise.all([
+        const [geoRes, clusterRes] = await Promise.allSettled([
           mapService.getGeoJsonFeed(),
           mapService.getClusters(),
         ]);
-        if (geoRes.data) setGeoJsonData(geoRes.data);
-        if (clusterRes.data) setClusters(clusterRes.data);
+        if (geoRes.status === 'fulfilled' && geoRes.value?.data) {
+          setGeoJsonData(geoRes.value.data);
+        }
+        if (clusterRes.status === 'fulfilled' && clusterRes.value?.data) {
+          setClusters(clusterRes.value.data);
+        }
       } catch (err) {
         console.error('Failed to load live map feed:', err);
       } finally {
@@ -216,10 +220,32 @@ export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) =
               <div>Fetching live geospatial markers...</div>
             </div>
           ) : filteredFeatures.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-2xl border border-slate-200 p-6 space-y-2 shadow-sm">
-              <AlertCircle className="w-8 h-8 text-slate-400 mx-auto" />
-              <div className="text-xs font-bold text-slate-800">No active incidents in this filter</div>
-              <p className="text-[11px] text-slate-500">Try adjusting the status or search radius.</p>
+            <div className="text-center py-10 bg-white rounded-2xl border border-slate-200 p-6 space-y-3 shadow-sm">
+              <AlertCircle className="w-8 h-8 text-amber-500 mx-auto" />
+              <div className="text-xs font-bold text-slate-800">
+                {features.length > 0
+                  ? `0 of ${features.length} incidents match this radius/sector filter`
+                  : 'No active incidents currently reported'}
+              </div>
+              <p className="text-[11px] text-slate-500">
+                {features.length > 0
+                  ? 'There are active complaints reported in the city, but they are outside your current sector or search radius.'
+                  : 'Reports submitted via the citizen portal will appear here immediately.'}
+              </p>
+              {features.length > 0 && (
+                <div className="flex flex-col gap-2 pt-2">
+                  <button
+                    onClick={() => {
+                      setSelectedSector('All Areas');
+                      setRadiusKm(50);
+                      setSelectedStatus('ALL');
+                    }}
+                    className="btn-stitch-primary text-xs w-full"
+                  >
+                    View All City Incidents (50 km)
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             filteredFeatures.map((feat) => {

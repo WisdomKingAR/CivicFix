@@ -14,4 +14,14 @@ export class MapController {
       sendError(res, msg, 500, 'MAP_DATA_ERROR');
     }
   }
+
+  public static async getMapSummary(req: Request, res: Response, next: NextFunction) {
+    try {
+      const summary = await MapService.getMapSummary();
+      sendSuccess(res, summary, 'Map summary retrieved.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to retrieve map summary';
+      sendError(res, msg, 500, 'MAP_SUMMARY_ERROR');
+    }
+  }
 }

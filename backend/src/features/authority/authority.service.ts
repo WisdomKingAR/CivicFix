@@ -8,6 +8,7 @@ import {
 import { AIService } from '../ai/ai.service';
 import { NotificationService } from '../admin/notification.service';
 import { RatnaService } from '../ratna/ratna.service';
+import { MapService } from '../map/map.service';
 
 export class AuthorityService {
   public static async getStaff() {
@@ -119,6 +120,8 @@ export class AuthorityService {
       data.status
     );
 
+    MapService.invalidateCache();
+
     return updated;
   }
 
@@ -167,6 +170,7 @@ export class AuthorityService {
       return assign;
     });
 
+    MapService.invalidateCache();
     return assignment;
   }
 
@@ -255,6 +259,8 @@ export class AuthorityService {
     if (isAiResolved) {
       await RatnaService.award(complaint.userId, RatnaEvent.COMPLAINT_RESOLVED, complaintId);
     }
+
+    MapService.invalidateCache();
 
     return result;
   }

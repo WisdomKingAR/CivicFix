@@ -12,4 +12,9 @@ export const mapService = {
     const res = await api.get<ApiResponse<ComplaintCluster[]>>('/clusters');
     return res.data;
   },
+
+  getMapSummary: async () => {
+    const res = await api.get<ApiResponse<any>>('/map/summary');
+    return res.data;
+  },
 };

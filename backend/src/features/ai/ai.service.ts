@@ -47,11 +47,11 @@ export class AIService {
     const model = getGeminiModel();
 
     if (!model) {
-      console.warn('⚠️ Gemini model unavailable. Returning fallback comparison result.');
+      console.warn('⚠️ Gemini model unavailable. Returning fail-safe comparison result.');
       const fallback: ImageComparisonResult = {
-        similarity: 0.85,
-        resolved: true,
-        reasoning: 'Automated fallback: Gemini API key not configured.',
+        similarity: 0.0,
+        resolved: false,
+        reasoning: 'Automated check: AI model unavailable or API key not configured. Routed for citizen validation.',
         cacheHit: false,
         aiAvailable: false,
       };
@@ -65,21 +65,26 @@ export class AIService {
         urlToInlinePart(afterUrl),
       ]);
 
-      const prompt = `You are an expert civic infrastructure inspector verifying urban repairs.
+      const prompt = `You are a strict, forensic municipal infrastructure inspector verifying whether an urban repair has ACTUALLY been completed.
 
-Image 1 is the BEFORE photo (the reported issue).
-Image 2 is the AFTER photo (claimed to be repaired).
+Image 1 is the BEFORE photo (the reported citizen incident).
+Image 2 is the AFTER photo (submitted as proof of resolution).
 
-Determine if the civic issue in Image 1 (pothole, garbage, broken streetlight, water leak, road damage) has been fully repaired in Image 2.
+STRICT VERIFICATION RULES:
+1. SITE & SCENE IDENTITY: First, inspect physical landmarks, road geometry, curbs, pavement markings, walls, and structures to verify if Image 1 and Image 2 show the EXACT SAME PHYSICAL LOCATION.
+2. UNRELATED / DIFFERENT IMAGES: If Image 2 is of a completely different place, an indoor scene, a pet/animal, an unrelated vehicle/object, or a different street, you MUST output:
+   "similarity": 0.0
+   "resolved": false
+   "reasoning": "Photos depict completely different locations or subjects; repair cannot be verified."
+3. UNRESOLVED / FAKE REPAIR: If both photos are from the same location but the defect (pothole, trash pile, broken lamp, water leak) is still present, output "resolved": false and "similarity": 0.0 to 0.2.
+4. GENUINE COMPLETED REPAIR: If and only if Image 2 shows the SAME location AND the civic defect has been visibly fixed, output "resolved": true and "similarity": 0.70 to 1.0 depending on repair quality and site restoration.
 
 Respond ONLY with valid JSON — no markdown, no backticks:
 {
   "similarity": 0.0,
-  "resolved": true,
-  "reasoning": "Brief 1-2 sentence explanation"
-}
-
-"similarity" ranges 0.0-1.0. A score >= 0.70 means high confidence the issue was repaired.`;
+  "resolved": false,
+  "reasoning": "Clear concise explanation of site match and repair status"
+}`;
 
       const response = await model.generateContent([beforePart, afterPart, prompt]);
       const text = response.response.text().replace(/```json|```/g, '').trim();
@@ -93,7 +98,7 @@ Respond ONLY with valid JSON — no markdown, no backticks:
         similarity:
           typeof parsed.similarity === 'number'
             ? Math.min(1, Math.max(0, parsed.similarity))
-            : 0.8,
+            : 0.0,
         resolved: Boolean(parsed.resolved),
         reasoning: parsed.reasoning || 'Image inspected by Gemini Vision.',
         cacheHit: false,
@@ -105,7 +110,7 @@ Respond ONLY with valid JSON — no markdown, no backticks:
     } catch (err) {
       console.error('Gemini Vision comparison error:', err);
       return {
-        similarity: 0.5,
+        similarity: 0.0,
         resolved: false,
         reasoning:
           'AI image comparison temporarily unavailable. Routed for citizen confirmation.',
@@ -136,7 +141,7 @@ Respond ONLY with valid JSON — no markdown, no backticks:
     if (!model) {
       const fallback: IssueDuplicateResult = {
         isSameIssue: false,
-        confidence: 0.5,
+        confidence: 0.0,
         reasoning: 'AI model offline; clustering by geographic proximity only.',
         cacheHit: false,
         aiAvailable: false,
@@ -162,7 +167,7 @@ Respond ONLY with valid JSON — no markdown, no backticks:
   "reasoning": "Brief explanation of physical landmarks, angle, or hazard alignment"
 }
 
-"confidence" ranges 0.0 to 1.0.`;
+"confidence" ranges 0.0 to 1.0. If the photos depict different locations or different defects, output isSameIssue: false and confidence: 0.0.`;
 
       const response = await model.generateContent([p1Part, p2Part, prompt]);
       const text = response.response.text().replace(/```json|```/g, '').trim();
@@ -177,7 +182,7 @@ Respond ONLY with valid JSON — no markdown, no backticks:
         confidence:
           typeof parsed.confidence === 'number'
             ? Math.min(1, Math.max(0, parsed.confidence))
-            : 0.7,
+            : 0.0,
         reasoning: parsed.reasoning || 'Visual feature alignment evaluated by Gemini Vision.',
         cacheHit: false,
         aiAvailable: true,
@@ -189,7 +194,7 @@ Respond ONLY with valid JSON — no markdown, no backticks:
       console.error('Gemini duplicate comparison error:', err);
       return {
         isSameIssue: false,
-        confidence: 0.5,
+        confidence: 0.0,
         reasoning: 'Visual deduplication temporarily unavailable.',
         cacheHit: false,
         aiAvailable: false,

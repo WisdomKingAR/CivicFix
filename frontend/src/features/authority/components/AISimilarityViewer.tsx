@@ -84,7 +84,13 @@ export const AISimilarityViewer: React.FC<AISimilarityViewerProps> = ({
           <div className="flex items-center gap-2">
             <span className="text-xs text-slate-300 font-semibold">Visual Repair Confidence:</span>
             {percentage !== null ? (
-              <span className={`text-lg font-black ${isHighMatch ? 'text-green-400' : 'text-amber-400'}`}>
+              <span className={`text-lg font-black ${
+                percentage === 0
+                  ? 'text-rose-400'
+                  : isHighMatch
+                  ? 'text-green-400'
+                  : 'text-amber-400'
+              }`}>
                 {percentage}%
               </span>
             ) : (
@@ -94,11 +100,15 @@ export const AISimilarityViewer: React.FC<AISimilarityViewerProps> = ({
             )}
           </div>
           <p className="text-[11px] text-slate-400">
-            {percentage === null
+            {!aiAvailable
+              ? 'AI comparison service currently unavailable. Routed directly for citizen validation.'
+              : percentage === null
               ? 'Upload an after-repair photo to run AI verification.'
+              : percentage === 0
+              ? 'Photos depict different locations or repair could not be confirmed. Awaiting citizen inspection.'
               : isHighMatch
               ? 'AI confirmed high structural surface repair alignment and hazard mitigation.'
-              : 'Moderate score. Requires field officer supervisor or citizen confirmation.'}
+              : 'Low confidence alignment. Requires field response inspection or citizen confirmation.'}
           </p>
         </div>
 
