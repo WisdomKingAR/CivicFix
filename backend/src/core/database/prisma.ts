@@ -1,4 +1,5 @@
 // src/core/database/prisma.ts
+import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 import { env } from '../config/env';
 

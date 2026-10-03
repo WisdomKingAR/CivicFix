@@ -201,9 +201,9 @@ export const ComplaintDetailView: React.FC<ComplaintDetailViewProps> = ({
               <AISimilarityViewer
                 beforePhotoUrl={resolution.beforePhotoUrl}
                 afterPhotoUrl={resolution.afterPhotoUrl}
-                aiSimilarityScore={resolution.aiSimilarityScore}
+                aiSimilarityScore={resolution.aiSimilarityScore ?? null}
                 verificationMethod={resolution.verificationMethod}
-                citizenConfirmed={resolution.citizenConfirmed}
+                citizenConfirmed={resolution.citizenConfirmed ?? null}
               />
             </div>
           ) : (

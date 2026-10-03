@@ -13,10 +13,12 @@ import {
   TrendingUp,
   Clock,
   ShieldCheck,
+  FileText,
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [complaints, setComplaints] = useState<any[]>([]);
   const [analytics, setAnalytics] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -25,17 +27,24 @@ export const AdminDashboard: React.FC = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [usersRes, analyticsRes] = await Promise.all([
+      const [usersRes, analyticsRes, complaintsRes] = await Promise.all([
         adminService.getUsers().catch(() => ({ data: [] })),
         adminService.getAnalytics().catch(() => ({ data: null })),
+        adminService.getComplaints().catch(() => ({ data: [] })),
       ]);
       const userList = Array.isArray(usersRes.data)
         ? usersRes.data
         : (usersRes.data as any)?.users || [];
       setUsers(userList);
       if (analyticsRes.data) setAnalytics(analyticsRes.data);
+
+      const complaintList = Array.isArray(complaintsRes.data)
+        ? complaintsRes.data
+        : (complaintsRes.data as any)?.complaints || [];
+      setComplaints(complaintList);
     } catch {
       setUsers([]);
+      setComplaints([]);
     } finally {
       setLoading(false);
     }
@@ -158,6 +167,78 @@ export const AdminDashboard: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* All Complaints & Triage Queue */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-green-700" />
+              Municipal Complaints &amp; Issues Queue
+            </h2>
+            <p className="text-xs text-slate-500">Live feed of all reported civic complaints across city wards</p>
+          </div>
+          <span className="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
+            {complaints.length} Total Issues
+          </span>
+        </div>
+
+        {complaints.length === 0 ? (
+          <div className="text-center py-8 text-xs text-slate-500">No complaints found.</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b border-slate-200 text-slate-400 font-bold uppercase">
+                  <th className="pb-3 px-3">Category</th>
+                  <th className="pb-3 px-3">Description</th>
+                  <th className="pb-3 px-3">Status</th>
+                  <th className="pb-3 px-3">Priority Score</th>
+                  <th className="pb-3 px-3">Location</th>
+                  <th className="pb-3 px-3 text-right">Submitted</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {complaints.map((c: any) => {
+                  const score = c.cluster?.priorityScore || c.priorityScore || 50;
+                  return (
+                    <tr key={c.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-3 px-3 font-bold text-slate-900">
+                        {c.category?.replace('_', ' ')}
+                      </td>
+                      <td className="py-3 px-3 text-slate-600 max-w-xs truncate">
+                        {c.description}
+                      </td>
+                      <td className="py-3 px-3">
+                        <span
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                            c.status === 'RESOLVED'
+                              ? 'bg-green-100 text-green-700'
+                              : c.status === 'IN_PROGRESS'
+                              ? 'bg-blue-100 text-blue-700'
+                              : 'bg-amber-100 text-amber-700'
+                          }`}
+                        >
+                          {c.status}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3 font-bold text-green-700">
+                        {Math.round(score)}/100
+                      </td>
+                      <td className="py-3 px-3 text-slate-600">
+                        {c.address || `Lat: ${c.lat?.toFixed(3)}, Lng: ${c.lng?.toFixed(3)}`}
+                      </td>
+                      <td className="py-3 px-3 text-slate-500 text-right">
+                        {new Date(c.createdAt).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
 
       {/* User Moderation Section */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">

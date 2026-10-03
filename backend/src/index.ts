@@ -1,4 +1,5 @@
 // src/index.ts
+import 'dotenv/config';
 import { validateEnv, env } from './core/config/env';
 import app from './app';
 import { prisma } from './core/database/prisma';
