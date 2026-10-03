@@ -127,11 +127,12 @@ export class AuthorityService {
     authorityId: string,
     data: AssignComplaintInput
   ) {
+    const assignedToId = data.assignedToId || authorityId;
     const assignment = await prisma.$transaction(async (tx) => {
       const assign = await tx.complaintAssignment.create({
         data: {
           complaintId,
-          assignedToId: data.assignedToId,
+          assignedToId,
           assignedById: authorityId,
           notes: data.notes,
         },
@@ -181,9 +182,10 @@ export class AuthorityService {
     }
 
     // 1. Run AI before/after image comparison
+    const afterPhotoUrl = data.afterPhotoUrl || data.afterImageUrl || '';
     const aiResult = await AIService.compareImages(
       complaint.photoUrl,
-      data.afterPhotoUrl
+      afterPhotoUrl
     );
 
     const isAiResolved = aiResult.resolved && aiResult.similarity >= 0.7;
@@ -202,13 +204,13 @@ export class AuthorityService {
         create: {
           complaintId,
           beforePhotoUrl: complaint.photoUrl,
-          afterPhotoUrl: data.afterPhotoUrl,
+          afterPhotoUrl,
           aiSimilarityScore: aiResult.similarity,
           verificationMethod,
           verifiedAt: isAiResolved ? new Date() : null,
         },
         update: {
-          afterPhotoUrl: data.afterPhotoUrl,
+          afterPhotoUrl,
           aiSimilarityScore: aiResult.similarity,
           verificationMethod,
           verifiedAt: isAiResolved ? new Date() : null,

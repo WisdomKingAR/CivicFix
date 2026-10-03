@@ -6,12 +6,14 @@ import { sendSuccess, sendError } from '../../core/utils/response';
 export class AIController {
   public static async compareImages(req: Request, res: Response, next: NextFunction) {
     try {
-      const { beforePhotoUrl, afterPhotoUrl } = req.body;
+      // Accept both test-prompt field names and legacy field names
+      const beforePhotoUrl = req.body.imageUrl1 || req.body.beforePhotoUrl;
+      const afterPhotoUrl = req.body.imageUrl2 || req.body.afterPhotoUrl;
 
       if (!beforePhotoUrl || !afterPhotoUrl) {
         sendError(
           res,
-          'Both beforePhotoUrl and afterPhotoUrl are required for comparison.',
+          'Both image URLs are required. Use imageUrl1/imageUrl2 or beforePhotoUrl/afterPhotoUrl.',
           400,
           'MISSING_IMAGES'
         );
@@ -19,7 +21,7 @@ export class AIController {
       }
 
       const result = await AIService.compareImages(beforePhotoUrl, afterPhotoUrl);
-      sendSuccess(res, result, 'Image comparison evaluation completed.');
+      sendSuccess(res, { ...result, similarityScore: result.similarity }, 'Image comparison evaluation completed.');
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Comparison evaluation failed';
       sendError(res, msg, 500, 'AI_EVALUATION_FAILED');
@@ -28,10 +30,11 @@ export class AIController {
 
   public static async classifyImage(req: Request, res: Response, next: NextFunction) {
     try {
-      const { photoUrl } = req.body;
+      // Accept both test-prompt field name (imageUrl) and legacy (photoUrl)
+      const photoUrl = req.body.imageUrl || req.body.photoUrl;
 
       if (!photoUrl) {
-        sendError(res, 'photoUrl is required for classification.', 400, 'MISSING_IMAGE');
+        sendError(res, 'imageUrl is required for classification.', 400, 'MISSING_IMAGE');
         return;
       }
 
@@ -43,3 +46,4 @@ export class AIController {
     }
   }
 }
+

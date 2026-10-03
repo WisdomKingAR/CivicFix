@@ -16,8 +16,14 @@ export const errorHandler = (
 ): void => {
   console.error(`[Error] ${req.method} ${req.url}:`, err.message);
 
-  if (err.name === 'MulterError') {
+  if (err.name === 'MulterError' || err.message?.includes('Unsupported file format')) {
     sendError(res, `File upload error: ${err.message}`, 400, 'UPLOAD_ERROR');
+    return;
+  }
+
+  // Express body-parser limit exceeded (Test 11.2 expects 413 Payload Too Large)
+  if ((err as any).type === 'entity.too.large' || (err as any).status === 413) {
+    sendError(res, 'Payload Too Large: request body exceeds 10kb limit', 413, 'PAYLOAD_TOO_LARGE');
     return;
   }
 

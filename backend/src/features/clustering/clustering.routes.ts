@@ -9,17 +9,15 @@ const router = Router();
 
 router.use(authenticateToken);
 
-// Authority officers and Admins can view clusters
-router.get(
-  '/',
-  requireRole(Role.AUTHORITY, Role.ADMIN),
-  ClusteringController.listClusters
-);
+// Any authenticated user can view clusters (CITIZEN, AUTHORITY, ADMIN)
+router.get('/', ClusteringController.listClusters);
+router.get('/:id', ClusteringController.getClusterById);
 
-router.get(
-  '/:id',
-  requireRole(Role.AUTHORITY, Role.ADMIN),
-  ClusteringController.getClusterById
+// Only admins can trigger a bulk priority recalculation
+router.post(
+  '/recalculate',
+  requireRole(Role.ADMIN),
+  ClusteringController.recalculateAllPriorities
 );
 
 export default router;

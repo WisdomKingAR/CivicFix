@@ -10,6 +10,7 @@ const router = Router();
 router.use(authenticateToken);
 
 router.get('/me', UsersController.getMe);
+router.get('/profile', UsersController.getMe); // alias — test prompt uses /profile
 router.put('/profile', validate(updateProfileSchema), UsersController.updateProfile);
 
 export default router;

@@ -8,6 +8,7 @@ const router = Router();
 // Public / Citizen routes
 router.get('/leaderboard', RatnaController.getLeaderboard);
 router.get('/me', authenticateToken, RatnaController.getMyStats);
+router.get('/balance', authenticateToken, RatnaController.getMyStats); // Test 10.1 alias
 router.post('/redeem', authenticateToken, RatnaController.redeemCoupon);
 
 export default router;

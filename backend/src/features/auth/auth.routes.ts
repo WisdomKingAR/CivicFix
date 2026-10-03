@@ -24,6 +24,7 @@ router.post(
 
 router.post('/refresh', AuthController.refresh);
 
-router.delete('/logout', authenticateToken, AuthController.logout);
+router.post('/logout', authenticateToken, AuthController.logout);
+router.delete('/logout', authenticateToken, AuthController.logout); // kept for REST purists
 
 export default router;

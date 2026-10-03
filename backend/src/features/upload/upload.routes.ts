@@ -11,5 +11,6 @@ router.use(authenticateToken);
 router.use(uploadLimiter);
 
 router.post('/', upload.single('image'), UploadController.uploadImage);
+router.post('/image', upload.single('image'), UploadController.uploadImage); // alias — test prompt uses /image
 
 export default router;

@@ -10,8 +10,19 @@ import { RatnaService } from '../ratna/ratna.service';
 import { RatnaEvent } from '@prisma/client';
 
 export class ComplaintsService {
-  public static async createComplaint(userId: string, data: CreateComplaintInput) {
-    const photoHash = sha256(data.photoUrl);
+  public static async createComplaint(userId: string, rawData: CreateComplaintInput) {
+    const photoUrl = rawData.imageUrl || rawData.photoUrl || '';
+    const description = rawData.title
+      ? `${rawData.title}: ${rawData.description}`
+      : rawData.description;
+
+    const data = {
+      ...rawData,
+      photoUrl,
+      description,
+    };
+
+    const photoHash = sha256(photoUrl);
 
     // 1. Run spam heuristic checks
     const spamCheck = await SpamService.checkSpamPatterns(

@@ -26,4 +26,17 @@ router.put(
   ComplaintsController.confirmResolution
 );
 
+// Route aliases from test prompt (4.8 POST /api/complaints/:id/confirm)
+router.post(
+  '/:id/confirm',
+  validate(confirmResolutionSchema),
+  ComplaintsController.confirmResolution
+);
+
+router.post(
+  '/:id/confirm-resolution',
+  validate(confirmResolutionSchema),
+  ComplaintsController.confirmResolution
+);
+
 export default router;

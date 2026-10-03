@@ -2,6 +2,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../../core/database/prisma';
 import { sendSuccess, sendError } from '../../core/utils/response';
+import { PriorityService } from './priority.service';
+import { ComplaintStatus } from '@prisma/client';
+
 
 export class ClusteringController {
   public static async listClusters(req: Request, res: Response, next: NextFunction) {
@@ -54,4 +57,35 @@ export class ClusteringController {
       sendError(res, msg, 500, 'CLUSTER_FETCH_FAILED');
     }
   }
+
+  public static async recalculateAllPriorities(req: Request, res: Response, next: NextFunction) {
+    try {
+      const openClusters = await prisma.complaintCluster.findMany({
+        where: {
+          status: {
+            notIn: [ComplaintStatus.RESOLVED, ComplaintStatus.REJECTED],
+          },
+        },
+        select: { id: true },
+      });
+
+      const totalEvaluated = openClusters.length;
+      let updatedCount = 0;
+
+      for (const cluster of openClusters) {
+        const score = await PriorityService.recalculate(cluster.id);
+        if (score >= 0) updatedCount++;
+      }
+
+      sendSuccess(
+        res,
+        { totalEvaluated, updatedCount },
+        'Priority scores recalculated successfully.'
+      );
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Priority recalculation failed';
+      sendError(res, msg, 500, 'RECALCULATE_FAILED');
+    }
+  }
 }
+

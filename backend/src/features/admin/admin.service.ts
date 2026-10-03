@@ -39,13 +39,25 @@ export class AdminService {
     };
   }
 
-  public static async updateUser(userId: string, data: UpdateUserInput) {
+  public static async updateUser(userId: string, data: any) {
+    const isFlagged =
+      data.status === 'UNDER_REVIEW'
+        ? true
+        : data.status === 'ACTIVE'
+        ? false
+        : data.isFlagged;
+
+    const flagReason =
+      data.status === 'UNDER_REVIEW'
+        ? data.reason || 'Flagged by admin as UNDER_REVIEW'
+        : data.flagReason;
+
     const updated = await prisma.user.update({
       where: { id: userId },
       data: {
         ...(data.role ? { role: data.role } : {}),
-        ...(data.isFlagged !== undefined ? { isFlagged: data.isFlagged } : {}),
-        ...(data.flagReason !== undefined ? { flagReason: data.flagReason } : {}),
+        ...(isFlagged !== undefined ? { isFlagged } : {}),
+        ...(flagReason !== undefined ? { flagReason } : {}),
         ...(data.jurisdiction !== undefined ? { jurisdiction: data.jurisdiction } : {}),
       },
       select: {

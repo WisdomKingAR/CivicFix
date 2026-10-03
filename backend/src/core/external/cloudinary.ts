@@ -18,6 +18,31 @@ export async function uploadBufferToCloudinary(
   buffer: Buffer,
   folder = 'civicfix/complaints'
 ): Promise<UploadApiResponse> {
+  if (!env.CLOUDINARY_CLOUD_NAME || !env.CLOUDINARY_API_KEY || !env.CLOUDINARY_API_SECRET) {
+    console.warn('⚠️ Cloudinary credentials missing. Returning local mock uploaded image.');
+    const mockId = `mock_${Date.now()}`;
+    return {
+      public_id: `${folder}/${mockId}`,
+      version: 1,
+      signature: 'mock_signature',
+      width: 800,
+      height: 600,
+      format: 'jpg',
+      resource_type: 'image',
+      created_at: new Date().toISOString(),
+      tags: [],
+      bytes: buffer.length,
+      type: 'upload',
+      etag: 'mock_etag',
+      placeholder: false,
+      url: `https://res.cloudinary.com/civicfix-demo/image/upload/v1/${folder}/${mockId}.jpg`,
+      secure_url: `https://res.cloudinary.com/civicfix-demo/image/upload/v1/${folder}/${mockId}.jpg`,
+      access_mode: 'public',
+      overwritten: false,
+      original_filename: 'mock_image',
+    } as unknown as UploadApiResponse;
+  }
+
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {

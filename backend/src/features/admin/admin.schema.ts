@@ -10,4 +10,14 @@ export const updateUserSchema = z
   })
   .strict();
 
+// Used by PATCH /users/:id/status — maps status string to isFlagged boolean
+export const updateUserStatusSchema = z
+  .object({
+    status: z.enum(['ACTIVE', 'UNDER_REVIEW', 'SUSPENDED']),
+    reason: z.string().max(255).optional(),
+  })
+  .strict();
+
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
+export type UpdateUserStatusInput = z.infer<typeof updateUserStatusSchema>;
+

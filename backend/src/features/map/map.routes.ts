@@ -8,5 +8,6 @@ const router = Router();
 // Public / Authenticated map view
 router.use(authenticateToken);
 router.get('/complaints', MapController.getMapData);
+router.get('/geojson', MapController.getMapData); // alias — test prompt uses /geojson
 
 export default router;

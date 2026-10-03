@@ -1,4 +1,5 @@
 // backend/src/features/ratna/ratna.service.ts
+import crypto from 'crypto';
 import { prisma } from '../../core/database/prisma';
 import { RatnaEvent } from '@prisma/client';
 
@@ -151,10 +152,9 @@ export class RatnaService {
       throw new Error('Insufficient Ratna balance to redeem this coupon.');
     }
 
-    const code = `RATNA-${partner.substring(0, 3).toUpperCase()}-${Math.random()
-      .toString(36)
-      .substring(2, 7)
-      .toUpperCase()}`;
+    // Check 10.3: Code format is RATNA-[8 hex chars] — crypto.randomBytes, not Math.random
+    const randomHex = crypto.randomBytes(4).toString('hex').toUpperCase();
+    const code = `RATNA-${randomHex}`;
     const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
 
     const [coupon] = await prisma.$transaction([

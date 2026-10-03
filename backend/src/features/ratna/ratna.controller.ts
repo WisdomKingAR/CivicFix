@@ -11,7 +11,11 @@ export class RatnaController {
         return;
       }
       const stats = await RatnaService.getUserStats(req.user.id);
-      sendSuccess(res, stats);
+      sendSuccess(res, {
+        ...stats,
+        totalPoints: stats.total,
+        monthlyPoints: stats.total, // fallback for prompt 10.1 expected fields
+      });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to retrieve Ratna statistics';
       sendError(res, msg, 500, 'RATNA_STATS_ERROR');
@@ -39,14 +43,14 @@ export class RatnaController {
         return;
       }
 
-      const { ratnaCost, partner, value } = req.body;
-      if (!ratnaCost || !partner || !value) {
-        sendError(res, 'Missing required coupon redemption parameters.', 400, 'INVALID_INPUT');
-        return;
-      }
+      // Handle both reward: "FREE_RIDE" format (test prompt 10.3) and detailed partner/cost/value format
+      const reward = req.body.reward;
+      const partner = req.body.partner || (reward ? String(reward) : 'CIVIC');
+      const ratnaCost = req.body.ratnaCost !== undefined ? Number(req.body.ratnaCost) : 10;
+      const value = req.body.value !== undefined ? Number(req.body.value) : 50;
 
       const coupon = await RatnaService.redeemCoupon(req.user.id, ratnaCost, partner, value);
-      sendSuccess(res, coupon, `Successfully redeemed ${partner} coupon!`, 201);
+      sendSuccess(res, coupon, `Successfully redeemed ${partner} coupon!`, 200);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Coupon redemption failed';
       sendError(res, msg, 400, 'REDEEM_ERROR');

@@ -32,7 +32,19 @@ router.post(
 );
 
 router.post(
+  '/assign',
+  validate(assignComplaintSchema),
+  AuthorityController.assignComplaint
+);
+
+router.post(
   '/complaints/:id/resolve',
+  validate(resolveComplaintSchema),
+  AuthorityController.resolveComplaint
+);
+
+router.post(
+  '/resolve',
   validate(resolveComplaintSchema),
   AuthorityController.resolveComplaint
 );

@@ -17,17 +17,24 @@ export const updateStatusSchema = z
 
 export const assignComplaintSchema = z
   .object({
-    assignedToId: z.string().min(1, 'Assigned user ID is required'),
+    clusterId: z.string().optional(),
+    assignedToId: z.string().optional(),
+    workerName: z.string().optional(),
+    estimatedResolutionDate: z.string().optional(),
     notes: z.string().max(500).optional(),
-  })
-  .strict();
+  });
 
 export const resolveComplaintSchema = z
   .object({
-    afterPhotoUrl: z.string().url('After repair photo URL must be valid'),
+    clusterId: z.string().optional(),
+    afterPhotoUrl: z.string().url('After repair photo URL must be valid').optional(),
+    afterImageUrl: z.string().url('After repair photo URL must be valid').optional(),
     notes: z.string().max(500).optional(),
   })
-  .strict();
+  .refine((data) => data.afterPhotoUrl || data.afterImageUrl, {
+    message: 'Either afterPhotoUrl or afterImageUrl is required',
+    path: ['afterImageUrl'],
+  });
 
 export type UpdateStatusInput = z.infer<typeof updateStatusSchema>;
 export type AssignComplaintInput = z.infer<typeof assignComplaintSchema>;

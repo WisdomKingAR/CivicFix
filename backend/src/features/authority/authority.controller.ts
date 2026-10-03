@@ -1,5 +1,6 @@
 // src/features/authority/authority.controller.ts
 import { Request, Response, NextFunction } from 'express';
+import { prisma } from '../../core/database/prisma';
 import { AuthorityService } from './authority.service';
 import { sendSuccess, sendError } from '../../core/utils/response';
 
@@ -55,9 +56,26 @@ export class AuthorityController {
         return;
       }
 
-      const { id } = req.params;
-      const assignment = await AuthorityService.assignComplaint(id, req.user.id, req.body);
-      sendSuccess(res, assignment, 'Complaint assigned successfully.', 201);
+      let id = req.params.id;
+      if (!id && req.body.clusterId) {
+        const cluster = await prisma.complaintCluster.findUnique({
+          where: { id: req.body.clusterId },
+          include: { complaints: { take: 1, select: { id: true } } },
+        });
+        id = cluster?.complaints[0]?.id || req.body.clusterId;
+      }
+
+      if (!id) {
+        sendError(res, 'Complaint ID or clusterId is required.', 400, 'MISSING_ID');
+        return;
+      }
+
+      const assignedToId = req.body.assignedToId || req.user.id;
+      const assignment = await AuthorityService.assignComplaint(id, req.user.id, {
+        ...req.body,
+        assignedToId,
+      });
+      sendSuccess(res, assignment, 'Complaint assigned successfully.', 200);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Assignment failed';
       sendError(res, msg, 400, 'ASSIGNMENT_FAILED');
@@ -71,8 +89,25 @@ export class AuthorityController {
         return;
       }
 
-      const { id } = req.params;
-      const result = await AuthorityService.resolveComplaint(id, req.user.id, req.body);
+      let id = req.params.id;
+      if (!id && req.body.clusterId) {
+        const cluster = await prisma.complaintCluster.findUnique({
+          where: { id: req.body.clusterId },
+          include: { complaints: { take: 1, select: { id: true } } },
+        });
+        id = cluster?.complaints[0]?.id || req.body.clusterId;
+      }
+
+      if (!id) {
+        sendError(res, 'Complaint ID or clusterId is required.', 400, 'MISSING_ID');
+        return;
+      }
+
+      const afterPhotoUrl = req.body.afterPhotoUrl || req.body.afterImageUrl;
+      const result = await AuthorityService.resolveComplaint(id, req.user.id, {
+        ...req.body,
+        afterPhotoUrl,
+      });
       sendSuccess(res, result, 'Resolution verified and processed.');
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Resolution processing failed';
