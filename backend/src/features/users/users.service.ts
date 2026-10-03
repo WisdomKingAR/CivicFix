@@ -14,6 +14,7 @@ export class UsersService {
         role: true,
         jurisdiction: true,
         isFlagged: true,
+        ratnaTotal: true,
         createdAt: true,
       },
     });

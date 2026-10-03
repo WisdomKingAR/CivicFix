@@ -22,6 +22,9 @@ import ratnaRoutes from './features/ratna/ratna.routes';
 
 const app = express();
 
+// Enable trust proxy for Render / Cloud reverse proxies (resolves real client IP)
+app.set('trust proxy', 1);
+
 // 1. Security & Core Middlewares
 app.use(helmet());
 app.use(

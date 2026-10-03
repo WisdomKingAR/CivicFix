@@ -1,5 +1,6 @@
 // src/features/admin/admin.controller.ts
 import { Request, Response, NextFunction } from 'express';
+import { ComplaintCategory } from '@prisma/client';
 import { AdminService } from './admin.service';
 import { sendSuccess, sendError } from '../../core/utils/response';
 
@@ -30,7 +31,11 @@ export class AdminController {
 
   public static async getAnalytics(req: Request, res: Response, next: NextFunction) {
     try {
-      const analytics = await AdminService.getAnalytics();
+      const { category, district } = req.query;
+      const analytics = await AdminService.getAnalytics({
+        category: category && category !== 'ALL' ? (category as ComplaintCategory) : undefined,
+        district: district && district !== 'ALL' ? String(district) : undefined,
+      });
       sendSuccess(res, analytics);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to compute analytics';
@@ -45,6 +50,17 @@ export class AdminController {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to retrieve spam report';
       sendError(res, msg, 500, 'SPAM_REPORT_FAILED');
+    }
+  }
+
+  public static async recalculatePriorities(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { recalculateOpenClustersPriority } = await import('../../scripts/backfill-priority');
+      const result = await recalculateOpenClustersPriority();
+      sendSuccess(res, result, `Recalculated priority scores for ${result.updatedCount} open clusters.`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to recalculate priority scores';
+      sendError(res, msg, 500, 'PRIORITY_RECALCULATION_FAILED');
     }
   }
 }

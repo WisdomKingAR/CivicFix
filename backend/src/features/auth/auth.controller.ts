@@ -20,7 +20,7 @@ export class AuthController {
 
       sendSuccess(
         res,
-        { user: result.user, accessToken: result.accessToken },
+        { user: result.user, accessToken: result.accessToken, refreshToken: result.refreshToken },
         'User registered successfully.',
         201
       );
@@ -43,7 +43,7 @@ export class AuthController {
 
       sendSuccess(
         res,
-        { user: result.user, accessToken: result.accessToken },
+        { user: result.user, accessToken: result.accessToken, refreshToken: result.refreshToken },
         'Logged in successfully.'
       );
     } catch (err: unknown) {
@@ -54,9 +54,9 @@ export class AuthController {
 
   public static async refresh(req: Request, res: Response, next: NextFunction) {
     try {
-      const refreshToken = req.cookies?.[REFRESH_COOKIE_NAME];
+      const refreshToken = req.cookies?.[REFRESH_COOKIE_NAME] || req.body?.refreshToken;
       if (!refreshToken) {
-        sendError(res, 'Missing refresh token cookie.', 401, 'UNAUTHORIZED');
+        sendError(res, 'Missing refresh token.', 401, 'UNAUTHORIZED');
         return;
       }
 

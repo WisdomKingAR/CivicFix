@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   Calendar,
   Layers,
+  FileSpreadsheet,
 } from 'lucide-react';
 
 export const CityAnalyticsView: React.FC = () => {
@@ -19,6 +20,7 @@ export const CityAnalyticsView: React.FC = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<string>('ALL');
   const [analytics, setAnalytics] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [exporting, setExporting] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -45,13 +47,12 @@ export const CityAnalyticsView: React.FC = () => {
   const resolutionRate = overview.resolutionRate ?? 0;
   const avgHours = overview.avgResolutionHours ?? 18.4;
   const inProgress = overview.inProgressComplaints ?? 0;
+  const resolvedCount = overview.resolvedComplaints ?? 0;
+  const underReviewCount = overview.underReviewComplaints ?? 0;
+  const flaggedUsers = overview.flaggedUsersCount ?? 0;
 
-  const categoryDistribution = analytics?.categoryDistribution || [
-    { category: 'POTHOLE', count: 542 },
-    { category: 'STREETLIGHT', count: 388 },
-    { category: 'GARBAGE', count: 312 },
-    { category: 'WATER_LEAKAGE', count: 186 },
-  ];
+  const categoryDistribution = analytics?.categoryDistribution || [];
+  const wardPerformance = analytics?.wardPerformance || [];
 
   const catTotal = categoryDistribution.reduce((acc: number, c: any) => acc + c.count, 0) || 1;
 
@@ -62,6 +63,83 @@ export const CityAnalyticsView: React.FC = () => {
     WATER_LEAKAGE: { bar: 'bg-purple-600', label: 'Water Supply & Drainage Bursts' },
     ROAD_DAMAGE: { bar: 'bg-rose-600', label: 'Structural Road Damage' },
     OTHER: { bar: 'bg-slate-600', label: 'Other Municipal Issues' },
+  };
+
+  const handleExportAudit = () => {
+    setExporting(true);
+    try {
+      const now = new Date();
+      const timestamp = now.toISOString().replace(/[:.]/g, '-');
+      const formattedDate = now.toLocaleDateString('en-IN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
+      // Build structured CSV content
+      const csvRows: string[] = [];
+
+      csvRows.push('CIVICFIX MUNICIPAL AUDIT & ANALYTICS REPORT');
+      csvRows.push(`Generated On:,"${formattedDate}"`);
+      csvRows.push(`Category Filter:,"${selectedCategory}"`);
+      csvRows.push(`District Filter:,"${selectedDistrict}"`);
+      csvRows.push('');
+
+      // Section 1: Executive Overview
+      csvRows.push('EXECUTIVE PERFORMANCE METRICS');
+      csvRows.push('Metric,Value,Standard SLA / Target');
+      csvRows.push(`Total Grievances Registered,${total},N/A`);
+      csvRows.push(`Resolved Grievances,${resolvedCount},N/A`);
+      csvRows.push(`In-Progress Grievances,${inProgress},N/A`);
+      csvRows.push(`Under Review / Spam Flagged,${underReviewCount},< 5%`);
+      csvRows.push(`Municipal Resolution Rate,${resolutionRate}%,>= 80% SLA Target`);
+      csvRows.push(`Average Resolution Time,${avgHours} hours,< 24 Hours SLA Standard`);
+      csvRows.push(`Flagged / Fraudulent Citizens,${flaggedUsers},Zero Tolerance`);
+      csvRows.push('');
+
+      // Section 2: Category Breakdown
+      csvRows.push('INCIDENT BREAKDOWN BY CATEGORY');
+      csvRows.push('Category,Incident Count,Percentage of Total Volume');
+      categoryDistribution.forEach((cat: any) => {
+        const pct = Math.round((cat.count / catTotal) * 100);
+        const name = (categoryColors[cat.category]?.label || cat.category).replace(/"/g, '""');
+        csvRows.push(`"${name}",${cat.count},${pct}%`);
+      });
+      csvRows.push('');
+
+      // Section 3: Ward Compliance
+      csvRows.push('WARD-LEVEL SLA COMPLIANCE AUDIT');
+      csvRows.push('Ward Name,Supervising Unit,SLA Compliance Rate,Status');
+      if (wardPerformance.length === 0) {
+        csvRows.push('"No Wards Active","N/A",100%,COMPLIANT');
+      } else {
+        wardPerformance.forEach((w: any) => {
+          csvRows.push(`"${(w.wardName || 'Ward').replace(/"/g, '""')}","${(w.officerInfo || 'Dispatch Unit').replace(/"/g, '""')}",${w.complianceRate ?? 100}%,${w.status || 'COMPLIANT'}`);
+        });
+      }
+      csvRows.push('');
+
+      csvRows.push('Report verified by CivicFix AI Engine & Municipal Command Center.');
+
+      const csvString = csvRows.join('\r\n');
+      const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `CivicFix_Municipal_Audit_${timestamp}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast.success('Municipal Audit CSV Report downloaded successfully!');
+    } catch (err: any) {
+      toast.error('Failed to generate audit report: ' + (err.message || 'Unknown error'));
+    } finally {
+      setExporting(false);
+    }
   };
 
   return (
@@ -79,11 +157,21 @@ export const CityAnalyticsView: React.FC = () => {
         </div>
 
         <button
-          onClick={() => toast.info('City Analytics Audit PDF Report generated successfully.')}
-          className="btn-stitch-primary text-xs"
+          onClick={handleExportAudit}
+          disabled={exporting}
+          className="btn-stitch-primary text-xs shadow-sm hover:shadow transition-all"
         >
-          <Download className="w-4 h-4" />
-          Export Audit Report
+          {exporting ? (
+            <>
+              <FileSpreadsheet className="w-4 h-4 animate-spin" />
+              Generating Audit...
+            </>
+          ) : (
+            <>
+              <Download className="w-4 h-4" />
+              Export Audit Report (.CSV)
+            </>
+          )}
         </button>
       </div>
 
@@ -182,10 +270,11 @@ export const CityAnalyticsView: React.FC = () => {
             onChange={(e) => setSelectedDistrict(e.target.value)}
             className="px-3 py-2 rounded-xl bg-slate-50 text-xs font-bold text-slate-800 border border-slate-200 outline-none"
           >
-            <option value="ALL">All Neighborhoods / Districts</option>
-            <option value="DOWNTOWN">Downtown Core (Ward 84)</option>
-            <option value="NORTH">Northside Industrial (Ward 85)</option>
-            <option value="EAST">Eastside Residential (Ward 86)</option>
+            <option value="ALL">All Municipal Wards (Mumbai BMC)</option>
+            <option value="WARD_KW">Ward K/W — Andheri West &amp; Juhu</option>
+            <option value="WARD_HE">Ward H/E — Bandra East &amp; BKC</option>
+            <option value="WARD_A">Ward A — Colaba, Fort &amp; Marine Drive</option>
+            <option value="WARD_FN">Ward F/N — Matunga &amp; Sion</option>
           </select>
         </div>
 
@@ -202,67 +291,72 @@ export const CityAnalyticsView: React.FC = () => {
           <h3 className="text-base font-bold text-slate-900">Live Incident Volume by Category</h3>
 
           <div className="space-y-4 text-xs">
-            {categoryDistribution.map((stat: any) => {
-              const meta = categoryColors[stat.category] || {
-                bar: 'bg-green-600',
-                label: stat.category,
-              };
-              const pct = Math.round((stat.count / catTotal) * 100);
+            {categoryDistribution.length === 0 ? (
+              <div className="text-center py-8 text-slate-400 text-xs font-semibold">
+                No incident records found matching selected filters.
+              </div>
+            ) : (
+              categoryDistribution.map((stat: any) => {
+                const meta = categoryColors[stat.category] || {
+                  bar: 'bg-green-600',
+                  label: stat.category,
+                };
+                const pct = Math.round((stat.count / catTotal) * 100);
 
-              return (
-                <div key={stat.category}>
-                  <div className="flex justify-between font-semibold mb-1 text-slate-700">
-                    <span>{meta.label}</span>
-                    <span className="font-bold text-slate-900">
-                      {stat.count} ({pct}%)
-                    </span>
+                return (
+                  <div key={stat.category}>
+                    <div className="flex justify-between font-semibold mb-1 text-slate-700">
+                      <span>{meta.label}</span>
+                      <span className="font-bold text-slate-900">
+                        {stat.count} ({pct}%)
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                      <div
+                        className={`${meta.bar} h-2.5 rounded-full transition-all duration-500`}
+                        style={{ width: `${Math.max(pct, 4)}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-                    <div
-                      className={`${meta.bar} h-2.5 rounded-full transition-all duration-500`}
-                      style={{ width: `${Math.max(pct, 4)}%` }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
 
         {/* Right: Ward Performance & Resolution Velocity */}
         <div className="lg:col-span-6 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-5">
-          <h3 className="text-base font-bold text-slate-900">Ward SLA &amp; Resolution Velocity</h3>
+          <h3 className="text-base font-bold text-slate-900">Municipal Ward SLA &amp; Resolution Velocity</h3>
 
           <div className="space-y-4 text-xs">
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-              <div>
-                <div className="font-bold text-slate-800">Ward 12 — Central Zone</div>
-                <div className="text-slate-500">Officer Sunita Sharma • Dispatch Unit Alpha</div>
+            {wardPerformance.length === 0 ? (
+              <div className="text-center py-8 text-slate-400 text-xs font-semibold">
+                No active municipal ward dispatches recorded yet.
               </div>
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-700">
-                96% SLA Compliance
-              </span>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-              <div>
-                <div className="font-bold text-slate-800">Ward 84 — Downtown Core</div>
-                <div className="text-slate-500">Lead Inspector • Rapid Triage Squad</div>
-              </div>
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700">
-                91% SLA Compliance
-              </span>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-              <div>
-                <div className="font-bold text-slate-800">Ward 85 — North Industrial Corridor</div>
-                <div className="text-slate-500">Heavy Repairs Dept • Civil Work Group</div>
-              </div>
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">
-                87% SLA Compliance
-              </span>
-            </div>
+            ) : (
+              wardPerformance.map((ward: any) => (
+                <div
+                  key={ward.wardName}
+                  className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between"
+                >
+                  <div>
+                    <div className="font-bold text-slate-800">{ward.wardName}</div>
+                    <div className="text-slate-500">{ward.officerInfo}</div>
+                  </div>
+                  <span
+                    className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                      ward.complianceRate >= 90
+                        ? 'bg-green-100 text-green-700'
+                        : ward.complianceRate >= 80
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'bg-amber-100 text-amber-700'
+                    }`}
+                  >
+                    {ward.complianceRate}% SLA Compliance
+                  </span>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

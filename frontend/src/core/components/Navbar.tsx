@@ -1,5 +1,5 @@
 // frontend/src/core/components/Navbar.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { toast } from './Toast';
 import {
@@ -11,13 +11,10 @@ import {
   LogOut,
   PlusCircle,
   Radar,
-  ChevronDown,
-  Sparkles,
   Menu,
   X,
   Award,
 } from 'lucide-react';
-import type { Role } from '../types';
 
 interface NavbarProps {
   activeTab: string;
@@ -30,22 +27,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   setActiveTab,
   onOpenReportModal,
 }) => {
-  const { user, logout, demoLogin } = useAuth();
-  const [showRoleMenu, setShowRoleMenu] = useState<boolean>(false);
+  const { user, logout, refreshUser } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
-  const handleRoleSwitch = async (role: Role) => {
-    setShowRoleMenu(false);
-    try {
-      const loggedUser = await demoLogin(role);
-      toast.success(`Switched persona to ${role}`);
-      if (role === 'CITIZEN') setActiveTab('citizen');
-      else if (role === 'AUTHORITY') setActiveTab('authority');
-      else if (role === 'ADMIN') setActiveTab('admin');
-    } catch (err: any) {
-      toast.error(err instanceof Error ? err.message : 'Demo login failed');
+  useEffect(() => {
+    if (user) {
+      refreshUser();
     }
-  };
+  }, [activeTab]);
 
   const navItem = (id: string, label: string, Icon: React.ElementType, badgeColor?: string) => {
     const isActive = activeTab === id;
@@ -69,7 +58,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-sm">
+    <header className="sticky top-0 z-[9999] w-full bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-sm">
       <div className="h-16 max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
         {/* Brand Logo & Title */}
         <div
@@ -95,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <nav className="hidden lg:flex items-center gap-1 bg-[#eff4ff] p-1 rounded-xl border border-slate-200">
           {navItem('landing', 'Home', Building2)}
           {navItem('map', 'Live Radar', Radar)}
-          {navItem('citizen', 'My Complaints', FileText)}
+          {user && navItem('citizen', 'My Complaints', FileText)}
           {(user?.role === 'AUTHORITY' || user?.role === 'ADMIN') &&
             navItem('authority', 'Triage Queue', ShieldAlert, 'bg-blue-600 text-white')}
           {user?.role === 'ADMIN' &&
@@ -115,60 +104,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               title="View your earned Ratna civic points"
             >
               <span className="text-amber-600 font-black">✦</span>
-              <span>{(user as any).ratnaTotal ?? 45} Ratna</span>
+              <span>{user.ratnaTotal ?? user.civicPoints ?? 0} Ratna</span>
             </button>
           )}
 
           {/* Quick Report CTA */}
           <button
-            onClick={onOpenReportModal}
+            onClick={() => (user ? onOpenReportModal?.() : setActiveTab('auth'))}
             className="btn-stitch-primary text-xs py-2 px-3.5 shadow-green-500/25 hidden sm:inline-flex"
           >
             <PlusCircle className="w-4 h-4" />
             <span>Report Issue</span>
           </button>
-
-          {/* Demo Persona Switcher Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setShowRoleMenu(!showRoleMenu)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 transition-colors"
-              title="Switch demo persona for testing"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span className="hidden md:inline">Dev Mode</span>
-              <ChevronDown className="w-3 h-3" />
-            </button>
-
-            {showRoleMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 animate-fadeIn">
-                <div className="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
-                  Instant Demo Login
-                </div>
-                <button
-                  onClick={() => handleRoleSwitch('CITIZEN')}
-                  className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-green-50 hover:text-green-700 flex items-center gap-2"
-                >
-                  <span className="w-2 h-2 rounded-full bg-green-500" />
-                  Citizen Persona
-                </button>
-                <button
-                  onClick={() => handleRoleSwitch('AUTHORITY')}
-                  className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-700 flex items-center gap-2"
-                >
-                  <span className="w-2 h-2 rounded-full bg-blue-500" />
-                  Authority Officer
-                </button>
-                <button
-                  onClick={() => handleRoleSwitch('ADMIN')}
-                  className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 flex items-center gap-2"
-                >
-                  <span className="w-2 h-2 rounded-full bg-purple-500" />
-                  Municipal Admin
-                </button>
-              </div>
-            )}
-          </div>
 
           {/* User Auth Profile / Login */}
           {user ? (
@@ -176,7 +123,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 onClick={() => setActiveTab('settings')}
                 className="w-8 h-8 rounded-full bg-green-700 text-white flex items-center justify-center font-bold text-xs shadow-sm hover:ring-2 hover:ring-green-400 transition-all"
-                title={`${user.name} (${user.role})`}
+                title={`${user.name || 'User'} (${user.role || 'CITIZEN'})`}
               >
                 {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
               </button>
@@ -217,7 +164,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <nav className="lg:hidden border-t border-slate-200 bg-white/98 backdrop-blur-md px-4 py-3 flex flex-col gap-1.5 shadow-xl animate-fadeIn">
           {navItem('landing', 'Home', Building2)}
           {navItem('map', 'Live Radar', Radar)}
-          {navItem('citizen', 'My Complaints', FileText)}
+          {user && navItem('citizen', 'My Complaints', FileText)}
           {(user?.role === 'AUTHORITY' || user?.role === 'ADMIN') &&
             navItem('authority', 'Triage Queue', ShieldAlert, 'bg-blue-600 text-white')}
           {user?.role === 'ADMIN' &&
@@ -229,7 +176,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => {
               setMobileMenuOpen(false);
-              onOpenReportModal && onOpenReportModal();
+              if (user) {
+                onOpenReportModal && onOpenReportModal();
+              } else {
+                setActiveTab('auth');
+              }
             }}
             className="btn-stitch-primary text-xs py-2.5 px-3 mt-2 flex items-center justify-center gap-2"
           >

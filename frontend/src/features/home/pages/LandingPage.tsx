@@ -55,7 +55,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         const [geoRes, clusterRes, statsRes, boardRes] = await Promise.all([
           mapService.getGeoJsonFeed().catch(() => null),
           mapService.getClusters().catch(() => null),
-          adminService.getAnalytics().catch(() => null),
+          mapService.getMapSummary().catch(() => null),
           ratnaService.getLeaderboard({ limit: 3 }).catch(() => null),
         ]);
         if (geoRes?.data) setGeoJsonData(geoRes.data);

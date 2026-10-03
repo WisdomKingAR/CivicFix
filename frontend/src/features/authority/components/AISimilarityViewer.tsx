@@ -6,7 +6,6 @@ import {
   ShieldCheck,
   CheckCircle2,
   AlertTriangle,
-  Layers,
 } from 'lucide-react';
 
 interface AISimilarityViewerProps {
@@ -15,6 +14,7 @@ interface AISimilarityViewerProps {
   aiSimilarityScore?: number | null;
   verificationMethod: VerificationMethod;
   citizenConfirmed?: boolean | null;
+  aiAvailable?: boolean;
 }
 
 export const AISimilarityViewer: React.FC<AISimilarityViewerProps> = ({
@@ -23,6 +23,7 @@ export const AISimilarityViewer: React.FC<AISimilarityViewerProps> = ({
   aiSimilarityScore,
   verificationMethod,
   citizenConfirmed,
+  aiAvailable = true,
 }) => {
   const hasScore = aiSimilarityScore !== null && aiSimilarityScore !== undefined;
   const percentage = hasScore ? Math.round((aiSimilarityScore as number) * 100) : null;
@@ -41,10 +42,17 @@ export const AISimilarityViewer: React.FC<AISimilarityViewerProps> = ({
           </div>
         </div>
 
-        <span className="px-3 py-1 bg-green-500/10 text-green-400 text-xs font-mono font-bold rounded-full border border-green-500/20 flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-          {verificationMethod}
-        </span>
+        <div className="flex items-center gap-2">
+          {!aiAvailable && (
+            <span className="px-2.5 py-1 bg-amber-500/10 text-amber-400 text-[11px] font-bold rounded-full border border-amber-500/30 flex items-center gap-1">
+              ⚠️ AI Offline — Fallback Mode
+            </span>
+          )}
+          <span className="px-3 py-1 bg-green-500/10 text-green-400 text-xs font-mono font-bold rounded-full border border-green-500/20 flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            {verificationMethod}
+          </span>
+        </div>
       </div>
 
       {/* Side by Side Photos */}
@@ -76,21 +84,31 @@ export const AISimilarityViewer: React.FC<AISimilarityViewerProps> = ({
           <div className="flex items-center gap-2">
             <span className="text-xs text-slate-300 font-semibold">Visual Repair Confidence:</span>
             {percentage !== null ? (
-              <span className={`text-lg font-black ${isHighMatch ? 'text-green-400' : 'text-amber-400'}`}>
+              <span className={`text-lg font-black ${
+                percentage === 0
+                  ? 'text-rose-400'
+                  : isHighMatch
+                  ? 'text-green-400'
+                  : 'text-amber-400'
+              }`}>
                 {percentage}%
               </span>
             ) : (
-              <span className="text-lg font-black text-slate-400">
+              <span className="text-sm font-black text-slate-400">
                 Not calculated yet
               </span>
             )}
           </div>
           <p className="text-[11px] text-slate-400">
-            {percentage === null
+            {!aiAvailable
+              ? 'AI comparison service currently unavailable. Routed directly for citizen validation.'
+              : percentage === null
               ? 'Upload an after-repair photo to run AI verification.'
+              : percentage === 0
+              ? 'Photos depict different locations or repair could not be confirmed. Awaiting citizen inspection.'
               : isHighMatch
               ? 'AI confirmed high structural surface repair alignment and hazard mitigation.'
-              : 'Moderate score. Requires field officer supervisor or citizen confirmation.'}
+              : 'Low confidence alignment. Requires field response inspection or citizen confirmation.'}
           </p>
         </div>
 

@@ -117,6 +117,28 @@
   height: 100%;
   border-radius: 16px;
   font-family: 'DM Sans', sans-serif !important;
+  background: #0b1c30;
+}
+
+/* Dark map trick: invert OSM tiles (free, no API key needed) */
+.leaflet-tile-pane {
+  filter: invert(100%) hue-rotate(180deg) brightness(92%) contrast(88%) saturate(0.8);
+}
+
+/* Keep markers, popups, and controls in normal color (uninvert them) */
+.leaflet-marker-pane,
+.leaflet-shadow-pane,
+.leaflet-overlay-pane,
+.leaflet-popup-pane,
+.leaflet-tooltip-pane,
+.leaflet-control-container {
+  filter: invert(100%) hue-rotate(180deg);
+}
+
+/* Re-invert marker HTML content (div icons) since they go through double invert */
+.custom-map-pin,
+.custom-sensitive-icon {
+  filter: invert(100%) hue-rotate(180deg);
 }
 
 .leaflet-popup-content-wrapper {

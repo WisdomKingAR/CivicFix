@@ -67,7 +67,7 @@ model User {
 model ComplaintCluster {
   id              String          @id @default(cuid())
   complaintCount  Int             @default(1)
-  priorityScore   Float           @default(0)
+  priorityScore   Float           @default(1)
   centroidLat     Float
   centroidLng     Float
   status          ComplaintStatus @default(SUBMITTED)

@@ -1,9 +1,9 @@
 // frontend/src/features/map/pages/LiveMapView.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, type FC } from 'react';
 import { InteractiveMap } from '../components/InteractiveMap';
 import { mapService } from '../services/mapService';
 import { complaintsService } from '../../complaints/services/complaintsService';
-import type { GeoJsonFeatureCollection, ComplaintCluster, Complaint } from '../../../core/types';
+import type { GeoJsonFeatureCollection, ComplaintCluster, Complaint, ComplaintCategory, ComplaintStatus } from '../../../core/types';
 import {
   Radar,
   MapPin,
@@ -16,38 +16,77 @@ interface LiveMapViewProps {
   onSelectComplaint?: (complaint: Complaint) => void;
 }
 
-export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) => {
+export const LiveMapView: FC<LiveMapViewProps> = ({ onSelectComplaint }) => {
   const [geoJsonData, setGeoJsonData] = useState<GeoJsonFeatureCollection | null>(null);
   const [clusters, setClusters] = useState<ComplaintCluster[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [radiusKm, setRadiusKm] = useState<number>(5);
-  const [selectedSector, setSelectedSector] = useState<string>('All Sectors');
+  const [radiusKm, setRadiusKm] = useState<number>(15);
+  const [selectedSector, setSelectedSector] = useState<string>('All Areas');
   const [selectedStatus, setSelectedStatus] = useState<string>('ALL');
 
+  // Mumbai regional centroids for sector filtering
+  const MUMBAI_SECTORS: Record<string, { lat: number; lng: number; zoom: number; maxDist?: number }> = {
+    'All Areas': { lat: 19.076, lng: 72.8777, zoom: 12 },
+    'Juhu / Vile Parle (Hackathon)': { lat: 19.1077, lng: 72.8362, zoom: 15, maxDist: 4 },
+    'Western Suburbs': { lat: 19.1197, lng: 72.8464, zoom: 13, maxDist: 10 },
+    'South Mumbai': { lat: 18.9388, lng: 72.8258, zoom: 13, maxDist: 8 },
+    'Eastern Suburbs': { lat: 19.0657, lng: 72.9106, zoom: 13, maxDist: 10 },
+    'Central Mumbai': { lat: 19.0216, lng: 72.8427, zoom: 13, maxDist: 7 },
+  };
+
   useEffect(() => {
-    const loadMapData = async () => {
-      setLoading(true);
+    const loadMapData = async (showSpinner = false) => {
+      if (showSpinner) setLoading(true);
       try {
-        const [geoRes, clusterRes] = await Promise.all([
+        const [geoRes, clusterRes] = await Promise.allSettled([
           mapService.getGeoJsonFeed(),
           mapService.getClusters(),
         ]);
-        if (geoRes.data) setGeoJsonData(geoRes.data);
-        if (clusterRes.data) setClusters(clusterRes.data);
+        if (geoRes.status === 'fulfilled' && geoRes.value?.data) {
+          setGeoJsonData(geoRes.value.data);
+        }
+        if (clusterRes.status === 'fulfilled' && clusterRes.value?.data) {
+          setClusters(clusterRes.value.data);
+        }
       } catch (err) {
         console.error('Failed to load live map feed:', err);
       } finally {
-        setLoading(false);
+        if (showSpinner) setLoading(false);
       }
     };
-    loadMapData();
+    loadMapData(true);
+    // Auto-refresh every 30 seconds so newly filed complaints appear without reload
+    const interval = setInterval(() => loadMapData(false), 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const features = geoJsonData?.features || [];
+  const currentSectorConfig = MUMBAI_SECTORS[selectedSector] || MUMBAI_SECTORS['All Areas'];
 
   const filteredFeatures = features.filter((f) => {
-    if (selectedStatus === 'ALL') return true;
-    return f.properties.status === selectedStatus;
+    if (selectedStatus !== 'ALL' && f.properties.status !== selectedStatus) {
+      return false;
+    }
+
+    const [lng, lat] = f.geometry.coordinates;
+
+    // Filter by distance from active sector / Mumbai center
+    const dLat = (lat - currentSectorConfig.lat) * 111;
+    const dLng =
+      (lng - currentSectorConfig.lng) *
+      111 *
+      Math.cos((currentSectorConfig.lat * Math.PI) / 180);
+    const distKm = Math.sqrt(dLat * dLat + dLng * dLng);
+
+    // Apply radius slider
+    if (distKm > radiusKm) return false;
+
+    // If specific sector selected, apply sector boundary limit
+    if (currentSectorConfig.maxDist && distKm > currentSectorConfig.maxDist) {
+      return false;
+    }
+
+    return true;
   });
 
   const handleSelectById = async (id: string) => {
@@ -63,9 +102,9 @@ export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) =
         onSelectComplaint({
           id: feature.properties.id,
           userId: 'public-viewer',
-          category: feature.properties.category,
+          category: (feature.properties.category as ComplaintCategory) || 'OTHER',
           description: feature.properties.description,
-          status: feature.properties.status,
+          status: (feature.properties.status as ComplaintStatus) || 'SUBMITTED',
           photoUrl: feature.properties.photoUrl,
           photoHash: 'hash',
           lat: feature.geometry.coordinates[1],
@@ -113,7 +152,7 @@ export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) =
               className="w-full accent-green-600 cursor-pointer"
             />
             <div className="flex gap-1.5 flex-wrap pt-1">
-              {['All Sectors', 'Downtown', 'North Sector', 'Central Ward'].map((sector) => (
+              {Object.keys(MUMBAI_SECTORS).map((sector) => (
                 <button
                   key={sector}
                   onClick={() => setSelectedSector(sector)}
@@ -182,10 +221,32 @@ export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) =
               <div>Fetching live geospatial markers...</div>
             </div>
           ) : filteredFeatures.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-2xl border border-slate-200 p-6 space-y-2 shadow-sm">
-              <AlertCircle className="w-8 h-8 text-slate-400 mx-auto" />
-              <div className="text-xs font-bold text-slate-800">No active incidents in this filter</div>
-              <p className="text-[11px] text-slate-500">Try adjusting the status or search radius.</p>
+            <div className="text-center py-10 bg-white rounded-2xl border border-slate-200 p-6 space-y-3 shadow-sm">
+              <AlertCircle className="w-8 h-8 text-amber-500 mx-auto" />
+              <div className="text-xs font-bold text-slate-800">
+                {features.length > 0
+                  ? `0 of ${features.length} incidents match this radius/sector filter`
+                  : 'No active incidents currently reported'}
+              </div>
+              <p className="text-[11px] text-slate-500">
+                {features.length > 0
+                  ? 'There are active complaints reported in the city, but they are outside your current sector or search radius.'
+                  : 'Reports submitted via the citizen portal will appear here immediately.'}
+              </p>
+              {features.length > 0 && (
+                <div className="flex flex-col gap-2 pt-2">
+                  <button
+                    onClick={() => {
+                      setSelectedSector('All Areas');
+                      setRadiusKm(50);
+                      setSelectedStatus('ALL');
+                    }}
+                    className="btn-stitch-primary text-xs w-full"
+                  >
+                    View All City Incidents (50 km)
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             filteredFeatures.map((feat) => {
@@ -242,8 +303,13 @@ export const LiveMapView: React.FC<LiveMapViewProps> = ({ onSelectComplaint }) =
       {/* Right Interactive Map Canvas */}
       <div className="flex-1 relative h-full">
         <InteractiveMap
-          geoJsonData={geoJsonData}
+          geoJsonData={{
+            type: 'FeatureCollection',
+            features: filteredFeatures,
+          }}
           clusters={clusters}
+          center={[currentSectorConfig.lat, currentSectorConfig.lng]}
+          zoom={currentSectorConfig.zoom}
           onSelectComplaint={handleSelectById}
         />
       </div>

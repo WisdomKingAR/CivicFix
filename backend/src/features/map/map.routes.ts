@@ -5,9 +5,9 @@ import { authenticateToken } from '../../core/middleware/auth.middleware';
 
 const router = Router();
 
-// Public / Authenticated map view
-router.use(authenticateToken);
+// Public map and incident transparency endpoints (rate limited by globalApiLimiter)
 router.get('/complaints', MapController.getMapData);
 router.get('/geojson', MapController.getMapData); // alias — test prompt uses /geojson
+router.get('/summary', MapController.getMapSummary);
 
 export default router;

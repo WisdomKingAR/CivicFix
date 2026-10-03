@@ -8,6 +8,7 @@ import { ClusteringService } from '../clustering/clustering.service';
 import { NotificationService } from '../admin/notification.service';
 import { RatnaService } from '../ratna/ratna.service';
 import { RatnaEvent } from '@prisma/client';
+import { MapService } from '../map/map.service';
 
 export class ComplaintsService {
   public static async createComplaint(userId: string, rawData: CreateComplaintInput) {
@@ -95,6 +96,8 @@ export class ComplaintsService {
       await RatnaService.award(userId, RatnaEvent.CLUSTER_JOINED, complaint.id);
     }
 
+    MapService.invalidateCache();
+
     return complaint;
   }
 
@@ -110,6 +113,11 @@ export class ComplaintsService {
         orderBy: { createdAt: 'desc' },
         include: {
           cluster: true,
+          assignments: {
+            include: {
+              assignedTo: { select: { id: true, name: true, jurisdiction: true } },
+            },
+          },
           resolution: true,
           statusHistory: { orderBy: { createdAt: 'asc' } },
         },
@@ -219,6 +227,8 @@ export class ComplaintsService {
         await NotificationService.notifyCitizenRejection(assignment.assignedToId, complaintId);
       }
     }
+
+    MapService.invalidateCache();
 
     return updated;
   }

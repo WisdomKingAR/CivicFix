@@ -8,6 +8,9 @@ import {
 import { AIService } from '../ai/ai.service';
 import { NotificationService } from '../admin/notification.service';
 import { RatnaService } from '../ratna/ratna.service';
+import { MapService } from '../map/map.service';
+import { PriorityService } from '../clustering/priority.service';
+import { ClusteringService } from '../clustering/clustering.service';
 
 export class AuthorityService {
   public static async getStaff() {
@@ -43,8 +46,10 @@ export class AuthorityService {
     const skip = (page - 1) * limit;
 
     const where = {
+      status: filters.status
+        ? filters.status
+        : { notIn: [ComplaintStatus.RESOLVED, ComplaintStatus.REJECTED] as ComplaintStatus[] },
       ...(filters.category ? { category: filters.category } : {}),
-      ...(filters.status ? { status: filters.status } : {}),
     };
 
     const [total, complaints] = await Promise.all([
@@ -119,6 +124,13 @@ export class AuthorityService {
       data.status
     );
 
+    MapService.invalidateCache();
+
+    if (complaint.clusterId) {
+      await ClusteringService.syncClusterStatus(complaint.clusterId);
+      await PriorityService.recalculate(complaint.clusterId);
+    }
+
     return updated;
   }
 
@@ -128,7 +140,19 @@ export class AuthorityService {
     data: AssignComplaintInput
   ) {
     const assignedToId = data.assignedToId || authorityId;
+    let clusterId: string | null = null;
     const assignment = await prisma.$transaction(async (tx) => {
+      const current = await tx.complaint.findUnique({
+        where: { id: complaintId },
+        select: { status: true, clusterId: true },
+      });
+
+      if (!current) {
+        throw new Error('Complaint not found.');
+      }
+
+      clusterId = current.clusterId;
+
       const assign = await tx.complaintAssignment.create({
         data: {
           complaintId,
@@ -149,7 +173,7 @@ export class AuthorityService {
       await tx.statusHistory.create({
         data: {
           complaintId,
-          oldStatus: ComplaintStatus.SUBMITTED,
+          oldStatus: current.status,
           newStatus: ComplaintStatus.ASSIGNED,
           changedById: authorityId,
           notes: `Assigned to ${assign.assignedTo.name}.`,
@@ -158,6 +182,12 @@ export class AuthorityService {
 
       return assign;
     });
+
+    MapService.invalidateCache();
+
+    if (assignment && clusterId) {
+      await PriorityService.recalculate(clusterId);
+    }
 
     return assignment;
   }
@@ -247,6 +277,13 @@ export class AuthorityService {
 
     if (isAiResolved) {
       await RatnaService.award(complaint.userId, RatnaEvent.COMPLAINT_RESOLVED, complaintId);
+    }
+
+    MapService.invalidateCache();
+
+    if (complaint.clusterId) {
+      await ClusteringService.syncClusterStatus(complaint.clusterId);
+      await PriorityService.recalculate(complaint.clusterId);
     }
 
     return result;

@@ -33,6 +33,7 @@ export interface User {
   flagReason?: string | null;
   jurisdiction?: string | null;
   ratnaTotal?: number;
+  civicPoints?: number;
   createdAt: string;
   updatedAt: string;
   _count?: {
@@ -121,6 +122,7 @@ export interface ApiResponse<T = any> {
 export interface LoginResponseData {
   user: User;
   accessToken: string;
+  refreshToken?: string;
 }
 
 export interface GeoJsonFeatureProperties {
@@ -132,6 +134,8 @@ export interface GeoJsonFeatureProperties {
   priorityScore?: number;
   complaintCount?: number;
   isCluster?: boolean;
+  address?: string | null;
+  isNearSensitive?: boolean;
 }
 
 export interface GeoJsonFeature {
